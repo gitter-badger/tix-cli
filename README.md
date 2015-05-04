@@ -7,7 +7,7 @@ Command line interface to interact with GitHub Authorization API and perform set
 Setup
 -----
 
-The TixCli and other TixInc applications require Git and Node.js on the local machine.  If the machine does not yet have these dependencies, jump to the OS specific "From Scratch" section below and run the oneliner. Done =).
+The TixCli and other TixInc applications require Git and Node.js on the local machine.  If the machine does not yet have these dependencies, jump to the OS specific section below and run the oneliner. Done =).
 
 If the local machine already has Git and Node.js, jump to the "Any OS" section and run the oneliner in a shell.
 
@@ -15,7 +15,7 @@ If the local machine already has Git and Node.js, jump to the "Any OS" section a
 ___
 
 
-### Windows From Scratch
+### Windows Setup
 
 
 To get all dependencies and CLI running on your local machine run the following oneliner in Administrator command prompt:
@@ -26,11 +26,12 @@ To get all dependencies and CLI running on your local machine run the following 
 
 
 
-### Linux / OSX From Scratch
+### Linux / OSX Setup
 
 Instructions coming soon...
 
 
+___
 
 
 ### Any OS
