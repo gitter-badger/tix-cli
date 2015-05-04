@@ -666,6 +666,11 @@ function getPath(path) {
     rl.setPrompt(cli.getPrompt());
     rl.prompt();
   }).on('close', function () {
+    var cliDir = getPath(args.path.cliDir);
+    var cliPath = join(cliDir, args.path.cliFile);
+    if(__dirname !== cliDir) {
+      console.log('You can delete the current file at ' + __filename + ' and run in the future from ' + cliDir + ' with "node tix-cli".');
+    }
     console.log('Tixcellent!');
     process.exit(0);
   });
@@ -717,7 +722,7 @@ function startShell(args) {
  exports.CliAdvanced = CliAdvanced;
 
 
- if (require.main === module || module.id === '[stdin]') {
+ if (require.main === module) {
   console.log('CLI MODE');
   // Called via a CLI so we should start the shell load process...
   new CliBasicShell(config);
