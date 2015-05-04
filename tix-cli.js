@@ -1,4 +1,3 @@
-'use strict';
 /**
  * TixInc CLI
  *
@@ -11,7 +10,7 @@
 //** Modify these args to control how the cli works. */
 var config = {
   base: {
-    windows: 'C:',
+    windows: 'c:',
     linux: process.env['HOME']
   },
   path: {
@@ -25,10 +24,11 @@ var config = {
     tokenFile: 'token.json'
   },
   npmDependencies: [
-  'minimist',
-  'shelljs',
-  'lodash',
-  'colors'
+    'minimist',
+    'shelljs',
+    'lodash',
+    'colors',
+    'read'
   ],
   flags: {
     cleanIfNotCliWorkingDir: true,
@@ -46,13 +46,13 @@ function getPlatformBase() {
   switch (platform) {
     case 'win32':
     case 'win64':
-    return config.base.windows;
+      return config.base.windows;
     case 'linux':
     case 'darwin':
     case 'osx':
-    return config.base.linux;
+      return config.base.linux;
     default:
-    throw 'Unknown platform [' + platform + '], cannot set base path.';
+      throw 'Unknown platform [' + platform + '], cannot set base path.';
   }
 }
 
@@ -67,31 +67,20 @@ function getPath(path) {
   return config.path.installRoot;
 }
 
+
+
 /**
  * CliBasic class.
  * This cli has no dependencies on any npm packages and is used to setup the bare dependencies in a cli folder to allow
  * other automation.
  * @class
  */
- function CliBasic(args) {
+function CliBasic(args) {
   var that = this;
   var installRoot = getPath();
   var cliDir = getPath(args.path.cliDir);
   var cliPath = join(cliDir, args.path.cliFile);
-  var tokenPath = join(cliDir, args.path.tokenFile);
   var packagePath = join(cliDir, 'package.json');
-
-  var getExecOpts = function () {
-    return {encoding: 'utf8', stdio: 'inherit'}
-  };
-  var execSync = function (command, opts) {
-    try {
-      return require('child_process').execSync(command, opts || getExecOpts());
-    }
-    catch (e) {
-      log(e, 'execSync');
-    }
-  };
 
   function log(message, source) {
     var msg = 'CliBasic';
@@ -101,6 +90,19 @@ function getPath(path) {
     msg += ': ' + message;
     console.log(msg);
   }
+
+  var getExecOpts = function () {
+    return {encoding: 'utf8', stdio: 'inherit'}
+  };
+
+  var execSync = function (command, opts) {
+    try {
+      return require('child_process').execSync(command, opts || getExecOpts());
+    }
+    catch (e) {
+      log(e, 'execSync');
+    }
+  };
 
   function getPathStats(path) {
     return fs.lstatSync(path);
@@ -150,31 +152,6 @@ function getPath(path) {
     process.chdir(path);
   };
 
-  this.getToken = function (username, password, callback) {
-    var exec = require('child_process').exec;
-    var clientId = 'eae2d821f84f1bb4ae6f';
-    var clientSecret = 'a097eb9f9e497f03e63af8e775aeabb489246f99';
-
-    var body = {
-      "client_id": clientId,
-      "client_secret": clientSecret,
-      "scopes": [
-      "repo"
-      ],
-      "note": "Repository access for TixInc CLI use."
-    };
-
-    var cmd = 'curl --user ' + username + ':' + password + ' -X POST  -H "Content-Type: application/json" --data \'' + JSON.stringify(body) + '\' https://api.github.com/authorizations';
-    exec(cmd, function (err, stdout, stderr) {
-      var res = JSON.parse(stdout);
-      var tokenJson = {
-        "access_token": res.token
-      };
-
-      fs.writeFileSync(tokenPath, JSON.stringify(tokenJson, null, 4));
-      callback();
-    });
-  };
 
   function iterateNpmDependencies(fn) {
     var returns = [];
@@ -244,19 +221,16 @@ function getPath(path) {
   };
 
   /** This method orchestrates setting up basic dependencies, which allows use of CliAdvanced. */
-  this.install = function (username, password, callbackFn) {
+  this.install = function () {
     // Setup folder structure
     that.mkDir(installRoot);
     that.mkAndChDir(cliDir);
 
-    that.getToken(username, password, function () {
-      // Install dependencies
-      that.installCli();
-      that.installNpm();
-      log('Dependencies installed.', 'install');
+    // Install dependencies
+    that.installCli();
+    that.installNpm();
 
-      callbackFn();
-    });
+    log('Dependencies installed.', 'install');
   }
 }
 
@@ -265,14 +239,24 @@ function getPath(path) {
  * cli directory.
  * @class
  */
- function CliAdvanced(args) {
+function CliAdvanced(args) {
   var that = this;
   var sh = require('shelljs');
   var _ = require('lodash');
   require('colors');
-  var accessToken = require('./token').access_token;
 
-  var tokenUrl = 'https://' + accessToken + '@github.com';
+  var cliDir = getPath(args.path.cliDir);
+  var cliPath = join(cliDir, args.path.cliFile);
+  var tokenPath = join(cliDir, args.path.tokenFile);
+  var tokenUrl = null;
+  this.init = function (callbackFn) {
+    getToken(function (accessToken) {
+      tokenUrl = 'https://' + accessToken + '@github.com';
+      callbackFn();
+    });
+  };
+
+
   var ascii = "                                                                           \r\n                                                          `.,:,,`          \r\n                                                  `::::::::::::::::::,     \r\n                                            ::::`          .::::::::::::   \r\n                                         .:,                 :::::::::::   \r\n                                       :`                     ::::::::::   \r\n                                     .                        ,:::::::::   \r\n                                                              :::::::::.   \r\n                                                              :::::::::    \r\n                                      '''''''':              .::::::::`    \r\n                       `@@@@@@@@      ''''''';               :::::::::     \r\n                       @@@@@@@@:                                           \r\n                       @@@@@@@@                                            \r\n                   #@@@@@@@@@@@@@@   @@@@@@@@   @@@@@@@#    @@@@@@@'       \r\n                   @@@@@@@@@@@@@@+  '@@@@@@@@    @@@@@@@: ;@@@@@@@         \r\n           +++        @@@@@@@@      @@@@@@@@      @@@@@@@@@@@@@@#    ,##'  \r\n          ''''+      #@@@@@@@'      @@@@@@@@      .@@@@@@@@@@@@`    :++++# \r\n         +''''''    .@@@@@@@@      @@@@@@@@         #@@@@@@@:       ++++++`\r\n         `'''''     @@@@@@@@      @@@@@@@@.       @@@@@@@@@@@       +++++# \r\n          :''+`    `@@@@@@@@      @@@@@@@@      ,@@@@@@@@@@@@@       #++#  \r\n                   `@@@@@@@@      @@@@@@@@'    @@@@@@@@'@@@@@@@            \r\n                    @@@@@@@@@#''' '@@@@@@@@@'@@@@@@@@:  @@@@@@@;           \r\n                      ...........   ................     .......           \r\n                                                                           \r\n                                                      ,,,,,,,,,            \r\n                                                  ::::::::::',             \r\n                   :`                        .::::::::::+:`                \r\n                   :,                     `::::::::::,+:`                  \r\n                  `:;`                 .::::::::::::',`                    \r\n                   :::`            `:::::::::::::+;.                       \r\n                   :::::,`   .::::::::::::::::'',`                         \r\n                    :::::::::::::::::::::::'':`                            \r\n                      `:::::::::::;+;:.`                                   \r\n                          `..,...`                                         \r\n                                                                           ";
 
 
@@ -534,16 +518,16 @@ function getPath(path) {
 
   /** Build alias object for quickly looking up a command by alias. */
   this.alias = _.chain(that.commands)
-  .transform(function (result, n, commandName) {
-   if (n.alias) {
-     if (n.alias.short) {
-       result['-' + n.alias.short] = commandName;
-     }
-     if (n.alias.long) {
-       result['--' + n.alias.long] = commandName;
-     }
-   }
- }).value();
+    .transform(function (result, n, commandName) {
+      if (n.alias) {
+        if (n.alias.short) {
+          result['-' + n.alias.short] = commandName;
+        }
+        if (n.alias.long) {
+          result['--' + n.alias.long] = commandName;
+        }
+      }
+    }).value();
 
 
   function getCommand(name) {
@@ -587,20 +571,62 @@ function getPath(path) {
       return 'TIX-' + 'X'.red + '>';
     }
     return 'TIX>';
+  };
+
+  function getToken(callbackFn) {
+    try {
+      var tokenFile = require('./token');
+      callbackFn(tokenFile.access_token);
+    }
+    catch (e) {
+      var read = require('read');
+      console.log('Your GitHub credentials are required to acquire a GitHub api token.  They will not be saved.');
+      read({prompt: 'Please enter your GitHub username: '}, function (err, username) {
+        read({prompt: 'Please enter your GitHub password: ', silent: true}, function (err, password) {
+          installToken(username, password, callbackFn);
+        });
+      });
+    }
+  }
+
+  function installToken(username, password, callbackFn) {
+    var exec = require('child_process').exec;
+    var clientId = 'eae2d821f84f1bb4ae6f';
+    var clientSecret = 'a097eb9f9e497f03e63af8e775aeabb489246f99';
+
+    var body = {
+      "client_id": clientId,
+      "client_secret": clientSecret,
+      "scopes": [
+        "repo"
+      ],
+      "note": "Repository access for TixInc CLI use."
+    };
+
+    var cmd = 'curl --user ' + username + ':' + password + ' -X POST  -H "Content-Type: application/json" --data \'' + JSON.stringify(body) + '\' https://api.github.com/authorizations';
+    exec(cmd, function (err, stdout, stderr) {
+      var res = JSON.parse(stdout);
+      var tokenJson = {
+        "access_token": res.token
+      };
+
+      fs.writeFileSync(tokenPath, JSON.stringify(tokenJson, null, 4));
+      callbackFn(res.token);
+    });
   }
 }
-
 
 /**
  * CliBasicShell for CliShell dependency deployment.
  * @param args
  * @class
  */
- function CliBasicShell(args) {
+function CliBasicShell(args) {
   var cliBasic = new CliBasic(args);
 
   var cliDir = getPath(args.path.cliDir);
-  var cliPath = join(cliDir, args.path.cliFile);
+  console.log('clidir: ' + cliDir);
+  console.log('__dirname: ' + __dirname);
 
   // Clean up previous installation.
   if (__dirname !== cliDir && args.flags.cleanIfNotCliWorkingDir) {
@@ -615,15 +641,9 @@ function getPath(path) {
 
   /** Installs basic dependencies and starts the CLI. */
   function installAndStartShell() {
-    console.log('Your GitHub credentials are required to acquire a GitHub api token.  They will not be saved.')
-    rl.question('Please enter your GitHub username: ', function(username) {
-      rl.question('Please enter your GitHub password: ', function(password) {
-        console.log('Installing to ' + cliDir + '...');
-        cliBasic.install(username, password, function () {
-          startShell(args);
-        });
-      });
-    });
+    console.log('Installing to ' + cliDir + '...');
+    cliBasic.install();
+    startShell(args);
   }
 
   console.log('Basic dependencies must be installed to use tix-cli.  These will be installed to ' + cliDir);
@@ -649,34 +669,35 @@ function getPath(path) {
  * @param args
  * @class
  */
- function CliShell(args) {
+function CliShell(args) {
   var cli = new CliAdvanced(args);
-  cli.printHeader();
-  var rl = createInterface();
-  rl.setPrompt(cli.getPrompt());
-  rl.prompt();
-
-  function onExit() {
-    var cliDir = getPath(args.path.cliDir);
-    var cliPath = join(cliDir, args.path.cliFile);
-    if(__dirname !== cliDir) {
-      console.log('You can delete the current file at ' + __filename + ' and run the CLI in the future from ' + cliDir + ' with "node tix-cli".');
-    }
-    console.log('Goodbye!');
-  }
-
-  rl.on('line', function (line) {
-    var command = line.trim();
-    cli.execCommand(command);
+  cli.init(function () {
+    cli.printHeader();
+    var rl = createInterface();
     rl.setPrompt(cli.getPrompt());
     rl.prompt();
-  }).on('SIGINT', function() {
-    onExit();
-  })
-  .on('close', function () {
-    onExit();
-    process.exit(0);
+
+    function onExit() {
+      var cliDir = getPath(args.path.cliDir);
+      if (__dirname !== cliDir) {
+        console.log('You can delete the current file at ' + __filename + ' and run the CLI in the future from ' + cliDir + ' with "node tix-cli".');
+      }
+      console.log('Goodbye!');
+    }
+
+    rl.on('line', function (line) {
+      var command = line.trim();
+      cli.execCommand(command);
+      rl.setPrompt(cli.getPrompt());
+      rl.prompt();
+    })
+      .on('close', function () {
+        onExit();
+        process.exit(0);
+      });
   });
+
+
 }
 
 /** Gets a readline (built-in) interface. */
@@ -708,28 +729,28 @@ function startShell(args) {
  * Exports basic shell so it can be run from a CLI.
  * @type {CliBasicShell}
  */
- exports.CliBasicShell = CliBasicShell;
+exports.CliBasicShell = CliBasicShell;
 
 /**
  * Exports shell so it can be run from a CLI.
  * @type {CliShell}
  */
- exports.CliShell = CliShell;
+exports.CliShell = CliShell;
 
 /**
  * Exports CliBasic for functional use in node.js automation apps.
  * @type {CliBasic}
  */
- exports.CliBasic = CliBasic;
+exports.CliBasic = CliBasic;
 
 /**
  * Exports CliAdvanced for functional use in node.js automation apps.
  * @type {CliAdvanced}
  */
- exports.CliAdvanced = CliAdvanced;
+exports.CliAdvanced = CliAdvanced;
 
 
- if (require.main === module) {
+if (require.main === module) {
   console.log('CLI MODE');
   // Called via a CLI so we should start the shell load process...
   new CliBasicShell(config);
