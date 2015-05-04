@@ -9,18 +9,18 @@
 $source = 'C:\TixInc\downloads'
 
 $packages = @(
-#  @{
-#    title='Git For Windows 1.9.5';
-#    url='https://github.com/msysgit/msysgit/releases/download/Git-1.9.5-preview20150319/Git-1.9.5-preview20150319.exe';
-#    dir=$source;
-#    arguments='/SILENT /SUPPRESSMSGBOXES /COMPONENTS="icons,ext\reg\shellhere,assoc,assoc_sh"'
-#  },
-#  @{
-#    title='Node.js 0.12.2';
-#    url='http://nodejs.org/dist/v0.12.2/x64/node-v0.12.2-x64.msi';
-#    dir=$source;
-#    arguments='/qn'
-#  },
+  @{
+    title='Git For Windows 1.9.5';
+    url='https://github.com/msysgit/msysgit/releases/download/Git-1.9.5-preview20150319/Git-1.9.5-preview20150319.exe';
+    dir=$source;
+    arguments='/SILENT /SUPPRESSMSGBOXES /COMPONENTS="icons,ext\reg\shellhere,assoc,assoc_sh"'
+  },
+  @{
+    title='Node.js 0.12.2';
+    url='http://nodejs.org/dist/v0.12.2/x64/node-v0.12.2-x64.msi';
+    dir=$source;
+    arguments='/qn'
+  },
   @{
     title='TixCli';
     url='https://raw.githubusercontent.com/TixInc/TixCli/master/oneliners/tix-cli-install.sh';
