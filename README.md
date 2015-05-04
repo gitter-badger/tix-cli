@@ -8,6 +8,7 @@ Table of Contents
   * [Setup](#setup)
   *   [Windows](#windows-setup)
   *   [Linux / OSX](#linux-osx-setup)
+
 ___
 
 
