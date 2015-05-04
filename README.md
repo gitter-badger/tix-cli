@@ -3,10 +3,14 @@ TixCli
 
 Command line interface to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.
 
+Table of Contents
+-----------------
+  * [Setup](#setup)
+
 ___
 
 
-Setup
+Setup [](setup)
 -----
 
 The TixCli and other TixInc applications require Git and Node.js on the local machine.  If the machine does not yet have these dependencies, jump to the OS specific section below and run the oneliner. Done =).
