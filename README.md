@@ -6,7 +6,8 @@ Command line interface to interact with GitHub Authorization API and perform set
 Table of Contents
 -----------------
   * [Setup](#setup)
-
+  *   [Windows](#windows-setup)
+  *   [Linux / OSX](#linux-osx-setup)
 ___
 
 
@@ -19,7 +20,7 @@ If the local machine already has Git and Node.js, jump to the "Any OS" section a
 
 
 
-### Windows
+### Windows [](windows-setup)
 
 
 Copy/paste the oneliner below into Administrator command prompt to get Git / Node.js and TixCli installed:
@@ -30,7 +31,7 @@ Copy/paste the oneliner below into Administrator command prompt to get Git / Nod
 
 
 
-### Linux / OSX
+### Linux / OSX [](linux-osx-setup)
 
 Instructions coming soon...
 
