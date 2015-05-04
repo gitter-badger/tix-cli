@@ -1,0 +1,1 @@
+curl https://github.com/TixInc/TixCli/blob/master/tix-cli.js | node -e
