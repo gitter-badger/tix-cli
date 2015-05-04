@@ -15,8 +15,7 @@ If the local machine already has Git and Node.js, jump to the "Any OS" section a
 
 
 
-
-### Windows Setup
+### Windows
 
 
 To get all dependencies and CLI running on your local machine run the following oneliner in Administrator command prompt:
@@ -26,8 +25,7 @@ To get all dependencies and CLI running on your local machine run the following 
 
 
 
-
-### Linux / OSX Setup
+### Linux / OSX
 
 Instructions coming soon...
 
