@@ -641,13 +641,8 @@ function getPath(path) {
       process.exit(0);
     }
   });
-
-
-
-
-
-
 }
+
 
 /**
  * CliShell for interactive deployment of TixInc apps at command line.
@@ -669,7 +664,7 @@ function getPath(path) {
     var cliDir = getPath(args.path.cliDir);
     var cliPath = join(cliDir, args.path.cliFile);
     if(__dirname !== cliDir) {
-      console.log('You can delete the current file at ' + __filename + ' and run in the future from ' + cliDir + ' with "node tix-cli".');
+      console.log('You can delete the current file at ' + __filename + ' and run the CLI in the future from ' + cliDir + ' with "node tix-cli".');
     }
     console.log('Tixcellent!');
     process.exit(0);
