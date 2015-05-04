@@ -51,6 +51,9 @@ If Git and Node.js are installed on the local machine, run this oneliner at git 
 curl https://raw.githubusercontent.com/TixInc/TixCli/master/tix-cli.js > tix-cli.js && node tix-cli
 ```
 
+___
+
+
 Usage <a id="usage"></a>
 ========================
 
