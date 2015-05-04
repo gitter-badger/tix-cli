@@ -655,18 +655,26 @@ function getPath(path) {
   var rl = createInterface();
   rl.setPrompt(cli.getPrompt());
   rl.prompt();
-  rl.on('line', function (line) {
-    var command = line.trim();
-    cli.execCommand(command);
-    rl.setPrompt(cli.getPrompt());
-    rl.prompt();
-  }).on('close', function () {
+
+  function onExit() {
     var cliDir = getPath(args.path.cliDir);
     var cliPath = join(cliDir, args.path.cliFile);
     if(__dirname !== cliDir) {
       console.log('You can delete the current file at ' + __filename + ' and run the CLI in the future from ' + cliDir + ' with "node tix-cli".');
     }
-    console.log('Tixcellent!');
+    console.log('Goodbye!');
+  }
+
+  rl.on('line', function (line) {
+    var command = line.trim();
+    cli.execCommand(command);
+    rl.setPrompt(cli.getPrompt());
+    rl.prompt();
+  }).on('SIGINT', function() {
+    onExit();
+  })
+  .on('close', function () {
+    onExit();
     process.exit(0);
   });
 }
