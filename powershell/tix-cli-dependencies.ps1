@@ -20,6 +20,12 @@ $packages = @(
     url='http://nodejs.org/dist/v0.12.2/x64/node-v0.12.2-x64.msi';
     dir=$source;
     arguments='/qn'
+  },
+  @{
+    title='TixCli';
+    url='https://raw.githubusercontent.com/TixInc/TixCli/master/oneline/tix-cli-install.sh';
+    dir=$source;
+    arguments=''
   }
 )
 
