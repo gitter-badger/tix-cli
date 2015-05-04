@@ -22,7 +22,7 @@ Setup <a id="setup"></a>
 ========================
 
 
-The TixCli and other TixInc applications require Git and Node.js on the local machine.  If the machine does not yet have these dependencies, jump to the OS specific section ([Windows](#windows-setup) or [Linux / OSX](linux-osx-setup) and run the oneliner. You will be prompted to enter a username and password so that the TixCli can acquire a GitHub api token to use on your behalf.
+The TixCli and other TixInc applications require Git and Node.js on the local machine.  If the machine does not yet have these dependencies, jump to the OS specific section ([Windows](#windows-setup) or [Linux / OSX](linux-osx-setup)) and run the oneliner. You will be prompted to enter a username and password so that the TixCli can acquire a GitHub api token to use on your behalf.
 
 If the local machine already has Git and Node.js, jump to the [Any OS](#any-os-setup) section and run the oneliner in a shell.
 
