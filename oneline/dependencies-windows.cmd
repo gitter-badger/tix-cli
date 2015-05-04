@@ -1,0 +1,1 @@
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://gist.githubusercontent.com/cchamberlain/8f70c5562e337aabd317/raw/9726ea8e6f1ffb882a26456531497024608d2591/dependencies-windows.ps1'))"

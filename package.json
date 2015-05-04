@@ -1,0 +1,13 @@
+{
+  "name": "tix-cli",
+  "version": "1.0.0",
+  "main": "tix-cli.js",
+  "description": "This is a small temporary package setup on the fly to allow use of npm dependencies and require in TixInc CLI.",
+  "private": "true",
+  "dependencies": {
+    "colors": "^1.1.0",
+    "lodash": "^3.8.0",
+    "minimist": "^1.1.1",
+    "shelljs": "^0.4.0"
+  }
+}
