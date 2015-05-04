@@ -4,6 +4,12 @@ TixCli
 Command line interface to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.
 
 
+Setup
+=====
+
+The TixCli and other TixInc applications require Git and Node.js on the local machine.  If the machine does not yet have these dependencies, jump to the OS specific section below and run the oneliner. Done =).
+
+
 Windows
 -------
 
@@ -13,11 +19,16 @@ To get all dependencies and CLI running on your local machine run the following 
     @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/TixCli/master/powershell/tix-cli-dependencies.ps1'))"
 
 
+Linux / OSX
+-----------
+
+Instructions coming soon...
+
+
 Any OS
 ------
 
-
-If you already have Git and Node.js installed on the local machine, run the following oneliner at the git (or linux) shell to  install and run the CLI:
+If you already have Git and Node.js installed on the local machine, run the following oneliner at the git bash or linux shell to  install and run the CLI:
 
 
     curl https://raw.githubusercontent.com/TixInc/TixCli/master/tix-cli.js > tix-cli.js && node tix-cli
