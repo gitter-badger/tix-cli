@@ -681,7 +681,11 @@ function getPath(path) {
 
 /** Gets a readline (built-in) interface. */
 function createInterface() {
-  return require('readline').createInterface(process.stdin, process.stdout, terminal: false);
+  return require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    terminal: false
+  });
 }
 
 /** Ensures advanced CLI shell gets started in the cli directory so that npm dependencies will be loadable. */
