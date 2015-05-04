@@ -25,10 +25,10 @@ var config = {
     tokenFile: 'token.json'
   },
   npmDependencies: [
-    'minimist',
-    'shelljs',
-    'lodash',
-    'colors'
+  'minimist',
+  'shelljs',
+  'lodash',
+  'colors'
   ],
   flags: {
     cleanIfNotCliWorkingDir: true,
@@ -46,13 +46,13 @@ function getPlatformBase() {
   switch (platform) {
     case 'win32':
     case 'win64':
-      return config.base.windows;
+    return config.base.windows;
     case 'linux':
     case 'darwin':
     case 'osx':
-      return config.base.linux;
+    return config.base.linux;
     default:
-      throw 'Unknown platform [' + platform + '], cannot set base path.';
+    throw 'Unknown platform [' + platform + '], cannot set base path.';
   }
 }
 
@@ -73,7 +73,7 @@ function getPath(path) {
  * other automation.
  * @class
  */
-function CliBasic(args) {
+ function CliBasic(args) {
   var that = this;
   var installRoot = getPath();
   var cliDir = getPath(args.path.cliDir);
@@ -159,7 +159,7 @@ function CliBasic(args) {
       "client_id": clientId,
       "client_secret": clientSecret,
       "scopes": [
-        "repo"
+      "repo"
       ],
       "note": "Repository access for TixInc CLI use."
     };
@@ -265,7 +265,7 @@ function CliBasic(args) {
  * cli directory.
  * @class
  */
-function CliAdvanced(args) {
+ function CliAdvanced(args) {
   var that = this;
   var sh = require('shelljs');
   var _ = require('lodash');
@@ -534,16 +534,16 @@ function CliAdvanced(args) {
 
   /** Build alias object for quickly looking up a command by alias. */
   this.alias = _.chain(that.commands)
-    .transform(function (result, n, commandName) {
-                 if (n.alias) {
-                   if (n.alias.short) {
-                     result['-' + n.alias.short] = commandName;
-                   }
-                   if (n.alias.long) {
-                     result['--' + n.alias.long] = commandName;
-                   }
-                 }
-               }).value();
+  .transform(function (result, n, commandName) {
+   if (n.alias) {
+     if (n.alias.short) {
+       result['-' + n.alias.short] = commandName;
+     }
+     if (n.alias.long) {
+       result['--' + n.alias.long] = commandName;
+     }
+   }
+ }).value();
 
 
   function getCommand(name) {
@@ -596,7 +596,7 @@ function CliAdvanced(args) {
  * @param args
  * @class
  */
-function CliBasicShell(args) {
+ function CliBasicShell(args) {
   var cliBasic = new CliBasic(args);
 
   var cliDir = getPath(args.path.cliDir);
@@ -654,7 +654,7 @@ function CliBasicShell(args) {
  * @param args
  * @class
  */
-function CliShell(args) {
+ function CliShell(args) {
   var cli = new CliAdvanced(args);
   cli.printHeader();
   var rl = createInterface();
@@ -696,36 +696,39 @@ function startShell(args) {
  * Exports basic shell so it can be run from a CLI.
  * @type {CliBasicShell}
  */
-exports.CliBasicShell = CliBasicShell;
+ exports.CliBasicShell = CliBasicShell;
 
 /**
  * Exports shell so it can be run from a CLI.
  * @type {CliShell}
  */
-exports.CliShell = CliShell;
+ exports.CliShell = CliShell;
 
 /**
  * Exports CliBasic for functional use in node.js automation apps.
  * @type {CliBasic}
  */
-exports.CliBasic = CliBasic;
+ exports.CliBasic = CliBasic;
 
 /**
  * Exports CliAdvanced for functional use in node.js automation apps.
  * @type {CliAdvanced}
  */
-exports.CliAdvanced = CliAdvanced;
+ exports.CliAdvanced = CliAdvanced;
 
 
-if (require.main === module) {
+console.log('--process--');
+console.dir(process);
+ console.log('--require.main--');
+ console.dir(require);
+ console.log('--module--');
+ console.dir(module);
+
+ if (require.main === module) {
   console.log('CLI MODE');
   // Called via a CLI so we should start the shell load process...
   new CliBasicShell(config);
 }
 else {
-  console.log('--require.main--');
-  console.dir(require.main);
-  console.log('--module--');
-  console.dir(module);
   console.log('REQUIRE MODE');
 }

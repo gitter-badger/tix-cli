@@ -1,1 +1,1 @@
-curl https://raw.githubusercontent.com/TixInc/TixCli/master/tix-cli.js | node -e
+curl -H "Cache-Control: no-cache, no-store, must-revalidate" -H "Pragma: no-cache" -H "Expires: 0" https://raw.githubusercontent.com/TixInc/TixCli/master/tix-cli.js | node
