@@ -12,7 +12,8 @@ The TixCli and other TixInc applications require Git and Node.js on the local ma
 If the local machine already has Git and Node.js, jump to the "Any OS" section and run the oneliner in a shell.
 
 
-#### Windows From Scratch
+
+##### Windows From Scratch
 
 
 To get all dependencies and CLI running on your local machine run the following oneliner in Administrator command prompt:
@@ -22,13 +23,15 @@ To get all dependencies and CLI running on your local machine run the following 
 
 
 
-#### Linux / OSX From Scratch
+
+##### Linux / OSX From Scratch
 
 Instructions coming soon...
 
 
 
-#### Any OS
+
+##### Any OS
 
 If you already have Git and Node.js installed on the local machine, run the following oneliner at the git bash or linux shell to  install and run the CLI:
 
