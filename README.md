@@ -88,3 +88,6 @@ var config = {
 ```
 
 The TixCli by default gets installed to `C:\TixInc\TixCli` directory on Windows and `~/TixInc/TixCli` on Linux / OSX.  Other TixInc applications will get installed by TixCli to the TixInc directory for the respective platform.
+
+
+After the initial install, the CLI may be run again at any time by navigating your shell of choice to the TixCli directory and run `node tix-cli`.
