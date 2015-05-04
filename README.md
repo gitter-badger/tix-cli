@@ -14,7 +14,6 @@ The TixCli and other TixInc applications require Git and Node.js on the local ma
 If the local machine already has Git and Node.js, jump to the "Any OS" section and run the oneliner in a shell.
 
 
-___
 
 
 ### Windows Setup
@@ -26,7 +25,6 @@ To get all dependencies and CLI running on your local machine run the following 
     @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/TixCli/master/powershell/tix-cli-dependencies.ps1'))"
 
 
-___
 
 
 ### Linux / OSX Setup
