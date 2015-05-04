@@ -717,14 +717,7 @@ function startShell(args) {
  exports.CliAdvanced = CliAdvanced;
 
 
-console.log('--process--');
-console.dir(process);
- console.log('--require.main--');
- console.dir(require);
- console.log('--module--');
- console.dir(module);
-
- if (require.main === module) {
+ if (require.main === module || module.id === '[stdin]') {
   console.log('CLI MODE');
   // Called via a CLI so we should start the shell load process...
   new CliBasicShell(config);
