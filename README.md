@@ -12,7 +12,7 @@ Table of Contents
 ___
 
 
-Setup [](setup)
+Setup <a id="setup"></a>
 -----
 
 The TixCli and other TixInc applications require Git and Node.js on the local machine.  If the machine does not yet have these dependencies, jump to the OS specific section below and run the oneliner. Done =).
@@ -21,7 +21,7 @@ If the local machine already has Git and Node.js, jump to the "Any OS" section a
 
 
 
-### Windows [](windows-setup)
+### Windows <a id="windows-setup"></a>
 
 
 Copy/paste the oneliner below into Administrator command prompt to get Git / Node.js and TixCli installed:
@@ -32,7 +32,7 @@ Copy/paste the oneliner below into Administrator command prompt to get Git / Nod
 
 
 
-### Linux / OSX [](linux-osx-setup)
+### Linux / OSX <a id="linux-osx-setup"></a>
 
 Instructions coming soon...
 
