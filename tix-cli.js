@@ -723,5 +723,9 @@ if (require.main === module) {
   new CliBasicShell(config);
 }
 else {
+  console.log('--require.main--');
+  console.dir(require.main);
+  console.log('--module--');
+  console.dir(module);
   console.log('REQUIRE MODE');
 }

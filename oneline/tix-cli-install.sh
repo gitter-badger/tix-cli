@@ -1,1 +1,1 @@
-curl https://github.com/TixInc/TixCli/blob/master/tix-cli.js | node -e
+curl https://raw.githubusercontent.com/TixInc/TixCli/master/tix-cli.js | node -e
