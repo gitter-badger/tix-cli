@@ -23,7 +23,7 @@ $packages = @(
 #  },
   @{
     title='TixCli';
-    url='https://raw.githubusercontent.com/TixInc/TixCli/master/oneline/tix-cli-install.sh';
+    url='https://raw.githubusercontent.com/TixInc/TixCli/master/oneliners/tix-cli-install.sh';
     dir=$source;
     arguments=' '
   }
