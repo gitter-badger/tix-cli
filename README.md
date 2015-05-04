@@ -6,8 +6,9 @@ Command line interface to interact with GitHub Authorization API and perform set
 Table of Contents
 -----------------
   * [Setup](#setup)
-  *   [Windows](#windows-setup)
-  *   [Linux / OSX](#linux-osx-setup)
+    * [Windows](#windows-setup)
+    * [Linux / OSX](#linux-osx-setup)
+    * [Any OS](#any-os-setup)
 
 ___
 
@@ -31,16 +32,12 @@ Copy/paste the oneliner below into Administrator command prompt to get Git / Nod
 ```
 
 
-
 ### Linux / OSX <a id="linux-osx-setup"></a>
 
 Instructions coming soon...
 
 
-___
-
-
-### Any OS
+### Any OS <a id="any-os-setup"></a>
 
 If Git and Node.js are installed on the local machine, run this oneliner at git bash or linux shell to install the CLI:
 
