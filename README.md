@@ -14,7 +14,7 @@ ___
 
 
 Setup <a id="setup"></a>
------
+========================
 
 The TixCli and other TixInc applications require Git and Node.js on the local machine.  If the machine does not yet have these dependencies, jump to the OS specific section below and run the oneliner. Done =).
 
