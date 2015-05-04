@@ -3,6 +3,9 @@ TixCli
 
 TixCli is a [command line interface](http://en.wikipedia.org/wiki/Command-line_interface) to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.
 
+___
+
+
 Table of Contents
 =================
   * [Setup](#setup)
@@ -10,6 +13,8 @@ Table of Contents
     * [Linux / OSX](#linux-osx-setup)
     * [Any OS](#any-os-setup)
   * [Usage](#usage)
+
+
 ___
 
 
