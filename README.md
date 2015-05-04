@@ -1,7 +1,7 @@
 TixCli
 ======
 
-Command line interface to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.
+TixCli is a [command line interface](http://en.wikipedia.org/wiki/Command-line_interface) to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.
 
 Table of Contents
 =================
