@@ -4,7 +4,7 @@ TixCli
 Command line interface to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.
 
 Table of Contents
------------------
+=================
   * [Setup](#setup)
     * [Windows](#windows-setup)
     * [Linux / OSX](#linux-osx-setup)
@@ -22,7 +22,7 @@ If the local machine already has Git and Node.js, jump to the "Any OS" section a
 
 
 
-### Windows <a id="windows-setup"></a>
+#### Windows <a id="windows-setup"></a>
 
 
 Copy/paste the oneliner below into Administrator command prompt to get Git / Node.js and TixCli installed:
@@ -32,12 +32,12 @@ Copy/paste the oneliner below into Administrator command prompt to get Git / Nod
 ```
 
 
-### Linux / OSX <a id="linux-osx-setup"></a>
+#### Linux / OSX <a id="linux-osx-setup"></a>
 
 Instructions coming soon...
 
 
-### Any OS <a id="any-os-setup"></a>
+#### Any OS <a id="any-os-setup"></a>
 
 If Git and Node.js are installed on the local machine, run this oneliner at git bash or linux shell to install the CLI:
 
