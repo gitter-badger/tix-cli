@@ -237,8 +237,9 @@ function CliBasic(args) {
  * cli directory.
  * @class
  */
-function CliAdvanced(args) {
+function CliAdvanced(args, rlInterface) {
   var that = this;
+  var rl = rlInterface;
   var sh = require('shelljs');
   var _ = require('lodash');
   require('colors');
@@ -550,7 +551,15 @@ function CliAdvanced(args) {
   this.execCommand = function (name) {
     var cmd = getCommand(name);
     if (cmd) {
-      cmd.fn();
+      if(cmd.async) {
+        rl.pause();
+        cmd.fn(function() {
+          rl.resume();
+        });
+      }
+      else {
+        cmd.fn();
+      }
     }
     else {
       that.printUnknown();
@@ -623,6 +632,7 @@ function CliAdvanced(args) {
       else if (stdout && stdout.indexOf('Problems parsing JSON') !== -1) {
         printAndExit(stdout);
       }
+
       var res = JSON.parse(stdout);
       var tokenJson = {
         "access_token": res.token
@@ -687,10 +697,10 @@ function CliBasicShell(args) {
  * @class
  */
 function CliShell(args) {
-  var cli = new CliAdvanced(args);
+  var rl = createInterface();
+  var cli = new CliAdvanced(args, rl);
   cli.init(function () {
     cli.printHeader();
-    var rl = createInterface();
     rl.setPrompt(cli.getPrompt());
     rl.prompt();
 
