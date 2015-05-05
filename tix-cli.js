@@ -67,7 +67,18 @@ function getPath(path) {
   return config.path.installRoot;
 }
 
+function getPathStats(path) {
+  return fs.lstatSync(path);
+}
 
+function dirExists(path) {
+  try {
+    return getPathStats(path).isDirectory();
+  }
+  catch (e) {
+    return false;
+  }
+}
 
 /**
  * CliBasic class.
@@ -104,25 +115,12 @@ function CliBasic(args) {
     }
   };
 
-  function getPathStats(path) {
-    return fs.lstatSync(path);
-  }
-
-  this.dirExists = function (path) {
-    try {
-      return getPathStats(path).isDirectory();
-    }
-    catch (e) {
-      return false;
-    }
-  };
-
   this.moduleExists = function (moduleName) {
-    return that.dirExists(cliDir + '/node_modules/' + moduleName);
+    return dirExists(cliDir + '/node_modules/' + moduleName);
   };
 
   this.rmDir = function (path) {
-    if (!that.dirExists(path)) {
+    if (!dirExists(path)) {
       log(path + ' directory does not exist.  Skipping clean.', 'rmDir');
       return;
     }
@@ -140,7 +138,7 @@ function CliBasic(args) {
   };
 
   this.mkDir = function (path) {
-    if (that.dirExists(path)) {
+    if (dirExists(path)) {
       log(path + ' directory already exists.  Skipping make.', 'mkDir');
       return;
     }
@@ -248,16 +246,20 @@ function CliAdvanced(args) {
   var cliDir = getPath(args.path.cliDir);
   var cliPath = join(cliDir, args.path.cliFile);
   var tokenPath = join(cliDir, args.path.tokenFile);
+  var automationPath = join(cliDir, 'automation');
   var tokenUrl = null;
   this.init = function (callbackFn) {
     getToken(function (accessToken) {
       tokenUrl = 'https://' + accessToken + '@github.com';
+      if(dirExists(automationPath)) {
+        that.isExtendedMode = true;
+      }
       callbackFn();
     });
   };
 
 
-  var ascii = "                                                                           \r\n                                                          `.,:,,`          \r\n                                                  `::::::::::::::::::,     \r\n                                            ::::`          .::::::::::::   \r\n                                         .:,                 :::::::::::   \r\n                                       :`                     ::::::::::   \r\n                                     .                        ,:::::::::   \r\n                                                              :::::::::.   \r\n                                                              :::::::::    \r\n                                      '''''''':              .::::::::`    \r\n                       `@@@@@@@@      ''''''';               :::::::::     \r\n                       @@@@@@@@:                                           \r\n                       @@@@@@@@                                            \r\n                   #@@@@@@@@@@@@@@   @@@@@@@@   @@@@@@@#    @@@@@@@'       \r\n                   @@@@@@@@@@@@@@+  '@@@@@@@@    @@@@@@@: ;@@@@@@@         \r\n           +++        @@@@@@@@      @@@@@@@@      @@@@@@@@@@@@@@#    ,##'  \r\n          ''''+      #@@@@@@@'      @@@@@@@@      .@@@@@@@@@@@@`    :++++# \r\n         +''''''    .@@@@@@@@      @@@@@@@@         #@@@@@@@:       ++++++`\r\n         `'''''     @@@@@@@@      @@@@@@@@.       @@@@@@@@@@@       +++++# \r\n          :''+`    `@@@@@@@@      @@@@@@@@      ,@@@@@@@@@@@@@       #++#  \r\n                   `@@@@@@@@      @@@@@@@@'    @@@@@@@@'@@@@@@@            \r\n                    @@@@@@@@@#''' '@@@@@@@@@'@@@@@@@@:  @@@@@@@;           \r\n                      ...........   ................     .......           \r\n                                                                           \r\n                                                      ,,,,,,,,,            \r\n                                                  ::::::::::',             \r\n                   :`                        .::::::::::+:`                \r\n                   :,                     `::::::::::,+:`                  \r\n                  `:;`                 .::::::::::::',`                    \r\n                   :::`            `:::::::::::::+;.                       \r\n                   :::::,`   .::::::::::::::::'',`                         \r\n                    :::::::::::::::::::::::'':`                            \r\n                      `:::::::::::;+;:.`                                   \r\n                          `..,...`                                         \r\n                                                                           ";
+  var ascii = "                                                                           \r\n                                                          `.,:,,`          \r\n                                                  `::::::::::::::::::,     \r\n                                            ::::`          .::::::::::::   \r\n                                         .:,                 :::::::::::   \r\n                                       :`                     ::::::::::   \r\n                                     .                        ,:::::::::   \r\n                                                              :::::::::.   \r\n                                                              :::::::::    \r\n                                      --------:              .::::::::`    \r\n                       `@@@@@@@@      -------;               :::::::::     \r\n                       @@@@@@@@:                                           \r\n                       @@@@@@@@                                            \r\n                   #@@@@@@@@@@@@@@   @@@@@@@@   @@@@@@@#    @@@@@@@'       \r\n                   @@@@@@@@@@@@@@+  '@@@@@@@@    @@@@@@@: ;@@@@@@@         \r\n           +++        @@@@@@@@      @@@@@@@@      @@@@@@@@@@@@@@#    ,##'  \r\n          ''''+      #@@@@@@@'      @@@@@@@@      .@@@@@@@@@@@@`    :++++# \r\n         +''''''    .@@@@@@@@      @@@@@@@@         #@@@@@@@:       ++++++`\r\n         `'''''     @@@@@@@@      @@@@@@@@.       @@@@@@@@@@@       +++++# \r\n          :''+`    `@@@@@@@@      @@@@@@@@      ,@@@@@@@@@@@@@       #++#  \r\n                   `@@@@@@@@      @@@@@@@@'    @@@@@@@@'@@@@@@@            \r\n                    @@@@@@@@@#''' '@@@@@@@@@'@@@@@@@@:  @@@@@@@;           \r\n                      ...........   ................     .......           \r\n                                                                           \r\n                                                      ,,,,,,,,,            \r\n                                                  ::::::::::',             \r\n                   :`                        .::::::::::+:`                \r\n                   :,                     `::::::::::,+:`                  \r\n                  `:;`                 .::::::::::::',`                    \r\n                   :::`            `:::::::::::::+;.                       \r\n                   :::::,`   .::::::::::::::::'',`                         \r\n                    :::::::::::::::::::::::'':`                            \r\n                      `:::::::::::;+;:.`                                   \r\n                          `..,...`                                         \r\n                                                                           ";
 
 
   function log(message, source) {
@@ -466,7 +468,7 @@ function CliAdvanced(args) {
         npmLink('./ext');
         that.extCommands = require('automation/helpers/commander');
         that.isExtendedMode = true;
-        console.log('Extended mode enabled. Use "??" to see extended mode commands.');
+        that.printHeader();
       }
     },
     '?': {
@@ -562,13 +564,19 @@ function CliAdvanced(args) {
   };
 
   this.printHeader = function () {
-    console.log(ascii);
-    console.log('Welcome to TixInc command line interface.  Type "?" for a list of available commands.');
+    if(that.isExtendedMode) {
+      console.log(ascii.replace(/\+/g, '+'.blue).replace(/:/g, ':'.yellow).replace(/'/g, '\''.green).replace(/-/g, '-'.red));
+      console.log('TixInc extended command line interface: Type "?" for a list of available commands or "??" for extended commands.');
+    }
+    else {
+      console.log(ascii);
+      console.log('TixInc command line interface: Type "?" for a list of available commands.');
+    }
   };
 
   this.getPrompt = function () {
     if (that.isExtendedMode) {
-      return 'TIX-' + 'X'.red + '>';
+      return 'TIX'.yellow + '>'.red;
     }
     return 'TIX>';
   };
@@ -602,14 +610,24 @@ function CliAdvanced(args) {
       ],
       "note": "Repository access for TixInc CLI use."
     };
-
-    var cmd = 'curl --user ' + username + ':' + password + ' -X POST  -H "Content-Type: application/json" --data \'' + JSON.stringify(body) + '\' https://api.github.com/authorizations';
+    var data = JSON.stringify(body).replace(/"/g, '\\"');
+    var cmd = 'curl --user ' + username + ':' + password + ' -X POST -H "Content-Type: application/json" -d "' + data + '" https://api.github.com/authorizations';
     exec(cmd, function (err, stdout, stderr) {
+      function printAndExit(error) {
+        console.log(error);
+        console.log('Exiting...');
+        process.exit(1);
+      }
+      if (err) {
+        printAndExit(err);
+      }
+      else if (stdout && stdout.indexOf('Problems parsing JSON') !== -1) {
+        printAndExit(stdout);
+      }
       var res = JSON.parse(stdout);
       var tokenJson = {
         "access_token": res.token
       };
-
       fs.writeFileSync(tokenPath, JSON.stringify(tokenJson, null, 4));
       callbackFn(res.token);
     });
