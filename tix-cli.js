@@ -9,12 +9,13 @@
 
 //** Modify these args to control how the cli works. */
 var config = {
-  base: {
+  platform: getPlatform(),
+  basePath: {
     windows: 'c:',
     linux: process.env['HOME']
   },
+  installPath: 'TixInc',
   path: {
-    installRoot: 'TixInc',
     cliDir: 'TixCli',
     npmDir: 'npm',
     jsDir: 'TixInc.js',
@@ -37,35 +38,43 @@ var config = {
   }
 };
 
-
 var fs = require('fs');
 var join = require('path').join;
 
-//** Gets the platform specific base path for current platform. */
-function getPlatformBase() {
+config.installRoot = join(getPlatformBase(), config.installPath);
+
+function getPlatform() {
   var platform = require('os').platform();
   switch (platform) {
     case 'win32':
     case 'win64':
-      return config.base.windows;
+      return 'windows';
     case 'linux':
     case 'darwin':
     case 'osx':
-      return config.base.linux;
+      return 'linux';
+    default:
+      throw 'Unknown platform [' + platform + '], cannot set base path.';
+  }
+}
+
+//** Gets the platform specific base path for current platform. */
+function getPlatformBase() {
+  switch (getPlatform()) {
+    case 'windows':
+      return config.basePath.windows;
+    case 'linux':
+      return config.basePath.linux;
     default:
       throw 'Unknown platform [' + platform + '], cannot set base path.';
   }
 }
 
 //** Remap install root to absolute path based at the platform specific base path. */
-config.path.installRoot = join(getPlatformBase(), config.path.installRoot);
 
 //** Gets the absolute install root path or a path relative to it if supplied. */
 function getPath(path) {
-  if (path) {
-    return join(config.path.installRoot, path);
-  }
-  return config.path.installRoot;
+  return join(config.installRoot, path);
 }
 
 function getPathStats(path) {
@@ -89,7 +98,7 @@ function dirExists(path) {
  */
 function CliBasic(args) {
   var that = this;
-  var installRoot = getPath();
+  var installRoot = args.installRoot;
   var cliDir = getPath(args.path.cliDir);
   var cliPath = join(cliDir, args.path.cliFile);
   var packagePath = join(cliDir, 'package.json');
@@ -238,14 +247,14 @@ function CliBasic(args) {
  * cli directory.
  * @class
  */
-function CliAdvanced(args, token, controls) {
+function CliAdvanced(args, token) {
   var that = this;
   var sh = require('shelljs');
   var _ = require('lodash');
   require('colors');
 
+  var installRoot = args.installRoot;
   var cliDir = getPath(args.path.cliDir);
-  var cliPath = join(cliDir, args.path.cliFile);
   var automationPath = join(cliDir, 'automation');
   var tokenUrl = 'https://' + token + '@github.com';
   if (dirExists(automationPath)) {
@@ -279,13 +288,6 @@ function CliAdvanced(args, token, controls) {
         process.exit(1);
       }
     }
-  }
-
-  // TODO: FIX THIS ONE
-  function npmDirs() {
-    fs.readdir(getPath(args.path.npmDir + '\\'), function (err, files) {
-      return files;
-    });
   }
 
   function fatal(message) {
@@ -327,10 +329,25 @@ function CliAdvanced(args, token, controls) {
         console.log('The environment is good to go!');
       }
     },
+    'interactive': {
+      alias: 'i',
+      desc: 'Allows CLI to be run interactively even when commands have been passed on command line.',
+      fn: function() {
+        console.log('Running interactively...');
+      }
+    },
+    'ls': {
+      desc: 'Prints contents of install directory (' + installRoot + ').',
+      fn: function() {
+        executeAt(installRoot, function() {
+          exec('ls');
+        });
+      }
+    },
     'clone-npm': {
       desc: 'Clones the TixInc npm modules recursively to ' + getPath(args.path.npmDir) + '.',
       fn: function () {
-        executeAt(getPath(), function () {
+        executeAt(installRoot, function () {
           // clone submodules...
           clone('TixInc/npm');
 
@@ -339,32 +356,33 @@ function CliAdvanced(args, token, controls) {
             // TODO: Remove the token from .gitmodules paths following the change.
             sh.sed('-i', /https:\/\/github\.com/g, tokenUrl, '.gitmodules');
             exec('git submodule update --init --recursive', 'An error occurred recursively pulling submodule dependencies.');
+            sh.sed('-i', /https:\/\/[\w\.]+@github\.com/g, 'https://github.com', '.gitmodules');
           });
         });
       }
     },
     'clone-config': {
-      desc: 'Clones the TixInc npm config module to ' + getPath() + '.',
+      desc: 'Clones the TixInc npm config module to ' + installRoot + '.',
       fn: function () {
-        executeAt(getPath(), function () {
+        executeAt(installRoot, function () {
           // clone config module
           clone('TixInc/config');
         });
       }
     },
     'clone-automation': {
-      desc: 'Clones the TixInc npm automation module to ' + getPath() + '.',
+      desc: 'Clones the TixInc npm automation module to ' + installRoot + '.',
       fn: function () {
-        executeAt(getPath(), function () {
+        executeAt(installRoot, function () {
           // clone automation module
           clone('TixInc/automation');
         });
       }
     },
     'clone-ext': {
-      desc: 'Clones the TixInc npm ext module to ' + getPath() + '.',
+      desc: 'Clones the TixInc npm ext module to ' + installRoot + '.',
       fn: function () {
-        executeAt(getPath(), function () {
+        executeAt(installRoot, function () {
           // clone ext module
           clone('TixInc/ext');
         });
@@ -373,7 +391,7 @@ function CliAdvanced(args, token, controls) {
     'clone-js': {
       desc: 'Clones the TixInc.js module (node.js host and angular app) to ' + getPath('TixInc.js') + '.',
       fn: function () {
-        executeAt(getPath(), function () {
+        executeAt(installRoot, function () {
           clone('TixInc/TixInc.js');
         });
       }
@@ -381,7 +399,7 @@ function CliAdvanced(args, token, controls) {
     'clone-net': {
       desc: 'Clones the TixInc.Net module (web apis and other modern .NET libraries) to ' + getPath('TixInc.Net') + '.',
       fn: function () {
-        executeAt(getPath(), function () {
+        executeAt(installRoot, function () {
           clone('TixInc/TixInc.Net');
         });
       }
@@ -389,20 +407,20 @@ function CliAdvanced(args, token, controls) {
     'clone-classic': {
       desc: 'Clones the TixInc.Classic module (classic asp and web forms projects) to ' + getPath('TixInc.Classic') + '.',
       fn: function () {
-        executeAt(getPath(), function () {
+        executeAt(installRoot, function () {
           clone('TixInc/TixInc.Classic');
         });
       }
     },
     'clone-node': {
-      desc: 'Clones all TixInc modern node libraries (npm and TixInc.js) into ' + getPath() + '.',
+      desc: 'Clones all TixInc modern node libraries (npm and TixInc.js) into ' + installRoot + '.',
       fn: function () {
         that.execCommand('clone-npm');
         that.execCommand('clone-js');
       }
     },
     'clone-modern': {
-      desc: 'Clones all TixInc modern libraries (npm, TixInc.js, and TixInc.Net) into ' + getPath() + '.',
+      desc: 'Clones all TixInc modern libraries (npm, TixInc.js, and TixInc.Net) into ' + installRoot + '.',
       fn: function () {
         that.execCommand('clone-npm');
         that.execCommand('clone-js');
@@ -487,14 +505,14 @@ function CliAdvanced(args, token, controls) {
   this.getAliasStr = function (commandName) {
     var alias = that.getAlias(commandName);
     if (alias) {
-      return '[alias: ' + alias + ']';
+      return '[alias: -' + alias + ']';
     }
     return _.noop();
   };
 
   this.getAlias = function (commandName) {
     var alias = getCommand(commandName).alias;
-    return alias ? '-' + alias : _.noop();
+    return alias ? alias : _.noop();
   };
 
   /** Build alias object for quickly looking up a command by alias. */
@@ -523,22 +541,10 @@ function CliAdvanced(args, token, controls) {
   }
 
   /** Executes a command by full name (e.g. "?") or alias (e.g. "-h"). */
-  this.execCommand = function (name) {
+  this.execCommand = function (name, arg) {
     var cmd = getCommand(name);
     if (cmd) {
-      controls.pause();
-      var result = cmd.fn();
-      if(result && result.then) {
-        result.then(function(res) {
-          controls.resume();
-        }, function(err) {
-          console.log(err);
-          controls.resume();
-        });
-      }
-      else {
-        controls.resume();
-      }
+      return cmd.fn(arg);
     }
     else {
       that.printUnknown();
@@ -572,40 +578,39 @@ function CliAdvanced(args, token, controls) {
 
 /**
  * CliBasicShell for CliShell dependency deployment.
+ * @param config
  * @param args
  * @class
  */
-function CliBasicShell(args) {
-  var cliBasic = new CliBasic(args);
+function CliBasicShell(config, args) {
 
-  var cliDir = getPath(args.path.cliDir);
-  console.log('clidir: ' + cliDir);
-  console.log('__dirname: ' + __dirname);
+  var cliBasic = new CliBasic(config);
+  var cliDir = getPath(config.path.cliDir);
 
   // Clean up previous installation.
-  if (__dirname !== cliDir && args.flags.cleanIfNotCliWorkingDir) {
+  if (__dirname !== cliDir && config.flags.cleanIfNotCliWorkingDir) {
     cliBasic.uninstall();
   }
 
   if (cliBasic.isInstalled()) {
-    return startShell(args);
+    return startShell(config, args);
   }
 
-  var rl = createInterface();
 
   /** Installs basic dependencies and starts the CLI. */
   function installAndStartShell() {
     console.log('Installing to ' + cliDir + '...');
     cliBasic.install();
-    startShell(args);
+    startShell(config, args);
   }
 
   console.log('Basic dependencies must be installed to use tix-cli.  These will be installed to ' + cliDir);
-  if (!args.flags.promptToInstallDependencies) {
+  if (!config.flags.promptToInstallDependencies) {
     console.log('Skipping user confirmation per flag.');
     return installAndStartShell();
   }
 
+  var rl = createInterface();
   rl.question('Would you like to install dependencies (Y/n)?: ', function (answer) {
     if (answer.match(/^y(es)?$/i)) {
       installAndStartShell();
@@ -620,37 +625,40 @@ function CliBasicShell(args) {
 
 /**
  * CliShell for interactive deployment of TixInc apps at command line.
+ * @param config
  * @param args
  * @class
  */
-function CliShell(args) {
-  var Q = require('q');
-
-  var cliDir = getPath(args.path.cliDir);
-  var tokenPath = join(cliDir, args.path.tokenFile);
+function CliShell(config, args) {
+  var _ = require('lodash');
+  var parseArgs = require('minimist');
+  var argv = parseArgs(args);
+  var argCommands = _.omit(argv, '_');
+  var isInteractive = args.length === 0 || argv.i || argv.interactive;
+  var cliDir = getPath(config.path.cliDir);
+  var tokenPath = join(cliDir, config.path.tokenFile);
 
   getToken(init);
 
   function init(token) {
+    var cli = new CliAdvanced(config, token);
+    if(!isInteractive) {
+      _.forEach(argCommands, function(arg, commandName) {
+        execAndHandle(commandName, arg);
+      });
+      return;
+    }
+
     var rl = createInterface();
-    var cli = new CliAdvanced(args, token, {
-      pause: function() {
-        rl.pause();
-      },
-      resume: function() {
-        rl.prompt();
-      }
-    });
-
     cli.printHeader();
-    rl.setPrompt(cli.getPrompt());
-    rl.prompt();
-
+    prompt();
     rl.on('line', function (line) {
       var command = line.trim();
-      cli.execCommand(command);
-      rl.setPrompt(cli.getPrompt());
-      rl.prompt();
+
+      var commandSplit = line.split(' ');
+      var commandName = commandSplit.length > 1 ? commandSplit[0].trim() : command;
+      var arg = commandSplit.length > 1 ? parseArgs(commandSplit.slice(2)) : _.noop();
+      execAndHandle(commandName, arg);
     }).on('close', function () {
       console.log('exit');
       if (__dirname !== cliDir) {
@@ -659,7 +667,29 @@ function CliShell(args) {
       console.log('Goodbye!');
       process.exit(0);
     });
+
+    function execAndHandle(commandName, arg) {
+      rl.pause();
+      var result = cli.execCommand(commandName, arg);
+      if (result && result.then) {
+        result.then(function () {
+          prompt();
+        }, function (err) {
+          console.log(err);
+          prompt();
+        });
+      }
+      else {
+        prompt();
+      }
+    }
+
+    function prompt() {
+      rl.setPrompt(cli.getPrompt());
+      rl.prompt();
+    }
   }
+
 
   function getToken(callbackFn) {
     try {
@@ -726,18 +756,18 @@ function createInterface() {
 }
 
 /** Ensures advanced CLI shell gets started in the cli directory so that npm dependencies will be loadable. */
-function startShell(args) {
-  var cliDir = getPath(args.path.cliDir);
-  var cliPath = join(cliDir, args.path.cliFile);
+function startShell(config, args) {
+  var cliDir = getPath(config.path.cliDir);
+  var cliPath = join(cliDir, config.path.cliFile);
 
   if (cliPath === __filename) {
     console.log('Starting CLI shell...');
-    new CliShell(args);
+    new CliShell(config, args);
   }
   else {
     console.log('Starting CLI shell in CLI directory...');
     var cli = require(cliPath);
-    new cli.CliShell(args);
+    new cli.CliShell(config, args);
   }
 }
 
@@ -769,7 +799,7 @@ exports.CliAdvanced = CliAdvanced;
 if (require.main === module) {
   console.log('CLI MODE');
   // Called via a CLI so we should start the shell load process...
-  new CliBasicShell(config);
+  new CliBasicShell(config, process.argv.slice(2));
 }
 else {
   console.log('REQUIRE MODE');
