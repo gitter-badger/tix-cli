@@ -96,11 +96,11 @@ function dirExists(path) {
  * other automation.
  * @class
  */
-function CliBasic(args) {
+function CliBasic(config) {
   var that = this;
-  var installRoot = args.installRoot;
-  var cliDir = getPath(args.path.cliDir);
-  var cliPath = join(cliDir, args.path.cliFile);
+  var installRoot = config.installRoot;
+  var cliDir = getPath(config.path.cliDir);
+  var cliPath = join(cliDir, config.path.cliFile);
   var packagePath = join(cliDir, 'package.json');
 
   function log(message, source) {
@@ -163,8 +163,8 @@ function CliBasic(args) {
 
   function iterateNpmDependencies(fn) {
     var returns = [];
-    for (var i = 0; i < args.npmDependencies.length; i++) {
-      returns.push(fn(args.npmDependencies[i]));
+    for (var i = 0; i < config.npmDependencies.length; i++) {
+      returns.push(fn(config.npmDependencies[i]));
     }
     return returns;
   }
@@ -247,14 +247,15 @@ function CliBasic(args) {
  * cli directory.
  * @class
  */
-function CliAdvanced(args, token) {
+function CliAdvanced(config, token) {
   var that = this;
   var sh = require('shelljs');
+  sh.config.silent = true;
   var _ = require('lodash');
   require('colors');
 
-  var installRoot = args.installRoot;
-  var cliDir = getPath(args.path.cliDir);
+  var installRoot = config.installRoot;
+  var cliDir = getPath(config.path.cliDir);
   var automationPath = join(cliDir, 'automation');
   var tokenUrl = 'https://' + token + '@github.com';
   if (dirExists(automationPath)) {
@@ -295,8 +296,8 @@ function CliAdvanced(args, token) {
     sh.exit(1);
   }
 
-  function exec(command, error) {
-    if (sh.exec(command).code !== 0) {
+  function exec(command, error, opts) {
+    if (sh.exec(command, opts).code !== 0) {
       if (error) {
         throw error;
       }
@@ -332,20 +333,31 @@ function CliAdvanced(args, token) {
     'interactive': {
       alias: 'i',
       desc: 'Allows CLI to be run interactively even when commands have been passed on command line.',
-      fn: function() {
+      fn: function () {
         console.log('Running interactively...');
+      }
+    },
+    'verbose': {
+      alias: 'v',
+      desc: 'Enables verbose mode which prints underlying output from commands being executed.',
+      fn: function() {
+        sh.config.silent = false;
       }
     },
     'ls': {
       desc: 'Prints contents of install directory (' + installRoot + ').',
-      fn: function() {
-        executeAt(installRoot, function() {
-          exec('ls');
+      fn: function (argv, arg) {
+        executeAt(installRoot, function () {
+          if (arg) {
+            exec('ls ' + arg, 'An error occurred during list directory.', {silent:false});
+          } else {
+            exec('ls', 'An error occurred during list directory.', {silent:false});
+          }
         });
       }
     },
     'clone-npm': {
-      desc: 'Clones the TixInc npm modules recursively to ' + getPath(args.path.npmDir) + '.',
+      desc: 'Clones the TixInc npm modules recursively to ' + getPath(config.path.npmDir) + '.',
       fn: function () {
         executeAt(installRoot, function () {
           // clone submodules...
@@ -454,6 +466,7 @@ function CliAdvanced(args, token) {
           console.log('Already in extended mode.  To see extended mode commands, use "??".');
           return;
         }
+        console.log('Installing extended mode...');
         clone('TixInc/config');
         clone('TixInc/automation');
         clone('TixInc/ext');
@@ -519,13 +532,13 @@ function CliAdvanced(args, token) {
   this.alias = _.chain(that.commands)
     .transform(function (result, n, commandName) {
       if (n.alias) {
-        result['-' + n.alias] = commandName;
+        result[n.alias] = commandName;
       }
     }).value();
 
 
   function getCommand(name) {
-    var command = that.commands[name];
+    var command = that.commands[name] || that.commands[that.alias[name]];
     if (!command) {
       if (that.isExtendedMode) {
         command = that.extCommands[name];
@@ -534,17 +547,14 @@ function CliAdvanced(args, token) {
     if (command) {
       return command;
     }
-    if (_.startsWith(name, '-')) {
-      return getCommand(that.alias[name]);
-    }
     return false;
   }
 
   /** Executes a command by full name (e.g. "?") or alias (e.g. "-h"). */
-  this.execCommand = function (name, arg) {
+  this.execCommand = function (name, argv, args) {
     var cmd = getCommand(name);
     if (cmd) {
-      return cmd.fn(arg);
+      return cmd.fn(argv, args);
     }
     else {
       that.printUnknown();
@@ -642,23 +652,29 @@ function CliShell(config, args) {
 
   function init(token) {
     var cli = new CliAdvanced(config, token);
-    if(!isInteractive) {
-      _.forEach(argCommands, function(arg, commandName) {
-        execAndHandle(commandName, arg);
-      });
+    cli.printHeader();
+
+    _.forEach(argCommands, function (arg, commandName) {
+      execAndHandle(commandName, arg);
+    });
+
+    if (!isInteractive) {
       return;
     }
 
     var rl = createInterface();
-    cli.printHeader();
     prompt();
     rl.on('line', function (line) {
       var command = line.trim();
 
       var commandSplit = line.split(' ');
       var commandName = commandSplit.length > 1 ? commandSplit[0].trim() : command;
-      var arg = commandSplit.length > 1 ? parseArgs(commandSplit.slice(2)) : _.noop();
-      execAndHandle(commandName, arg);
+      var arg = commandSplit.length > 1 ? commandSplit.slice(1).join(' ') : _.noop();
+      if(arg) {
+        execAndHandle(commandName, parseArgs(arg), arg);
+      } else {
+        execAndHandle(commandName);
+      }
     }).on('close', function () {
       console.log('exit');
       if (__dirname !== cliDir) {
@@ -668,9 +684,11 @@ function CliShell(config, args) {
       process.exit(0);
     });
 
-    function execAndHandle(commandName, arg) {
-      rl.pause();
-      var result = cli.execCommand(commandName, arg);
+    function execAndHandle(commandName, argv, arg) {
+      if(rl && isInteractive) {
+        rl.pause();
+      }
+      var result = argv ? cli.execCommand(commandName, argv, arg) : cli.execCommand(commandName);
       if (result && result.then) {
         result.then(function () {
           prompt();
@@ -685,8 +703,10 @@ function CliShell(config, args) {
     }
 
     function prompt() {
-      rl.setPrompt(cli.getPrompt());
-      rl.prompt();
+      if(rl && isInteractive) {
+        rl.setPrompt(cli.getPrompt());
+        rl.prompt();
+      }
     }
   }
 
