@@ -251,7 +251,7 @@ function CliAdvanced(args) {
   this.init = function (callbackFn) {
     getToken(function (accessToken) {
       tokenUrl = 'https://' + accessToken + '@github.com';
-      if(dirExists(automationPath)) {
+      if (dirExists(automationPath)) {
         that.isExtendedMode = true;
       }
       callbackFn();
@@ -434,24 +434,6 @@ function CliAdvanced(args) {
         that.execCommand('npm-link');
       }
     },
-    'start-ec2': {
-      desc: 'Lights up an AWS EC2 instance for testing purposes.',
-      fn: function () {
-
-      }
-    },
-    'deploy-ec2': {
-      desc: 'Deploys to an AWS EC2 instance.',
-      fn: function () {
-
-      }
-    },
-    'easy-ec2': {
-      desc: 'Lights up an AWS EC2 instance and runs easy-setup on that instance.',
-      fn: function () {
-
-      }
-    },
     'extended-mode': {
       alias: {short: 'x', long: 'extend'},
       desc: 'Installs additional TixInc dependencies to cli folder and allows running advanced commands.',
@@ -466,7 +448,8 @@ function CliAdvanced(args) {
         npmLink('./config');
         npmLink('./automation');
         npmLink('./ext');
-        that.extCommands = require('automation/helpers/commander');
+        var CliExtended = require('automation/cli');
+        that.extCommands = (new CliExtended()).commands;
         that.isExtendedMode = true;
         that.printHeader();
       }
@@ -475,18 +458,33 @@ function CliAdvanced(args) {
       alias: {short: 'h', long: 'help'},
       desc: 'Prints information about the available commands.',
       fn: function () {
-        var printCommand = _.template('<%= command %>:<%= alias %> <%= desc %>');
-        _.forEach(that.commands, function (n, key) {
-          var printObj = {
-            command: key,
-            desc: n.desc,
-            alias: that.getAliasStr(key)
-          };
-          console.log(printCommand(printObj));
-        });
+        printCommands(that.commands);
+      }
+    },
+    '??': {
+      desc: 'Prints information about extended commands.',
+      fn: function () {
+        if (that.isExtendedMode) {
+          printCommands(that.extCommands);
+        }
+        else {
+          console.log('Must be in extended mode to print these commands.');
+        }
       }
     }
   };
+
+  function printCommands(commands) {
+    var printCommand = _.template('<%= command %>:<%= alias %> <%= desc %>');
+    _.forEach(commands, function (n, key) {
+      var printObj = {
+        command: key,
+        desc: n.desc,
+        alias: that.getAliasStr(key)
+      };
+      console.log(printCommand(printObj));
+    });
+  }
 
   this.getAliasStr = function (commandName) {
     var short = that.getShortAlias(commandName);
@@ -564,7 +562,7 @@ function CliAdvanced(args) {
   };
 
   this.printHeader = function () {
-    if(that.isExtendedMode) {
+    if (that.isExtendedMode) {
       console.log(ascii.replace(/\+/g, '+'.blue).replace(/:/g, ':'.yellow).replace(/'/g, '\''.green).replace(/-/g, '-'.red));
       console.log('TixInc extended command line interface: Type "?" for a list of available commands or "??" for extended commands.');
     }
@@ -618,6 +616,7 @@ function CliAdvanced(args) {
         console.log('Exiting...');
         process.exit(1);
       }
+
       if (err) {
         printAndExit(err);
       }
