@@ -28,7 +28,8 @@ var config = {
     'shelljs',
     'lodash',
     'colors',
-    'read'
+    'read',
+    'q'
   ],
   flags: {
     cleanIfNotCliWorkingDir: true,
@@ -237,27 +238,19 @@ function CliBasic(args) {
  * cli directory.
  * @class
  */
-function CliAdvanced(args, rlInterface) {
+function CliAdvanced(args, token, controls) {
   var that = this;
-  var rl = rlInterface;
   var sh = require('shelljs');
   var _ = require('lodash');
   require('colors');
 
   var cliDir = getPath(args.path.cliDir);
   var cliPath = join(cliDir, args.path.cliFile);
-  var tokenPath = join(cliDir, args.path.tokenFile);
   var automationPath = join(cliDir, 'automation');
-  var tokenUrl = null;
-  this.init = function (callbackFn) {
-    getToken(function (accessToken) {
-      tokenUrl = 'https://' + accessToken + '@github.com';
-      if (dirExists(automationPath)) {
-        that.isExtendedMode = true;
-      }
-      callbackFn();
-    });
-  };
+  var tokenUrl = 'https://' + token + '@github.com';
+  if (dirExists(automationPath)) {
+    enableExtendedMode();
+  }
 
 
   var ascii = "                                                                           \r\n                                                          `.,:,,`          \r\n                                                  `::::::::::::::::::,     \r\n                                            ::::`          .::::::::::::   \r\n                                         .:,                 :::::::::::   \r\n                                       :`                     ::::::::::   \r\n                                     .                        ,:::::::::   \r\n                                                              :::::::::.   \r\n                                                              :::::::::    \r\n                                      --------:              .::::::::`    \r\n                       `@@@@@@@@      -------;               :::::::::     \r\n                       @@@@@@@@:                                           \r\n                       @@@@@@@@                                            \r\n                   #@@@@@@@@@@@@@@   @@@@@@@@   @@@@@@@#    @@@@@@@'       \r\n                   @@@@@@@@@@@@@@+  '@@@@@@@@    @@@@@@@: ;@@@@@@@         \r\n           +++        @@@@@@@@      @@@@@@@@      @@@@@@@@@@@@@@#    ,##'  \r\n          ''''+      #@@@@@@@'      @@@@@@@@      .@@@@@@@@@@@@`    :++++# \r\n         +''''''    .@@@@@@@@      @@@@@@@@         #@@@@@@@:       ++++++`\r\n         `'''''     @@@@@@@@      @@@@@@@@.       @@@@@@@@@@@       +++++# \r\n          :''+`    `@@@@@@@@      @@@@@@@@      ,@@@@@@@@@@@@@       #++#  \r\n                   `@@@@@@@@      @@@@@@@@'    @@@@@@@@'@@@@@@@            \r\n                    @@@@@@@@@#''' '@@@@@@@@@'@@@@@@@@:  @@@@@@@;           \r\n                      ...........   ................     .......           \r\n                                                                           \r\n                                                      ,,,,,,,,,            \r\n                                                  ::::::::::',             \r\n                   :`                        .::::::::::+:`                \r\n                   :,                     `::::::::::,+:`                  \r\n                  `:;`                 .::::::::::::',`                    \r\n                   :::`            `:::::::::::::+;.                       \r\n                   :::::,`   .::::::::::::::::'',`                         \r\n                    :::::::::::::::::::::::'':`                            \r\n                      `:::::::::::;+;:.`                                   \r\n                          `..,...`                                         \r\n                                                                           ";
@@ -436,7 +429,7 @@ function CliAdvanced(args, rlInterface) {
       }
     },
     'extended-mode': {
-      alias: {short: 'x', long: 'extend'},
+      alias: 'x',
       desc: 'Installs additional TixInc dependencies to cli folder and allows running advanced commands.',
       fn: function () {
         if (that.isExtendedMode) {
@@ -449,14 +442,11 @@ function CliAdvanced(args, rlInterface) {
         npmLink('./config');
         npmLink('./automation');
         npmLink('./ext');
-        var CliExtended = require('automation/cli');
-        that.extCommands = (new CliExtended()).commands;
-        that.isExtendedMode = true;
-        that.printHeader();
+        enableExtendedMode();
       }
     },
     '?': {
-      alias: {short: 'h', long: 'help'},
+      alias: 'h',
       desc: 'Prints information about the available commands.',
       fn: function () {
         printCommands(that.commands);
@@ -475,6 +465,13 @@ function CliAdvanced(args, rlInterface) {
     }
   };
 
+  function enableExtendedMode() {
+    var CliExtended = require('automation/cli');
+    that.extCommands = (new CliExtended()).commands;
+    that.isExtendedMode = true;
+    that.printHeader();
+  }
+
   function printCommands(commands) {
     var printCommand = _.template('<%= command %>:<%= alias %> <%= desc %>');
     _.forEach(commands, function (n, key) {
@@ -488,45 +485,23 @@ function CliAdvanced(args, rlInterface) {
   }
 
   this.getAliasStr = function (commandName) {
-    var short = that.getShortAlias(commandName);
-    var long = that.getLongAlias(commandName);
-    if (short || long) {
-      var str = '[';
-      if (short) {
-        str += short;
-        if (long) {
-          str += ',' + long;
-        }
-      }
-      else {
-        str += 'long';
-      }
-      str += ']';
-      return str;
+    var alias = that.getAlias(commandName);
+    if (alias) {
+      return '[alias: ' + alias + ']';
     }
     return _.noop();
   };
 
-  this.getShortAlias = function (commandName) {
+  this.getAlias = function (commandName) {
     var alias = getCommand(commandName).alias;
-    return alias && alias.short ? '-' + alias.short : _.noop();
-  };
-
-  this.getLongAlias = function (commandName) {
-    var alias = getCommand(commandName).alias;
-    return alias && alias.long ? '--' + alias.long : _.noop();
+    return alias ? '-' + alias : _.noop();
   };
 
   /** Build alias object for quickly looking up a command by alias. */
   this.alias = _.chain(that.commands)
     .transform(function (result, n, commandName) {
       if (n.alias) {
-        if (n.alias.short) {
-          result['-' + n.alias.short] = commandName;
-        }
-        if (n.alias.long) {
-          result['--' + n.alias.long] = commandName;
-        }
+        result['-' + n.alias] = commandName;
       }
     }).value();
 
@@ -547,18 +522,22 @@ function CliAdvanced(args, rlInterface) {
     return false;
   }
 
-  /** Executes a command by full name (e.g. "?"), short alias (e.g. "-h"), or long alias (e.g. "--help"). */
+  /** Executes a command by full name (e.g. "?") or alias (e.g. "-h"). */
   this.execCommand = function (name) {
     var cmd = getCommand(name);
     if (cmd) {
-      if(cmd.async) {
-        rl.pause();
-        cmd.fn(function() {
-          rl.resume();
+      controls.pause();
+      var result = cmd.fn();
+      if(result && result.then) {
+        result.then(function(res) {
+          controls.resume();
+        }, function(err) {
+          console.log(err);
+          controls.resume();
         });
       }
       else {
-        cmd.fn();
+        controls.resume();
       }
     }
     else {
@@ -588,59 +567,7 @@ function CliAdvanced(args, rlInterface) {
     return 'TIX>';
   };
 
-  function getToken(callbackFn) {
-    try {
-      var tokenFile = require('./token');
-      callbackFn(tokenFile.access_token);
-    }
-    catch (e) {
-      var read = require('read');
-      console.log('Your GitHub credentials are required to acquire a GitHub api token.  They will not be saved.');
-      read({prompt: 'Please enter your GitHub username: '}, function (err, username) {
-        read({prompt: 'Please enter your GitHub password: ', silent: true}, function (err, password) {
-          installToken(username, password, callbackFn);
-        });
-      });
-    }
-  }
 
-  function installToken(username, password, callbackFn) {
-    var exec = require('child_process').exec;
-    var clientId = 'eae2d821f84f1bb4ae6f';
-    var clientSecret = 'a097eb9f9e497f03e63af8e775aeabb489246f99';
-
-    var body = {
-      "client_id": clientId,
-      "client_secret": clientSecret,
-      "scopes": [
-        "repo"
-      ],
-      "note": "Repository access for TixInc CLI use."
-    };
-    var data = JSON.stringify(body).replace(/"/g, '\\"');
-    var cmd = 'curl --user ' + username + ':' + password + ' -X POST -H "Content-Type: application/json" -d "' + data + '" https://api.github.com/authorizations';
-    exec(cmd, function (err, stdout, stderr) {
-      function printAndExit(error) {
-        console.log(error);
-        console.log('Exiting...');
-        process.exit(1);
-      }
-
-      if (err) {
-        printAndExit(err);
-      }
-      else if (stdout && stdout.indexOf('Problems parsing JSON') !== -1) {
-        printAndExit(stdout);
-      }
-
-      var res = JSON.parse(stdout);
-      var tokenJson = {
-        "access_token": res.token
-      };
-      fs.writeFileSync(tokenPath, JSON.stringify(tokenJson, null, 4));
-      callbackFn(res.token);
-    });
-  }
 }
 
 /**
@@ -697,34 +624,96 @@ function CliBasicShell(args) {
  * @class
  */
 function CliShell(args) {
-  var rl = createInterface();
-  var cli = new CliAdvanced(args, rl);
-  cli.init(function () {
+  var Q = require('q');
+
+  var cliDir = getPath(args.path.cliDir);
+  var tokenPath = join(cliDir, args.path.tokenFile);
+
+  getToken(init);
+
+  function init(token) {
+    var rl = createInterface();
+    var cli = new CliAdvanced(args, token, {
+      pause: function() {
+        rl.pause();
+      },
+      resume: function() {
+        rl.prompt();
+      }
+    });
+
     cli.printHeader();
     rl.setPrompt(cli.getPrompt());
     rl.prompt();
-
-    function onExit() {
-      var cliDir = getPath(args.path.cliDir);
-      if (__dirname !== cliDir) {
-        console.log('You can delete the current file at ' + __filename + ' and run the CLI in the future from ' + cliDir + ' with "node tix-cli".');
-      }
-      console.log('Goodbye!');
-    }
 
     rl.on('line', function (line) {
       var command = line.trim();
       cli.execCommand(command);
       rl.setPrompt(cli.getPrompt());
       rl.prompt();
-    })
-      .on('close', function () {
-        onExit();
-        process.exit(0);
+    }).on('close', function () {
+      console.log('exit');
+      if (__dirname !== cliDir) {
+        console.log('You can delete the current file at ' + __filename + ' and run the CLI in the future from ' + cliDir + ' with "node tix-cli".');
+      }
+      console.log('Goodbye!');
+      process.exit(0);
+    });
+  }
+
+  function getToken(callbackFn) {
+    try {
+      var tokenFile = require('./token');
+      callbackFn(tokenFile.access_token);
+    }
+    catch (e) {
+      var read = require('read');
+      console.log('Your GitHub credentials are required to acquire a GitHub api token.  They will not be saved.');
+      read({prompt: 'Please enter your GitHub username: '}, function (err, username) {
+        read({prompt: 'Please enter your GitHub password: ', silent: true}, function (err, password) {
+          installToken(username, password, callbackFn);
+        });
       });
-  });
+    }
+  }
 
+  function installToken(username, password, callbackFn) {
+    var exec = require('child_process').exec;
+    var clientId = 'eae2d821f84f1bb4ae6f';
+    var clientSecret = 'a097eb9f9e497f03e63af8e775aeabb489246f99';
 
+    var body = {
+      "client_id": clientId,
+      "client_secret": clientSecret,
+      "scopes": [
+        "repo"
+      ],
+      "note": "Repository access for TixInc CLI use."
+    };
+    var data = JSON.stringify(body).replace(/"/g, '\\"');
+    var cmd = 'curl --user ' + username + ':' + password + ' -X POST -H "Content-Type: application/json" -d "' + data + '" https://api.github.com/authorizations';
+    exec(cmd, function (err, stdout, stderr) {
+      function printAndExit(error) {
+        console.log(error);
+        console.log('Exiting...');
+        process.exit(1);
+      }
+
+      if (err) {
+        printAndExit(err);
+      }
+      else if (stdout && stdout.indexOf('Problems parsing JSON') !== -1) {
+        printAndExit(stdout);
+      }
+
+      var res = JSON.parse(stdout);
+      var tokenJson = {
+        "access_token": res.token
+      };
+      fs.writeFileSync(tokenPath, JSON.stringify(tokenJson, null, 4));
+      callbackFn(res.token);
+    });
+  }
 }
 
 /** Gets a readline (built-in) interface. */
