@@ -11,7 +11,7 @@
         "powershell/tix-cli-dependencies.ps1"
     ],
     "bin": {
-        "tix": "./tix-cli.js"
+        "tix": "./bin/tix.sh"
     },
     "repository": "TixInc/TixCli",
     "keywords": [
