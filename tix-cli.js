@@ -30,7 +30,8 @@ var config = {
     'lodash',
     'colors',
     'read',
-    'q'
+    'q',
+    'ftp'
   ],
   flags: {
     cleanIfNotCliWorkingDir: true,
@@ -296,7 +297,11 @@ function CliAdvanced(config, token) {
     sh.exit(1);
   }
 
-  function exec(command, error, opts) {
+  function exec(command, error, isLoud) {
+    var opts = {silent: !that.isVerbose};
+    if (isLoud) {
+      opts.silent = false;
+    }
     if (sh.exec(command, opts).code !== 0) {
       if (error) {
         throw error;
@@ -340,7 +345,8 @@ function CliAdvanced(config, token) {
     'verbose': {
       alias: 'v',
       desc: 'Enables verbose mode which prints underlying output from commands being executed.',
-      fn: function() {
+      fn: function () {
+        that.isVerbose = true;
         sh.config.silent = false;
       }
     },
@@ -349,9 +355,9 @@ function CliAdvanced(config, token) {
       fn: function (argv, arg) {
         executeAt(installRoot, function () {
           if (arg) {
-            exec('ls ' + arg, 'An error occurred during list directory.', {silent:false});
+            exec('ls ' + arg, 'An error occurred during list directory.', true);
           } else {
-            exec('ls', 'An error occurred during list directory.', {silent:false});
+            exec('ls', 'An error occurred during list directory.', true);
           }
         });
       }
@@ -437,6 +443,102 @@ function CliAdvanced(config, token) {
         that.execCommand('clone-npm');
         that.execCommand('clone-js');
         that.execCommand('clone-net');
+      }
+    },
+    'acpush-repo': {
+      desc: 'Git add and commit a repository in the install directory.',
+      args: {
+        'message': {
+          'alias': 'm',
+          'desc': 'A commit message to use.'
+        },
+        'branch': {
+          'alias': 'b',
+          'desc': 'The branch to push to.',
+          'default': 'master'
+        },
+        'repo': {
+          'alias': 'r',
+          'desc': 'The repository to push.'
+        }
+      },
+      fn: function (argv) {
+        var message = argv.m || argv.message;
+        var branch = argv.b || argv.branch || 'master';
+        executeAt(getPath(argv.repo), function () {
+          console.log('On repository: ' + argv.repo);
+          var commands = [
+            'git add .',
+            'git commit -am ' + message,
+            'git push origin ' + branch
+          ];
+          _.forEach(commands, function (cmd) {
+            console.log(cmd);
+            exec(cmd, 'An error occurred during the add / commit / push operation.', true);
+          });
+        });
+      }
+    },
+    'acpush-automation': {
+      desc: 'Git adds, commits, and pushes automation module.',
+      fn: function (argv) {
+        argv.repo = 'automation';
+        that.execCommand('acpush-repo', argv);
+      }
+    },
+    'acpush-config': {
+      desc: 'Git adds, commits, and pushes config module.',
+      fn: function (argv) {
+        argv.repo = 'config';
+        that.execCommand('acpush-repo', argv);
+      }
+    },
+    'acpush-all': {
+      desc: 'Git adds, commits, and pushes all cloned modules.',
+      fn: function(argv) {
+        that.execCommand('acpush-automation', argv);
+        that.execCommand('acpush-config', argv);
+      }
+    },
+    'pull-repo': {
+      desc: 'Git pulls a repository that has been cloned to the install directory.',
+      args: {
+        'repo': {
+          'alias': 'r',
+          'desc': 'The repo to pull.'
+        },
+        'branch': {
+          'alias': 'b',
+          'desc': 'The branch to pull.',
+          'default': 'master'
+        }
+      },
+      fn: function(argv) {
+        executeAt(getPath(argv.repo), function() {
+          console.log('Pulling repository ' + argv.repo + ' from branch ' + argv.branch + '.');
+          exec('git pull origin ' + argv.branch);
+        });
+      }
+    },
+    'pull-automation': {
+      desc: 'Git pulls automation module.',
+      fn: function(argv) {
+        argv.repo = 'automation';
+        that.execCommand('pull-repo', argv);
+      }
+    },
+    'pull-config': {
+      desc: 'Git pulls config module.',
+      fn: function(argv) {
+        argv.repo = 'config';
+        that.execCommand('pull-repo', argv);
+      }
+    },
+    'pull-all': {
+      desc: 'Git pulls all cloned modules.',
+      fn: function(argv) {
+        that.execCommand('pull-automation', argv);
+        that.execCommand('pull-config', argv);
       }
     },
     'npm-link': {
@@ -552,12 +654,37 @@ function CliAdvanced(config, token) {
 
   /** Executes a command by full name (e.g. "?") or alias (e.g. "-h"). */
   this.execCommand = function (name, argv, args) {
-    var cmd = getCommand(name);
-    if (cmd) {
-      return cmd.fn(argv, args);
+    try {
+      var cmd = getCommand(name);
+      if (cmd) {
+        if (cmd.args) {
+          _.forEach(cmd.args, function (argDef, argName) {
+            // If there is a default specified, set it if not set.
+            if (argDef.default) {
+              argv[argName] = argv[argName] || argDef.default;
+            } else { // Else, coalesce the value and its alias to the value or throw error if its not specified.
+              var argVal = argv[argName] || argv[argDef.alias];
+              if (!argVal) {
+                var error = 'Command ' + name + ' requires parameter --' + argName;
+                if (argDef.alias) {
+                  error += ' or -' + argDef.alias;
+                }
+                error += ' set.';
+                throw error;
+              }
+              argv[argName] = argVal;
+            }
+          });
+        }
+        return cmd.fn(argv, args);
+      }
+      else {
+        that.printUnknown();
+      }
     }
-    else {
-      that.printUnknown();
+    catch(err) {
+      console.log(err);
+      return false;
     }
   };
 
@@ -636,15 +763,15 @@ function CliBasicShell(config, args) {
 /**
  * CliShell for interactive deployment of TixInc apps at command line.
  * @param config
- * @param args
+ * @param mainArgs
  * @class
  */
-function CliShell(config, args) {
+function CliShell(config, mainArgs) {
   var _ = require('lodash');
   var parseArgs = require('minimist');
-  var argv = parseArgs(args);
-  var argCommands = _.omit(argv, '_');
-  var isInteractive = args.length === 0 || argv.i || argv.interactive;
+  var mainArgv = parseArgs(mainArgs);
+  var argCommands = _.omit(mainArgv, '_');
+  var isInteractive = mainArgs.length === 0 || mainArgv.i || mainArgv.interactive;
   var cliDir = getPath(config.path.cliDir);
   var tokenPath = join(cliDir, config.path.tokenFile);
 
@@ -654,8 +781,8 @@ function CliShell(config, args) {
     var cli = new CliAdvanced(config, token);
     cli.printHeader();
 
-    _.forEach(argCommands, function (arg, commandName) {
-      execAndHandle(commandName, arg);
+    _.forEach(argCommands, function (argv, commandName) {
+      execAndHandle(commandName, argv);
     });
 
     if (!isInteractive) {
@@ -667,11 +794,11 @@ function CliShell(config, args) {
     rl.on('line', function (line) {
       var command = line.trim();
 
-      var commandSplit = line.split(' ');
+      var commandSplit = splitArgs(command);
       var commandName = commandSplit.length > 1 ? commandSplit[0].trim() : command;
-      var arg = commandSplit.length > 1 ? commandSplit.slice(1).join(' ') : _.noop();
-      if(arg) {
-        execAndHandle(commandName, parseArgs(arg), arg);
+      var arg = commandSplit.length > 1 ? commandSplit.slice(1) : _.noop();
+      if (arg) {
+        execAndHandle(commandName, parseArgs(arg), arg.join(' '));
       } else {
         execAndHandle(commandName);
       }
@@ -685,10 +812,10 @@ function CliShell(config, args) {
     });
 
     function execAndHandle(commandName, argv, arg) {
-      if(rl && isInteractive) {
+      if (rl && isInteractive) {
         rl.pause();
       }
-      var result = argv ? cli.execCommand(commandName, argv, arg) : cli.execCommand(commandName);
+      var result = argv ? cli.execCommand(commandName, argv, arg) : cli.execCommand(commandName, {});
       if (result && result.then) {
         result.then(function () {
           prompt();
@@ -702,8 +829,13 @@ function CliShell(config, args) {
       }
     }
 
+    /** Splits arguments ignoring quoted content. */
+    function splitArgs(str) {
+      return str.match(/(?:[^\s"]+|"[^"]*")+/g)
+    }
+
     function prompt() {
-      if(rl && isInteractive) {
+      if (rl && isInteractive) {
         rl.setPrompt(cli.getPrompt());
         rl.prompt();
       }
