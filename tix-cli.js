@@ -80,11 +80,6 @@ function toAbsPath(path) {
   return join(config.installRoot, path);
 }
 
-/** Added toAbsPath to string prototype extension to make calling it more readable. */
-String.prototype.toAbsPath = function() {
-  return toAbsPath(this);
-};
-
 /** Get information about a path. */
 function getPathStats(path) {
   return fs.lstatSync(path);
@@ -109,7 +104,7 @@ function dirExists(path) {
 function CliBasic(config) {
   var that = this;
   var installRoot = config.installRoot;
-  var cliDir = config.path.cliDir.toAbsPath();
+  var cliDir = toAbsPath(config.path.cliDir);
   var cliPath = join(cliDir, config.path.cliFile);
   var packagePath = join(cliDir, 'package.json');
 
@@ -265,7 +260,7 @@ function CliAdvanced(config, token) {
   require('colors');
 
   var installRoot = config.installRoot;
-  var cliDir = config.path.cliDir.toAbsPath();
+  var cliDir = toAbsPath(config.path.cliDir);
   var automationPath = join(cliDir, 'automation');
   var tokenUrl = 'https://' + token + '@github.com';
   if (dirExists(automationPath)) {
@@ -645,7 +640,7 @@ function CliAdvanced(config, token) {
       });
     },
     "clone-repo": function (argv) {
-      var cwd = argv['working-dir'].toAbsPath();
+      var cwd = toAbsPath(argv['working-dir']);
       var githubPath = argv['github-path'];
       var localPath = argv['local-path'];
       executeAt(cwd, function () {
@@ -710,7 +705,7 @@ function CliAdvanced(config, token) {
     "acpush-repo": function (argv) {
       var message = argv.m || argv.message;
       var branch = argv.b || argv.branch || 'master';
-      executeAt(argv.repo.toAbsPath(), function () {
+      executeAt(toAbsPath(argv.repo), function () {
         console.log('On repository: ' + argv.repo);
         var commands = [
           'git add .',
@@ -739,7 +734,7 @@ function CliAdvanced(config, token) {
       that.execCommands(argv['acpush-commands'], argv);
     },
     "pull-repo": function (argv) {
-      executeAt(argv.repo.toAbsPath(), function () {
+      executeAt(toAbsPath(argv.repo), function () {
         console.log('Pulling repository ' + argv.repo + ' from branch ' + argv.branch + '.');
         exec('git pull origin ' + argv.branch);
       });
@@ -767,7 +762,7 @@ function CliAdvanced(config, token) {
       that.execCommands(argv['pull-commands'], argv);
     },
     "npm-link": function (argv) {
-      executeAt(argv.module.toAbsPath(), function () {
+      executeAt(toAbsPath(argv.module), function () {
         npmLink(argv.path);
       });
     },
@@ -830,19 +825,18 @@ function CliAdvanced(config, token) {
     that.printHeader();
   }
 
-  /*
   var templateImports = {
     'imports': {
       'toAbsPath': toAbsPath
     }
-  };*/
+  };
 
   function printCommands(commands) {
     var printCommand = _.template('<%= command %>:<%= alias %> <%= desc %>');
     _.forEach(commands, function (n, key) {
       var printObj = {
         command: key,
-        desc: n.desc, //_.template(n.desc, templateImports)(config),
+        desc: _.template(n.desc, templateImports)(config),
         alias: that.getAliasStr(key)
       };
       console.log(printCommand(printObj));
@@ -963,7 +957,7 @@ function CliAdvanced(config, token) {
 function CliBasicShell(config, args) {
 
   var cliBasic = new CliBasic(config);
-  var cliDir = config.path.cliDir.toAbsPath();
+  var cliDir = toAbsPath(config.path.cliDir);
 
   // Clean up previous installation.
   if (__dirname !== cliDir && config.flags.cleanIfNotCliWorkingDir) {
@@ -1014,7 +1008,7 @@ function CliShell(config, mainArgs) {
 
   var argCommands = _.omit(mainArgv, '_');
   var isInteractive = mainArgs.length === 0 || mainArgv.i || mainArgv.interactive;
-  var cliDir = config.path.cliDir.toAbsPath();
+  var cliDir = toAbsPath(config.path.cliDir);
   var tokenPath = join(cliDir, config.path.tokenFile);
 
   getToken(init);
@@ -1155,7 +1149,7 @@ function createInterface() {
 
 /** Ensures advanced CLI shell gets started in the cli directory so that npm dependencies will be loadable. */
 function startShell(config, args) {
-  var cliDir = config.path.cliDir.toAbsPath();
+  var cliDir = toAbsPath(config.path.cliDir);
   var cliPath = join(cliDir, config.path.cliFile);
 
   if (cliPath === __filename) {
