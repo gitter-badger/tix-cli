@@ -80,6 +80,12 @@ function toAbsPath(path) {
   return join(config.installRoot, path);
 }
 
+var templateImports = {
+  'imports': {
+    'toAbsPath': toAbsPath
+  }
+};
+
 /** Get information about a path. */
 function getPathStats(path) {
   return fs.lstatSync(path);
@@ -263,6 +269,7 @@ function CliAdvanced(config, token) {
   var cliDir = toAbsPath(config.path.cliDir);
   var automationPath = join(cliDir, 'automation');
   var tokenUrl = 'https://' + token + '@github.com';
+
   if (dirExists(automationPath)) {
     enableExtendedMode();
   }
@@ -366,7 +373,7 @@ function CliAdvanced(config, token) {
         "working-dir": {
           "alias": "d",
           "desc": "The current working directory relative to install root to execute from.",
-          "nullable": true
+          "default": "<%= installRoot %>"
         }
       }
     },
@@ -640,6 +647,7 @@ function CliAdvanced(config, token) {
       });
     },
     "clone-repo": function (argv) {
+      console.dir(argv);
       var cwd = toAbsPath(argv['working-dir']);
       var githubPath = argv['github-path'];
       var localPath = argv['local-path'];
@@ -825,11 +833,7 @@ function CliAdvanced(config, token) {
     that.printHeader();
   }
 
-  var templateImports = {
-    'imports': {
-      'toAbsPath': toAbsPath
-    }
-  };
+
 
   function printCommands(commands) {
     var printCommand = _.template('<%= command %>:<%= alias %> <%= desc %>');
@@ -889,7 +893,8 @@ function CliAdvanced(config, token) {
     var normalizeArgs = function (argDef, argName) {
       // If there is a default specified, set it if not set.
       if (argDef.default) {
-        argv[argName] = argv[argName] || argDef.default;
+        var def = _.isString(argDef.default) ? _.template(argDef.default, templateImports)(config) : argDef.default;
+        argv[argName] = argv[argName] || def;
       } // Else, coalesce the value and its alias to the value or throw error if its not specified and not nullable.
       else {
         var argVal = argv[argName] || argv[argDef.alias];
