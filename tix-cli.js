@@ -24,7 +24,7 @@ var config = {
     netDir: 'TixInc.Net',
     classicDir: 'TixInc.Classic',
     cliFile: 'tix-cli.js',
-    tokenFile: 'token.json'
+    tokenFile: '.token.json'
   },
   npmDependencies: [
     'minimist',
@@ -1014,7 +1014,7 @@ function CliShell(config, mainArgs) {
   var argCommands = _.omit(mainArgv, '_');
   var isInteractive = mainArgs.length === 0 || mainArgv.i || mainArgv.interactive;
   var cliDir = toAbsPath(config.path.cliDir);
-  var tokenPath = join(cliDir, config.path.tokenFile);
+  var tokenPath = toAbsPath(config.path.tokenFile);
 
   getToken(init);
 
@@ -1090,7 +1090,7 @@ function CliShell(config, mainArgs) {
 
   function getToken(callbackFn) {
     try {
-      var tokenFile = require('./token');
+      var tokenFile = require(tokenPath);
       callbackFn(tokenFile.access_token);
     }
     catch (e) {
