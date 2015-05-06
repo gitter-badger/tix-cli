@@ -326,407 +326,452 @@ function CliAdvanced(config, token) {
 
   this.isExtendedMode = false;
 
-  this.commands = {
-    'is-env-ready': {
-      desc: 'Tests to see whether all required tools have been installed on this system.',
-      fn: function () {
-        if (!sh.which('git')) {
-          fatal('TixInc applications require git installed and in your environment PATH.');
-        }
-        if (!sh.which('npm')) {
-          fatal('TixInc applications requires npm installed and in your environment PATH.');
-        }
-        console.log('The environment is good to go!');
-      }
-    },
-    'interactive': {
-      alias: 'i',
-      desc: 'Allows CLI to be run interactively even when commands have been passed on command line.',
-      fn: function () {
-        console.log('Running interactively...');
-      }
-    },
-    'verbose': {
-      alias: 'v',
-      desc: 'Enables verbose mode which prints underlying output from commands being executed.',
-      fn: function () {
-        that.isVerbose = true;
-        sh.config.silent = false;
-      }
-    },
-    'ls': {
-      desc: 'Prints contents of install directory (' + installRoot + ').',
-      fn: function (argv, arg) {
-        executeAt(installRoot, function () {
-          if (arg) {
-            exec('ls ' + arg, 'An error occurred during list directory.', true);
-          } else {
-            exec('ls', 'An error occurred during list directory.', true);
-          }
-        });
-      }
-    },
-    'clone-repo': {
-      'desc': 'Clones a GitHub repo to install directory or local path.',
-      'args': {
-        'github-path': {
-          'alias': 'g',
-          'desc': 'The github path to the repo (e.g. https://github.com/[github-path].git)'
-        },
-        'local-path': {
-          'alias': 'p',
-          'desc': 'The local path relative to the working directory.',
-          'nullable': true
-        },
-        'working-dir': {
-          'alias': 'd',
-          'desc': 'The current working directory relative to install root to execute from.',
-          'default': ''
-        }
-      },
-      fn: function(argv) {
-        var cwd = getPath(argv['working-dir']);
-        var githubPath = argv['github-path'];
-        var localPath = argv['local-path'];
-        executeAt(cwd, function() {
-          console.log('Cloning ' + githubPath + ' to ' + cwd + '.');
-          clone(githubPath, localPath);
-        });
-      }
-    },
-    'clone-npm': {
-      desc: 'Clones the TixInc npm modules recursively to ' + getPath(config.path.npmDir) + '.',
-      fn: function () {
-        executeAt(installRoot, function () {
-          // clone submodules...
-          clone('TixInc/npm');
 
-          executeAt('npm', function () {
-            // Add token to git urls in file so we can clone them.
-            // TODO: Remove the token from .gitmodules paths following the change.
-            sh.sed('-i', /https:\/\/github\.com/g, tokenUrl, '.gitmodules');
-            exec('git submodule update --init --recursive', 'An error occurred recursively pulling submodule dependencies.');
-            sh.sed('-i', /https:\/\/[\w\.]+@github\.com/g, 'https://github.com', '.gitmodules');
-          });
-        });
-      }
+
+  this.commands = {
+    "is-env-ready": {
+      "desc": "Tests to see whether all required tools have been installed on this system."
     },
-    'clone-config': {
-      desc: 'Clones the TixInc npm config module to ' + installRoot + '.',
-      fn: function () {
-        that.execCommand('clone-repo', {
-          'github-path': 'TixInc/config'
-        });
-      }
+    "interactive": {
+      "alias": "i",
+      "desc": "Allows CLI to be run interactively even when commands have been passed on command line."
     },
-    'clone-automation': {
-      desc: 'Clones the TixInc npm automation module to ' + installRoot + '.',
-      fn: function () {
-        that.execCommand('clone-repo', {
-          'github-path': 'TixInc/automation'
-        });
-      }
+    "verbose": {
+      "alias": "v",
+      "desc": "Enables verbose mode which prints underlying output from commands being executed."
     },
-    'clone-ext': {
-      desc: 'Clones the TixInc npm ext module to ' + installRoot + '.',
-      fn: function () {
-        that.execCommand('clone-repo', {
-          'github-path': 'TixInc/ext'
-        });
-      }
+    "ls": {
+      "desc": "Prints contents of install directory (' + installRoot + ')."
     },
-    'clone-js': {
-      desc: 'Clones the TixInc.js module (node.js host and angular app) to ' + getPath('TixInc.js') + '.',
-      fn: function () {
-        that.execCommand('clone-repo', {
-          'github-path': 'TixInc/TixInc.js'
-        });
-      }
-    },
-    'clone-net': {
-      desc: 'Clones the TixInc.Net module (web apis and other modern .NET libraries) to ' + getPath('TixInc.Net') + '.',
-      fn: function () {
-        that.execCommand('clone-repo', {
-          'github-path': 'TixInc/TixInc.Net'
-        });
-      }
-    },
-    'clone-classic': {
-      desc: 'Clones the TixInc.Classic module (classic asp and web forms projects) to ' + getPath('TixInc.Classic') + '.',
-      fn: function () {
-        that.execCommand('clone-repo', {
-          'github-path': 'TixInc/TixInc.Classic'
-        });
-      }
-    },
-    'clone-node': {
-      desc: 'Clones all TixInc modern node libraries (npm and TixInc.js) into ' + installRoot + '.',
-      fn: function () {
-        that.execCommands(['clone-npm', 'clone-js']);
-      }
-    },
-    'clone-modern': {
-      desc: 'Clones all TixInc modern libraries (npm, TixInc.js, and TixInc.Net) into ' + installRoot + '.',
-      fn: function () {
-        that.execCommands(['clone-npm', 'clone-js', 'clone-net']);
-      }
-    },
-    'clone-cli-src': {
-      desc: 'Clones the TixCli source code to ' + getPath('TixCliSrc') + '.',
-      fn: function () {
-        that.execCommand('clone-repo', {
-          'github-path': 'TixInc/TixCli',
-          'local-path': 'TixCliSrc'
-        });
-      }
-    },
-    'acpush-repo': {
-      desc: 'Git add and commit a repository in the install directory.',
-      args: {
-        'message': {
-          'alias': 'm',
-          'desc': 'A commit message to use.'
+    "clone-repo": {
+      "desc": "Clones a GitHub repo to install directory or local path.",
+      "args": {
+        "github-path": {
+          "alias": "g",
+          "desc": "The github path to the repo (e.g. https://github.com/[github-path].git)"
         },
-        'branch': {
-          'alias': 'b',
-          'desc': 'The branch to push to.',
-          'default': 'master'
+        "local-path": {
+          "alias": "p",
+          "desc": "The local path relative to the working directory.",
+          "nullable": true
         },
-        'repo': {
-          'alias': 'r',
-          'desc': 'The repository to push.'
+        "working-dir": {
+          "alias": "d",
+          "desc": "The current working directory relative to install root to execute from.",
+          "nullable": true
         }
-      },
-      fn: function (argv) {
-        var message = argv.m || argv.message;
-        var branch = argv.b || argv.branch || 'master';
-        executeAt(getPath(argv.repo), function () {
-          console.log('On repository: ' + argv.repo);
-          var commands = [
-            'git add .',
-            'git commit -am ' + message,
-            'git push origin ' + branch
-          ];
-          _.forEach(commands, function (cmd) {
-            console.log(cmd);
-            exec(cmd, 'An error occurred during the add / commit / push operation.', true);
-          });
-        });
       }
     },
-    'acpush-automation': {
-      desc: 'Git adds, commits, and pushes automation module.',
-      fn: function (argv) {
-        argv.repo = 'automation';
-        that.execCommand('acpush-repo', argv);
-      }
+    "clone-npm": {
+      "desc": "Clones the TixInc npm modules recursively to ' + getPath(config.path.npmDir) + '."
     },
-    'acpush-config': {
-      desc: 'Git adds, commits, and pushes config module.',
-      fn: function (argv) {
-        argv.repo = 'config';
-        that.execCommand('acpush-repo', argv);
-      }
+    "clone-config": {
+      "desc": "Clones the TixInc npm config module to ' + installRoot + '."
     },
-    'acpush-cli-src': {
-      desc: 'Git adds, commits, and pushes TixCli source.',
-      fn: function (argv) {
-        argv.repo = 'TixCliSrc';
-        that.execCommand('acpush-repo', argv);
-      }
+    "clone-automation": {
+      "desc": "Clones the TixInc npm automation module to ' + installRoot + '."
     },
-    'acpush-all': {
-      desc: 'Git adds, commits, and pushes all cloned modules.',
-      'args': {
-        'acpush-commands': {
-          'alias': 'p',
-          'desc': 'Array of acpush-commands to run.',
-          'default': ['acpush-automation', 'acpush-config', 'acpush-cli-src']
-        }
-      },
-      fn: function (argv) {
-        that.execCommands(argv['acpush-commands'], argv);
-      }
+    "clone-ext": {
+      "desc": "Clones the TixInc npm ext module to ' + installRoot + '."
     },
-    'pull-repo': {
-      desc: 'Git pulls a repository that has been cloned to the install directory.',
-      args: {
-        'repo': {
-          'alias': 'r',
-          'desc': 'The repo to pull.'
+    "clone-js": {
+      "desc": "Clones the TixInc.js module (node.js host and angular app) to ' + getPath('TixInc.js') + '."
+    },
+    "clone-net": {
+      "desc": "Clones the TixInc.Net module (web apis and other modern .NET libraries) to ' + getPath('TixInc.Net') + '."
+    },
+    "clone-classic": {
+      "desc": "Clones the TixInc.Classic module (classic asp and web forms projects) to ' + getPath('TixInc.Classic') + '."
+    },
+    "clone-node": {
+      "desc": "Clones all TixInc modern node libraries (npm and TixInc.js) into ' + installRoot + '."
+    },
+    "clone-modern": {
+      "desc": "Clones all TixInc modern libraries (npm, TixInc.js, and TixInc.Net) into ' + installRoot + '."
+    },
+    "clone-cli-src": {
+      "desc": "Clones the TixCli source code to ' + getPath('TixCliSrc') + '."
+    },
+    "acpush-repo": {
+      "desc": "Git add and commit a repository in the install directory.",
+      "args": {
+        "message": {
+          "alias": "m",
+          "desc": "A commit message to use."
         },
-        'branch': {
-          'alias': 'b',
-          'desc': 'The branch to pull.',
-          'default': 'master'
-        }
-      },
-      fn: function (argv) {
-        executeAt(getPath(argv.repo), function () {
-          console.log('Pulling repository ' + argv.repo + ' from branch ' + argv.branch + '.');
-          exec('git pull origin ' + argv.branch);
-        });
-      }
-    },
-    'pull-automation': {
-      desc: 'Git pulls automation module.',
-      fn: function (argv) {
-        that.execCommand('pull-repo', {
-          'repo': 'automation',
-          'branch': argv.branch
-        });
-      }
-    },
-    'pull-config': {
-      desc: 'Git pulls config module.',
-      fn: function (argv) {
-        that.execCommand('pull-repo', {
-          'repo': 'config',
-          'branch': argv.branch
-        });
-      }
-    },
-    'pull-cli-src': {
-      desc: 'Git pulls TixCli source module.',
-      fn: function (argv) {
-        argv.repo = 'TixCliSrc';
-        that.execCommand('pull-repo', {
-          'repo': 'TixCliSrc',
-          'branch': argv.branch
-        });
-      }
-    },
-    'pull-all': {
-      desc: 'Git pulls all cloned modules.',
-      args: {
-        'pull-commands': {
-          'alias': 'c',
-          'desc': 'The array of pull commands to issue.',
-          'default': ['pull-automation', 'pull-config', 'pull-cli-src']
-        }
-      },
-      fn: function (argv) {
-        that.execCommands(argv['pull-commands'], argv);
-      }
-    },
-    'npm-link': {
-      desc: 'Links all of the TixInc npm modules to the specified module project for local development.',
-      args: {
-        'module': {
-          'alias': 'm',
-          'desc': 'Module that npm link is running on.'
+        "branch": {
+          "alias": "b",
+          "desc": "The branch to push to.",
+          "default": "master"
         },
-        'path': {
-          'alias': 'p',
-          'desc': 'Path to the module that is being linked.'
+        "repo": {
+          "alias": "r",
+          "desc": "The repository to push."
         }
-      },
-      fn: function (argv) {
-        executeAt(getPath(argv.module), function () {
-          npmLink(argv.path);
-        });
       }
     },
-    'npm-link-modules': {
-      desc: 'Links all the git npm submodules to the module (Defaults to TixInc.js).',
-      overrides: ['npm-link'],
-      args: {
-        'module': {
-          'alias': 'm',
-          'desc': 'Module that npm link is running on.',
-          'default': 'TixInc.js'
+    "acpush-automation": {
+      "desc": "Git adds, commits, and pushes automation module."
+    },
+    "acpush-config": {
+      "desc": "Git adds, commits, and pushes config module."
+    },
+    "acpush-cli-src": {
+      "desc": "Git adds, commits, and pushes TixCli source."
+    },
+    "acpush-all": {
+      "desc": "Git adds, commits, and pushes all cloned modules.",
+      "args": {
+        "acpush-commands": {
+          "alias": "p",
+          "desc": "Array of acpush-commands to run.",
+          "default": ["acpush-automation", "acpush-config", "acpush-cli-src"]
+        }
+      }
+    },
+    "pull-repo": {
+      "desc": "Git pulls a repository that has been cloned to the install directory.",
+      "args": {
+        "repo": {
+          "alias": "r",
+          "desc": "The repo to pull."
         },
-        'paths': {
-          'alias': 'p',
-          'desc': 'Paths that are being npm linked to.',
-          'default': [
-            '../npm/config',
-            '../npm/automation',
-            '../npm/ext',
-            '../npm/client',
-            '../npm/server'
+        "branch": {
+          "alias": "b",
+          "desc": "The branch to pull.",
+          "default": "master"
+        }
+      }
+    },
+    "pull-automation": {
+      "desc": "Git pulls automation module."
+    },
+    "pull-config": {
+      "desc": "Git pulls config module."
+    },
+    "pull-cli-src": {
+      "desc": "Git pulls TixCli source module."
+    },
+    "pull-all": {
+      "desc": "Git pulls all cloned modules.",
+      "args": {
+        "pull-commands": {
+          "alias": "c",
+          "desc": "The array of pull commands to issue.",
+          "default": ["pull-automation", "pull-config", "pull-cli-src"]
+        }
+      }
+    },
+    "npm-link": {
+      "desc": "Links all of the TixInc npm modules to the specified module project for local development.",
+      "args": {
+        "module": {
+          "alias": "m",
+          "desc": "Module that npm link is running on."
+        },
+        "path": {
+          "alias": "p",
+          "desc": "Path to the module that is being linked."
+        }
+      }
+    },
+    "npm-link-modules": {
+      "desc": "Links all the git npm submodules to the module (Defaults to TixInc.js).",
+      "overrides": ["npm-link"],
+      "args": {
+        "module": {
+          "alias": "m",
+          "desc": "Module that npm link is running on.",
+          "default": "TixInc.js"
+        },
+        "paths": {
+          "alias": "p",
+          "desc": "Paths that are being npm linked to.",
+          "default": [
+            "../npm/config",
+            "../npm/automation",
+            "../npm/ext",
+            "../npm/client",
+            "../npm/server"
           ]
         }
-      },
-      fn: function (argv) {
-        _.forEach(argv.paths, function (p) {
-          that.execCommand('npm-link', {path: p, module: argv.module});
-        });
       }
     },
-    'easy-setup': {
-      alias: 's',
-      desc: 'Clones, links, and run tests on all modern repositories and runs tests to ensure they are working.',
-      args: {
-        'commands': {
-          'alias': 'c',
-          'desc': 'Array of commands to run for easy setup.',
-          'default': ['clone-modern', 'npm-link']
+    "easy-setup": {
+      "alias": "s",
+      "desc": "Clones, links, and run tests on all modern repositories and runs tests to ensure they are working.",
+      "args": {
+        "commands": {
+          "alias": "c",
+          "desc": "Array of commands to run for easy setup.",
+          "default": ["clone-modern", "npm-link"]
         }
-      },
-      fn: function (argv) {
-        that.execCommands(argv.commands);
       }
     },
-    'extended-mode': {
-      alias: 'x',
-      desc: 'Installs additional TixInc dependencies to cli directory and allows running advanced commands.',
-      'args': {
-        'clone-paths': {
-          'alias': 'c',
-          'desc': 'Array of GitHub repository paths to clone to cli directory.',
-          'default': ['TixInc/config', 'TixInc/automation', 'TixInc/ext']
+    "extended-mode": {
+      "alias": "x",
+      "desc": "Installs additional TixInc dependencies to cli directory and allows running advanced commands.",
+      "args": {
+        "clone-paths": {
+          "alias": "c",
+          "desc": "Array of GitHub repository paths to clone to cli directory.",
+          "default": ["TixInc/config", "TixInc/automation", "TixInc/ext"]
         },
-        'link-paths': {
-          'alias': 'l',
-          'desc': 'Array of paths to be linked to the TixCli module.',
-          'default': ['./config', './automation', './ext']
+        "link-paths": {
+          "alias": "l",
+          "desc": "Array of paths to be linked to the TixCli module.",
+          "default": ["./config", "./automation", "./ext"]
         }
-      },
-      fn: function (argv) {
-        if (that.isExtendedMode) {
-          console.log('Already in extended mode.  To see extended mode commands, use "??".');
-          return;
-        }
-        console.log('Installing extended mode...');
-
-        console.log('Cloning additional dependencies...');
-        var clonePaths = argv['clone-paths'];
-        _.forEach(clonePaths, function(githubPath) {
-          that.execCommand('clone-repo', {
-            'github-path': githubPath,
-            'working-dir': 'TixCli'
-          });
-        });
-
-        console.log('Linking dependencies...');
-        var linkPaths = argv['link-paths'];
-        that.execCommand('npm-link-modules', {
-          paths: linkPaths,
-          module: 'TixCli'
-        });
-        enableExtendedMode();
       }
     },
-    '?': {
-      alias: 'h',
-      desc: 'Prints information about the available commands.',
-      fn: function () {
-        printCommands(that.commands);
-      }
+    "?": {
+      "alias": "h",
+      "desc": "Prints information about the available commands."
     },
-    '??': {
-      desc: 'Prints information about extended commands.',
-      fn: function () {
-        if (that.isExtendedMode) {
-          printCommands(that.extCommands);
-        }
-        else {
-          console.log('Must be in extended mode to print these commands.');
-        }
-      }
+    "??": {
+      "desc": "Prints information about extended commands."
     }
   };
+
+  function addFn(commandName, fn) {
+    that.commands[commandName].fn = fn;
+  }
+
+  function addFnQ(commandName, fn) {
+    addFn(commandName, function (argv, args) {
+      var deferred = Q.defer();
+      fn(deferred, argv, args);
+      return deferred.promise;
+    });
+  }
+
+  addFn('is-env-ready', function () {
+    if (!sh.which('git')) {
+      fatal('TixInc applications require git installed and in your environment PATH.');
+    }
+    if (!sh.which('npm')) {
+      fatal('TixInc applications requires npm installed and in your environment PATH.');
+    }
+    console.log('The environment is good to go!');
+  });
+
+  addFn('interactive', function () {
+    console.log('Running interactively...');
+  });
+
+  addFn('verbose', function () {
+    that.isVerbose = true;
+    sh.config.silent = false;
+  });
+
+  addFn('ls', function (argv, arg) {
+    executeAt(installRoot, function () {
+      if (arg) {
+        exec('ls ' + arg, 'An error occurred during list directory.', true);
+      } else {
+        exec('ls', 'An error occurred during list directory.', true);
+      }
+    });
+  });
+
+  addFn('clone-repo', function (argv) {
+    var cwd = getPath(argv['working-dir']);
+    var githubPath = argv['github-path'];
+    var localPath = argv['local-path'];
+    executeAt(cwd, function () {
+      console.log('Cloning ' + githubPath + ' to ' + cwd + '.');
+      clone(githubPath, localPath);
+    });
+  });
+
+  addFn('clone-config', function () {
+    that.execCommand('clone-repo', {
+      'github-path': 'TixInc/config'
+    });
+  });
+
+  addFn('clone-automation', function () {
+    that.execCommand('clone-repo', {
+      'github-path': 'TixInc/automation'
+    });
+  });
+
+  addFn('clone-ext', function () {
+    that.execCommand('clone-repo', {
+      'github-path': 'TixInc/ext'
+    });
+  });
+
+  addFn('clone-js', function () {
+    that.execCommand('clone-repo', {
+      'github-path': 'TixInc/TixInc.js'
+    });
+  });
+
+  addFn('clone-net', function () {
+    that.execCommand('clone-repo', {
+      'github-path': 'TixInc/TixInc.Net'
+    });
+  });
+
+  addFn('clone-classic', function () {
+    that.execCommand('clone-repo', {
+      'github-path': 'TixInc/TixInc.Classic'
+    });
+  });
+
+  addFn('clone-node', function () {
+    that.execCommands(['clone-npm', 'clone-js']);
+  });
+
+  addFn('clone-modern', function () {
+    that.execCommands(['clone-npm', 'clone-js', 'clone-net']);
+  });
+
+  addFn('clone-cli-src', function () {
+    that.execCommand('clone-repo', {
+      'github-path': 'TixInc/TixCli',
+      'local-path': 'TixCliSrc'
+    });
+  });
+
+  addFn('clone-npm', function () {
+    executeAt(installRoot, function () {
+      // clone submodules...
+      clone('TixInc/npm');
+
+      executeAt('npm', function () {
+        // Add token to git urls in file so we can clone them.
+        // TODO: Remove the token from .gitmodules paths following the change.
+        sh.sed('-i', /https:\/\/github\.com/g, tokenUrl, '.gitmodules');
+        exec('git submodule update --init --recursive', 'An error occurred recursively pulling submodule dependencies.');
+        sh.sed('-i', /https:\/\/[\w\.]+@github\.com/g, 'https://github.com', '.gitmodules');
+      });
+    });
+  });
+
+  addFn('acpush-repo', function (argv) {
+    var message = argv.m || argv.message;
+    var branch = argv.b || argv.branch || 'master';
+    executeAt(getPath(argv.repo), function () {
+      console.log('On repository: ' + argv.repo);
+      var commands = [
+        'git add .',
+        'git commit -am ' + message,
+        'git push origin ' + branch
+      ];
+      _.forEach(commands, function (cmd) {
+        console.log(cmd);
+        exec(cmd, 'An error occurred during the add / commit / push operation.', true);
+      });
+    });
+  });
+
+  addFn('acpush-automation', function (argv) {
+    argv.repo = 'automation';
+    that.execCommand('acpush-repo', argv);
+  });
+
+  addFn('acpush-config', function (argv) {
+    argv.repo = 'config';
+    that.execCommand('acpush-repo', argv);
+  });
+
+  addFn('acpush-cli-src', function (argv) {
+    argv.repo = 'TixCliSrc';
+    that.execCommand('acpush-repo', argv);
+  });
+
+  addFn('acpush-all', function (argv) {
+    that.execCommands(argv['acpush-commands'], argv);
+  });
+
+  addFn('pull-repo', function (argv) {
+    executeAt(getPath(argv.repo), function () {
+      console.log('Pulling repository ' + argv.repo + ' from branch ' + argv.branch + '.');
+      exec('git pull origin ' + argv.branch);
+    });
+  });
+
+  addFn('pull-automation', function (argv) {
+    that.execCommand('pull-repo', {
+      'repo': 'automation',
+      'branch': argv.branch
+    });
+  });
+
+  addFn('pull-config', function (argv) {
+    that.execCommand('pull-repo', {
+      'repo': 'config',
+      'branch': argv.branch
+    });
+  });
+
+  addFn('pull-cli-src', function (argv) {
+    argv.repo = 'TixCliSrc';
+    that.execCommand('pull-repo', {
+      'repo': 'TixCliSrc',
+      'branch': argv.branch
+    });
+  });
+
+  addFn('pull-all', function (argv) {
+    that.execCommands(argv['pull-commands'], argv);
+  });
+
+  addFn('npm-link', function (argv) {
+    executeAt(getPath(argv.module), function () {
+      npmLink(argv.path);
+    });
+  });
+
+  addFn('npm-link-modules', function (argv) {
+    _.forEach(argv.paths, function (p) {
+      that.execCommand('npm-link', {path: p, module: argv.module});
+    });
+  });
+
+  addFn('easy-setup', function (argv) {
+    that.execCommands(argv.commands);
+  });
+
+  addFn('extended-mode', function (argv) {
+    if (that.isExtendedMode) {
+      console.log('Already in extended mode.  To see extended mode commands, use "??".');
+      return;
+    }
+    console.log('Installing extended mode...');
+
+    console.log('Cloning additional dependencies...');
+    var clonePaths = argv['clone-paths'];
+    _.forEach(clonePaths, function (githubPath) {
+      that.execCommand('clone-repo', {
+        'github-path': githubPath,
+        'working-dir': 'TixCli'
+      });
+    });
+
+    console.log('Linking dependencies...');
+    var linkPaths = argv['link-paths'];
+    that.execCommand('npm-link-modules', {
+      paths: linkPaths,
+      module: 'TixCli'
+    });
+    enableExtendedMode();
+  });
+
+  addFn('?', function () {
+    printCommands(that.commands);
+  });
+
+  addFn('??', function () {
+    if (that.isExtendedMode) {
+      printCommands(that.extCommands);
+    }
+    else {
+      console.log('Must be in extended mode to print these commands.');
+    }
+  });
 
   function enableExtendedMode() {
     var CliExtended = require('automation/cli');
@@ -783,14 +828,14 @@ function CliAdvanced(config, token) {
   }
 
   this.execCommands = function (names, argv, args) {
-    _.forEach(names, function(name) {
+    _.forEach(names, function (name) {
       that.execCommand(name, argv, args);
     });
   };
 
   /** Executes a command by full name (e.g. "?") or alias (e.g. "-h"). */
   this.execCommand = function (name, argv, args) {
-    var normalizeArgs = function(argDef, argName) {
+    var normalizeArgs = function (argDef, argName) {
       // If there is a default specified, set it if not set.
       if (argDef.default) {
         argv[argName] = argv[argName] || argDef.default;
@@ -826,8 +871,6 @@ function CliAdvanced(config, token) {
       return false;
     }
   };
-
-
 
   this.printUnknown = function () {
     console.log('You must supply a valid command.  For a list of commands use "?".');
@@ -924,7 +967,7 @@ function CliShell(config, mainArgs) {
     cli.printHeader();
 
     _.forEach(argCommands, function (argv, commandName) {
-      if(argv === true) {
+      if (argv === true) {
         execAndHandle(commandName);
       } else {
         execAndHandle(commandName, argv);
