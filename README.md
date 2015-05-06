@@ -91,3 +91,7 @@ The TixCli by default gets installed to `C:\TixInc\TixCli` directory on Windows 
 
 
 After the initial install, the CLI may be run again at any time by navigating your shell of choice to the TixCli directory and run `node tix-cli`.
+
+Below are some of the supported commands by TixCli: ->
+
+[TixCli Solarized](https://raw.githubusercontent.com/TixInc/TixCli/master/img/cli-solarized-dark.png)
