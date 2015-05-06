@@ -830,18 +830,19 @@ function CliAdvanced(config, token) {
     that.printHeader();
   }
 
+  /*
   var templateImports = {
     'imports': {
       'toAbsPath': toAbsPath
     }
-  };
+  };*/
 
   function printCommands(commands) {
     var printCommand = _.template('<%= command %>:<%= alias %> <%= desc %>');
     _.forEach(commands, function (n, key) {
       var printObj = {
         command: key,
-        desc: _.template(n.desc, templateImports)(config),
+        desc: n.desc, //_.template(n.desc, templateImports)(config),
         alias: that.getAliasStr(key)
       };
       console.log(printCommand(printObj));
