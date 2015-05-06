@@ -60,12 +60,13 @@ The CLI can be modified by changing the config object literal at the top of the 
 
 ```js
 var config = {
-  base: {
-    windows: 'C:',
+  platform: getPlatform(),
+  basePath: {
+    windows: 'c:',
     linux: process.env['HOME']
   },
+  installPath: 'TixInc',
   path: {
-    installRoot: 'TixInc',
     cliDir: 'TixCli',
     npmDir: 'npm',
     jsDir: 'TixInc.js',
@@ -75,10 +76,13 @@ var config = {
     tokenFile: 'token.json'
   },
   npmDependencies: [
-  'minimist',
-  'shelljs',
-  'lodash',
-  'colors'
+    'minimist',
+    'shelljs',
+    'lodash',
+    'colors',
+    'read',
+    'q',
+    'ftp'
   ],
   flags: {
     cleanIfNotCliWorkingDir: true,
