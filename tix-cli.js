@@ -542,7 +542,7 @@ function CliAdvanced(config, token) {
         "commands": {
           "alias": "c",
           "desc": "Array of commands to run for easy setup.",
-          "default": ["clone-modern", "npm-link"]
+          "default": ["clone-modern", "npm-link-modules"]
         }
       }
     },
