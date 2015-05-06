@@ -1,63 +1,63 @@
 {
-    "name": "tix-cli",
-    "version": "1.0.2",
-    "main": "tix-cli.js",
-    "description": "Command line interface to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.",
-    "files": [
-        "tix-cli.js",
-        "README.md",
-        "bin/tix.sh",
-        "oneliners/tix-cli-install.cmd",
-        "oneliners/tix-cli-install.sh",
-        "powershell/tix-cli-dependencies.ps1"
-    ],
-    "bin": {
-        "tix": "./bin/tix.sh"
+  "name": "tix-cli",
+  "version": "1.0.3",
+  "main": "tix-cli.js",
+  "description": "Command line interface to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.",
+  "files": [
+    "tix-cli.js",
+    "README.md",
+    "bin/tix.sh",
+    "oneliners/tix-cli-install.cmd",
+    "oneliners/tix-cli-install.sh",
+    "powershell/tix-cli-dependencies.ps1"
+  ],
+  "bin": {
+    "tix": "./bin/tix.sh"
+  },
+  "repository": "TixInc/TixCli",
+  "keywords": [
+    "TixInc",
+    "TixCli"
+  ],
+  "homepage": "http://tixinc.github.io/TixCli/",
+  "bugs": "https://github.com/TixInc/TixCli/issues",
+  "directories": {
+    "doc": "./doc",
+    "man": "./man"
+  },
+  "contributors": [
+    {
+      "name": "Cole Chamberlain",
+      "email": "cole.chamberlain@gmail.com",
+      "url": "https://github.com/cchamberlain"
     },
-    "repository": "TixInc/TixCli",
-    "keywords": [
-        "TixInc",
-        "TixCli"
-    ],
-    "homepage": "http://tixinc.github.io/TixCli/",
-    "bugs": "https://github.com/TixInc/TixCli/issues",
-    "directories": {
-        "doc": "./doc",
-        "man": "./man"
+    {
+      "name": "Joe Iacoponi",
+      "email": "joe.iacoponi@tix.com",
+      "url": "https://github.com/joeiacoponi"
     },
-    "contributors": [
-        {
-            "name": "Cole Chamberlain",
-            "email": "cole.chamberlain@gmail.com",
-            "url": "https://github.com/cchamberlain"
-        },
-        {
-            "name": "Joe Iacoponi",
-            "email": "joe.iacoponi@tix.com",
-            "url": "https://github.com/joeiacoponi"
-        },
-        {
-            "name": "Robert Edmison",
-            "email": "robert.edmison@tix.com",
-            "url": "https://github.com/RobertTix"
-        }
-    ],
-    "scripts": {
-        "test": "tape test/*.js"
-    },
-    "devDependencies": {
-        "tape": "^4.0.0"
-    },
-    "dependencies": {
-        "colors": "^1.1.0",
-        "lodash": "^3.8.0",
-        "minimist": "^1.1.1",
-        "shelljs": "^0.4.0"
-    },
-    "os": [
-        "win32",
-        "darwin",
-        "linux"
-    ],
-    "preferGlobal": true
+    {
+      "name": "Robert Edmison",
+      "email": "robert.edmison@tix.com",
+      "url": "https://github.com/RobertTix"
+    }
+  ],
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "devDependencies": {
+    "tape": "^4.0.0"
+  },
+  "dependencies": {
+    "colors": "^1.1.0",
+    "lodash": "^3.8.0",
+    "minimist": "^1.1.1",
+    "shelljs": "^0.4.0"
+  },
+  "os": [
+    "win32",
+    "darwin",
+    "linux"
+  ],
+  "preferGlobal": true
 }
