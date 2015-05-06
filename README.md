@@ -94,4 +94,4 @@ After the initial install, the CLI may be run again at any time by navigating yo
 
 Below are some of the supported commands by TixCli: ->
 
-[TixCli Solarized](https://raw.githubusercontent.com/TixInc/TixCli/master/img/cli-solarized-dark.png)
+![TixCli Solarized](https://raw.githubusercontent.com/TixInc/TixCli/master/img/cli-solarized-dark.png)
