@@ -647,8 +647,7 @@ function CliAdvanced(config, token) {
       });
     },
     "clone-repo": function (argv) {
-      console.dir(argv);
-      var cwd = toAbsPath(argv['working-dir']);
+      var cwd = argv['working-dir'];
       var githubPath = argv['github-path'];
       var localPath = argv['local-path'];
       executeAt(cwd, function () {
