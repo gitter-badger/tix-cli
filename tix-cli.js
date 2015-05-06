@@ -386,8 +386,11 @@ function CliAdvanced(config, token) {
       },
       fn: function(argv) {
         var cwd = getPath(argv['working-dir']);
+        var githubPath = argv['github-path'];
+        var localPath = argv['local-path'];
         executeAt(cwd, function() {
-          clone(argv['github-path'], argv['local-path']);
+          console.log('Cloning ' + githubPath + ' to ' + cwd + '.');
+          clone(githubPath, localPath);
         });
       }
     },
@@ -534,8 +537,15 @@ function CliAdvanced(config, token) {
     },
     'acpush-all': {
       desc: 'Git adds, commits, and pushes all cloned modules.',
+      'args': {
+        'acpush-commands': {
+          'alias': 'p',
+          'desc': 'Array of acpush-commands to run.',
+          'default': ['acpush-automation', 'acpush-config', 'acpush-cli-src']
+        }
+      },
       fn: function (argv) {
-        that.execCommands(['acpush-automation', 'acpush-config', 'acpush-cli-src'], argv);
+        that.execCommands(argv['acpush-commands'], argv);
       }
     },
     'pull-repo': {
@@ -611,7 +621,7 @@ function CliAdvanced(config, token) {
           'desc': 'Path to the module that is being linked.'
         }
       },
-      fn: function () {
+      fn: function (argv) {
         executeAt(getPath(argv.module), function () {
           npmLink(argv.path);
         });
@@ -681,20 +691,18 @@ function CliAdvanced(config, token) {
         console.log('Installing extended mode...');
 
         console.log('Cloning additional dependencies...');
-        _.forEach(argv['clone-paths'], function(path) {
+        var clonePaths = argv['clone-paths'];
+        _.forEach(clonePaths, function(githubPath) {
           that.execCommand('clone-repo', {
-            'github-path': path,
+            'github-path': githubPath,
             'working-dir': 'TixCli'
           });
         });
 
         console.log('Linking dependencies...');
+        var linkPaths = argv['link-paths'];
         that.execCommand('npm-link-modules', {
-          paths: [
-            './config',
-            './automation',
-            './ext'
-          ],
+          paths: linkPaths,
           module: 'TixCli'
         });
         enableExtendedMode();
@@ -782,7 +790,7 @@ function CliAdvanced(config, token) {
 
   /** Executes a command by full name (e.g. "?") or alias (e.g. "-h"). */
   this.execCommand = function (name, argv, args) {
-    function normalizeArgs(argDef, argName) {
+    var normalizeArgs = function(argDef, argName) {
       // If there is a default specified, set it if not set.
       if (argDef.default) {
         argv[argName] = argv[argName] || argDef.default;
@@ -799,7 +807,7 @@ function CliAdvanced(config, token) {
         }
         argv[argName] = argVal;
       }
-    }
+    };
 
     try {
       var cmd = getCommand(name);
@@ -903,6 +911,7 @@ function CliShell(config, mainArgs) {
   var _ = require('lodash');
   var parseArgs = require('minimist');
   var mainArgv = parseArgs(mainArgs);
+
   var argCommands = _.omit(mainArgv, '_');
   var isInteractive = mainArgs.length === 0 || mainArgv.i || mainArgv.interactive;
   var cliDir = getPath(config.path.cliDir);
@@ -915,7 +924,11 @@ function CliShell(config, mainArgs) {
     cli.printHeader();
 
     _.forEach(argCommands, function (argv, commandName) {
-      execAndHandle(commandName, argv);
+      if(argv === true) {
+        execAndHandle(commandName);
+      } else {
+        execAndHandle(commandName, argv);
+      }
     });
 
     if (!isInteractive) {
