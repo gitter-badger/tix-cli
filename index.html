@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="TixCli : Command line interface to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>TixCli</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/TixInc/TixCli">View on GitHub</a>
+
+          <h1 id="project_title">TixCli</h1>
+          <h2 id="project_tagline">Command line interface to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/TixInc/TixCli/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/TixInc/TixCli/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="tixcli" class="anchor" href="#tixcli" aria-hidden="true"><span class="octicon octicon-link"></span></a>TixCli</h1>
+
+<p>TixCli is a <a href="http://en.wikipedia.org/wiki/Command-line_interface">command line interface</a> to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.</p>
+
+<p><img src="img/cli-solarized-dark.png" alt="TixCli Solarized"></p>
+
+<h3>
+<a id="table-of-contents" class="anchor" href="#table-of-contents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Table of Contents</h3>
+
+<ul>
+<li>
+<a href="#setup">Setup</a>
+
+<ul>
+<li><a href="#windows-setup">Windows</a></li>
+<li><a href="#linux-osx-setup">Linux / OSX</a></li>
+<li><a href="#any-os-setup">Any OS</a></li>
+</ul>
+</li>
+<li><a href="#usage">Usage</a></li>
+</ul>
+
+<hr>
+
+<h1>
+<a id="setup-" class="anchor" href="#setup-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup <a id="setup"></a>
+</h1>
+
+<ul>
+<li><p>The TixCli and other TixInc applications require Git and Node.js on the local machine.  If the machine does not yet have these dependencies, jump to the OS specific section (<a href="#windows-setup">Windows</a> or <a href="linux-osx-setup">Linux / OSX</a>) and run the oneliner. You will be prompted to enter a username and password so that the TixCli can acquire a GitHub api token to use on your behalf.</p></li>
+<li><p>If the local machine already has Git and Node.js, jump to the <a href="#any-os-setup">Any OS</a> section and run the oneliner in a shell.</p></li>
+</ul>
+
+<h4>
+<a id="windows-" class="anchor" href="#windows-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Windows <a id="windows-setup"></a>
+</h4>
+
+<p>Copy/paste the oneliner below into Administrator command prompt to get Git / Node.js and TixCli installed:</p>
+
+<div class="highlight highlight-cmd"><pre>@powershell -NoProfile -ExecutionPolicy unrestricted -Command <span class="pl-s"><span class="pl-pds">"</span>iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/TixCli/master/powershell/tix-cli-dependencies.ps1'))</span></pre></div>
+
+<h4>
+<a id="linux--osx-" class="anchor" href="#linux--osx-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linux / OSX <a id="linux-osx-setup"></a>
+</h4>
+
+<p>Instructions coming soon...</p>
+
+<h4>
+<a id="any-os-" class="anchor" href="#any-os-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Any OS <a id="any-os-setup"></a>
+</h4>
+
+<p>If Git and Node.js are installed on the local machine, run this oneliner at git bash or linux shell to install the CLI:</p>
+
+<div class="highlight highlight-sh"><pre>curl https://raw.githubusercontent.com/TixInc/TixCli/master/tix-cli.js <span class="pl-k">&gt;</span> tix-cli.js <span class="pl-k">&amp;&amp;</span> node tix-cli</pre></div>
+
+<hr>
+
+<h1>
+<a id="usage-" class="anchor" href="#usage-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage <a id="usage"></a>
+</h1>
+
+<p>After running the setup steps above, you should eventually be prompted with a command prompt "TIX&gt;" which means the CLI has been setup and is ready to use.  You can use the command "?" to list basic information about all the supported commands.</p>
+
+<p>The CLI can be modified by changing the config object literal at the top of the tix-cli.js file.  The default uses this configuration:</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> config <span class="pl-k">=</span> {
+  base<span class="pl-k">:</span> {
+    windows<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>C:<span class="pl-pds">'</span></span>,
+    linux<span class="pl-k">:</span> <span class="pl-c1">process</span>.env[<span class="pl-s"><span class="pl-pds">'</span>HOME<span class="pl-pds">'</span></span>]
+  },
+  path<span class="pl-k">:</span> {
+    installRoot<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>TixInc<span class="pl-pds">'</span></span>,
+    cliDir<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>TixCli<span class="pl-pds">'</span></span>,
+    npmDir<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>npm<span class="pl-pds">'</span></span>,
+    jsDir<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>TixInc.js<span class="pl-pds">'</span></span>,
+    netDir<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>TixInc.Net<span class="pl-pds">'</span></span>,
+    classicDir<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>TixInc.Classic<span class="pl-pds">'</span></span>,
+    cliFile<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>tix-cli.js<span class="pl-pds">'</span></span>,
+    tokenFile<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>token.json<span class="pl-pds">'</span></span>
+  },
+  npmDependencies<span class="pl-k">:</span> [
+  <span class="pl-s"><span class="pl-pds">'</span>minimist<span class="pl-pds">'</span></span>,
+  <span class="pl-s"><span class="pl-pds">'</span>shelljs<span class="pl-pds">'</span></span>,
+  <span class="pl-s"><span class="pl-pds">'</span>lodash<span class="pl-pds">'</span></span>,
+  <span class="pl-s"><span class="pl-pds">'</span>colors<span class="pl-pds">'</span></span>
+  ],
+  flags<span class="pl-k">:</span> {
+    cleanIfNotCliWorkingDir<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    promptToInstallDependencies<span class="pl-k">:</span> <span class="pl-c1">false</span>
+  }
+};</pre></div>
+
+<p>The TixCli by default gets installed to <code>C:\TixInc\TixCli</code> directory on Windows and <code>~/TixInc/TixCli</code> on Linux / OSX.  Other TixInc applications will get installed by TixCli to the TixInc directory for the respective platform.</p>
+
+<p>After the initial install, the CLI may be run again at any time by navigating your shell of choice to the TixCli directory and run <code>node tix-cli</code>.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">TixCli maintained by <a href="https://github.com/TixInc">TixInc</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
