@@ -775,8 +775,9 @@ function CliAdvanced(config, token) {
       executeAt(toAbsPath(argv.repo), function () {
         exec('npm version patch', 'Error patching version.', true);
         exec('npm publish', 'Error publishing.', true);
+        exec('git push origin master');
       });
-      that.execCommand('acpush-repo', argv);
+      //that.execCommand('acpush-repo', argv);
     },
     "acpush-all": function (argv) {
       that.execCommands(argv['acpush-commands'], argv);
