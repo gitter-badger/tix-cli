@@ -574,6 +574,10 @@ function CliAdvanced(config, token) {
         }
       }
     },
+    "uninstall-extended": {
+      "desc": "Uninstalls extended module.",
+      "category": "utility"
+    },
     "upgrade": {
       "desc": "Upgrades tix-cli to latest source control in master branches.",
       "category": "utility"
