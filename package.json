@@ -1,6 +1,6 @@
 {
   "name": "tix-cli",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "main": "tix-cli.js",
   "description": "Command line interface to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.",
   "files": [
