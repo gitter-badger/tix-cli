@@ -1,2 +1,2 @@
 echo "Executing tix-cli..."
-node ../tix-cli
+node ~/TixInc/TixCli/tix-cli
