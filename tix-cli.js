@@ -270,6 +270,7 @@ function CliAdvanced(config, token) {
   var automationPath = join(cliDir, 'automation');
   var tokenUrl = 'https://' + token + '@github.com';
 
+  this.isExtendedMode = false;
   if (dirExists(automationPath)) {
     enableExtendedMode();
   }
@@ -330,28 +331,6 @@ function CliAdvanced(config, token) {
     log('Successfully cloned: ' + githubPath, 'clone');
   }
 
-  function bashConfig() {
-    if (getPlatform() === 'windows') {
-      executeAt(process.env['HOME'], function () {
-        console.log('Configuring path on windows to store npm global modules in user directory.');
-        var cmd = 'PATH=$PATH:$HOME/npm';
-        exec(cmd);
-        exec('echo ' + cmd + ' > .bashrc');
-      });
-    } else {
-      console.log('Not windows, skipping bash config.');
-    }
-  }
-
-  function npmConfig() {
-    if (getPlatform() === 'windows') {
-      console.log('Configuring npm to store global modules at ~/npm');
-      exec('npm config set prefix ')
-    } else {
-      console.log('Not windows, skipping npm config.');
-    }
-  }
-
   function npmLink(path) {
     exec('npm link ' + path, 'An error occurred linking ' + path + '.', true);
     log('Successfully linked: ' + path, 'npmLink');
@@ -362,7 +341,6 @@ function CliAdvanced(config, token) {
     log('Successfully installed.', 'npmInstall');
   }
 
-  this.isExtendedMode = false;
 
   /** Definitions for all commands supported by CliExtended interface. */
   this.commands = {
@@ -595,6 +573,10 @@ function CliAdvanced(config, token) {
           "default": "TixInc.js"
         }
       }
+    },
+    "upgrade": {
+      "desc": "Upgrades tix-cli to latest source control in master branches.",
+      "category": "utility"
     },
     "extended-mode": {
       "alias": "x",
@@ -844,6 +826,21 @@ function CliAdvanced(config, token) {
         //exec('gulp debug', 'Error occurred during gulp debug.', true);
         exec('node bin/www');
       });
+    },
+    "uninstall-extended": function() {
+      if (that.isExtendedMode) {
+        executeAt(cliDir, function() {
+          var cliBasic = new CliBasic(config);
+          cliBasic.rmDir('automation');
+          cliBasic.rmDir('config');
+          cliBasic.rmDir('ext');
+          that.isExtendedMode = false;
+        });
+      }
+    },
+    "upgrade": function () {
+      that.execCommand("uninstall-extended");
+      that.execCommand("extended-mode");
     },
     "extended-mode": function (argv) {
       if (that.isExtendedMode) {
