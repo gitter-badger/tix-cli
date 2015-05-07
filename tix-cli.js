@@ -779,7 +779,7 @@ function CliAdvanced(config, token) {
       });
     },
     "easy-setup": function (argv) {
-      that.execCommands(argv.commands);
+      that.execCommands(argv.commands, argv);
     },
     "extended-mode": function (argv) {
       if (that.isExtendedMode) {
