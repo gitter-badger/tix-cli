@@ -772,7 +772,7 @@ function CliAdvanced(config, token) {
     "acpush-cli-src": function (argv) {
       argv.repo = 'TixCliSrc';
       that.execCommand('acpush-repo', argv);
-      executeAt(toAbsPath(argv.repo), function() {
+      executeAt(toAbsPath(argv.repo), function () {
         exec('npm version patch', 'Error patching version.', true);
         exec('npm publish', 'Error publishing.', true);
       });
@@ -836,15 +836,15 @@ function CliAdvanced(config, token) {
         exec('node bin/www');
       });
     },
-    "uninstall-extended": function() {
+    "uninstall-extended": function () {
       if (that.isExtendedMode) {
-        executeAt(cliDir, function() {
-          var cliBasic = new CliBasic(config);
+        var cliBasic = new CliBasic(config);
+        executeAt(cliDir, function () {
           cliBasic.rmDir('automation');
           cliBasic.rmDir('config');
           cliBasic.rmDir('ext');
-          that.isExtendedMode = false;
         });
+        that.isExtendedMode = false;
       }
     },
     "upgrade": function () {
@@ -862,7 +862,7 @@ function CliAdvanced(config, token) {
       _.forEach(clonePaths, function (githubPath) {
         that.execCommand('clone-repo', {
           'github-path': githubPath,
-          'working-dir': 'TixCli'
+          'working-dir': toAbsPath('TixCli')
         });
       });
       console.log('Linking dependencies...');
