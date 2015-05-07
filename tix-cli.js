@@ -1158,6 +1158,7 @@ function CliShell(config, mainArgs) {
       callbackFn(tokenFile.access_token);
     }
     catch (e) {
+      console.log('Token path: ' + tokenPath);
       console.log('Could not find token: ' + e);
       var read = require('read');
       console.log('Your GitHub credentials are required to acquire a GitHub api token.  They will not be saved.');
