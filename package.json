@@ -6,6 +6,7 @@
   "files": [
     "tix-cli.js",
     "README.md",
+    "LICENSE",
     "bin/tix.sh",
     "bin/node-npm-src-install.sh",
     "bin/tix-cli-install.sh",
