@@ -634,8 +634,8 @@ function CliAdvanced(config, token) {
     if (cmd) {
       cmd.fn = fn;
     } else {
-      var msg = _.template('No command definition exists for <%= obj %>, ensure that it exists in [CliAdvanced.commands]');
-      throw msg(commandName);
+      var msg = _.template('ERROR: No command definition exists for <%= obj %>, ensure that it exists in [CliAdvanced.commands]');
+      console.log(msg);
     }
   }
 
@@ -777,7 +777,6 @@ function CliAdvanced(config, token) {
         exec('npm publish', 'Error publishing.', true);
         exec('git push origin master');
       });
-      //that.execCommand('acpush-repo', argv);
     },
     "acpush-all": function (argv) {
       that.execCommands(argv['acpush-commands'], argv);
@@ -903,7 +902,6 @@ function CliAdvanced(config, token) {
     that.printHeader();
   }
 
-
   function printCommands(commands) {
     var printCommand = _.template('<%= command %>:<%= alias %> <%= desc %>');
     _.forEach(commands, function (n, key) {
@@ -1018,8 +1016,6 @@ function CliAdvanced(config, token) {
     }
     return 'TIX>';
   };
-
-
 }
 
 /**
@@ -1085,10 +1081,11 @@ function CliShell(config, mainArgs) {
   var cliDir = toAbsPath(config.path.cliDir);
   var tokenPath = toAbsPath(config.path.tokenFile);
 
-  getToken(init);
 
   function init(token) {
+    console.log('CliShell.init');
     var cli = new CliAdvanced(config, token);
+    console.log('CliAdvanced');
     cli.printHeader();
 
     _.forEach(argCommands, function (argv, commandName) {
@@ -1156,10 +1153,12 @@ function CliShell(config, mainArgs) {
     }
   }
 
+  getToken(init);
 
   function getToken(callbackFn) {
     try {
       var tokenFile = require(tokenPath);
+
       callbackFn(tokenFile.access_token);
     }
     catch (e) {
