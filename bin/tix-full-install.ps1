@@ -14,20 +14,20 @@ $packages = @(
     title='7-Zip for Windows';
     type='download';
     url='http://www.7-zip.org/a/7z938-x64.msi';
-    arguments="/qr TARGETDIR=$install\7z ADDLOCAL=ALL"
+    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 INSTALLDIR=`"$install\7z`""
   },
   @{
     title='Python 2.7.9';
     type='download';
-    url='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi;
-    arguments="/qr TARGETDIR=$install\python279 ADDLOCAL=ALL"
+    url='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
+    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 TARGETDIR=$install\python279 ADDLOCAL=ALL"
   },
   @{
-    title='MSYS2 Base 2015-02-02 - Linux Virtualization Layer';
+    title='MSYS2Base 20150202 Linux Virtualization Layer';
     type='download';
     url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
-    $destName='msys2';
-    $executeFile='msys2_shell.bat'
+    destName='msys2';
+    executeFile='msys2_shell.bat'
   },
   @{
     title='MSYS2 Synchronize and Update packages';
@@ -40,28 +40,32 @@ $packages = @(
     path="$install\msys2\msys2_shell.bat";
   },
   @{
-    title='Tix Post-Install Script';
+    title='Tix Post Install Script';
     type='download';
     url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-full-post-install.sh';
   }
-  #@{
-  #  title='Git For Windows 1.9.5';
-  #  url='https://github.com/msysgit/msysgit/releases/download/Git-1.9.5-preview20150319/Git-1.9.5-preview20150319.exe';
-  #  arguments='/SILENT /SUPPRESSMSGBOXES /COMPONENTS="icons,ext\reg\shellhere,assoc,assoc_sh"'
-  #},
-  #@{
-  #  title='Node.js 0.12.2';
-  #  url='http://nodejs.org/dist/v0.12.2/x64/node-v0.12.2-x64.msi';
-  #  arguments='/qr'
-  #},
-  #@{
-  #   title='Node.js and NPM From Source';
-  #   url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/node-npm-src-install.sh';
-  #},
-  #@{
-  #  title='TixCli';
-  #  url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-cli-install.sh';
-  #}
+
+  # old scripts
+  <#
+  @{
+    title='Git For Windows 1.9.5';
+    url='https://github.com/msysgit/msysgit/releases/download/Git-1.9.5-preview20150319/Git-1.9.5-preview20150319.exe';
+    arguments='/SILENT /SUPPRESSMSGBOXES /COMPONENTS="icons,ext\reg\shellhere,assoc,assoc_sh"'
+  },
+  @{
+    title='Node.js 0.12.2';
+    url='http://nodejs.org/dist/v0.12.2/x64/node-v0.12.2-x64.msi';
+    arguments='/qr'
+  },
+  @{
+     title='Node.js and NPM From Source';
+     url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/node-npm-src-install.sh';
+  },
+  @{
+    title='TixCli';
+    url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-cli-install.sh';
+  }
+  #>
 )
 
 
@@ -115,9 +119,10 @@ function Install ($filePath, $arguments)
 
 #Once we've downloaded all our files lets install them.
 foreach ($package in $packages) {
+    Write-Host 'Processing started...'
     $title = $package.title
     $type = $package.type
-    Write-Host "Processing $title as $type"
+    Write-Host 'Processing ' + $title + ' as ' + $type
     If($type -eq 'download') {
       $url = $package.url
       $fileName = Split-Path $url -Leaf
