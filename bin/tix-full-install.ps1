@@ -6,7 +6,7 @@
 # downloaded.                                                    #
 ##################################################################
 
-$source = 'C:\TixInc\downloads'
+$source = "$HOME\TixInc\downloads"
 
 $packages = @(
   @{
@@ -15,15 +15,21 @@ $packages = @(
     dir=$source;
     arguments='/SILENT /SUPPRESSMSGBOXES /COMPONENTS="icons,ext\reg\shellhere,assoc,assoc_sh"'
   },
+  #@{
+  #  title='Node.js 0.12.2';
+  #  url='http://nodejs.org/dist/v0.12.2/x64/node-v0.12.2-x64.msi';
+  #  dir=$source;
+  #  arguments='/qn'
+  #},
   @{
-    title='Node.js 0.12.2';
-    url='http://nodejs.org/dist/v0.12.2/x64/node-v0.12.2-x64.msi';
-    dir=$source;
-    arguments='/qn'
+     title='Node.js and NPM From Source';
+     url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/node-npm-src-install.sh';
+     dir=$source;
+     arguments=' '
   },
   @{
     title='TixCli';
-    url='https://raw.githubusercontent.com/TixInc/TixCli/master/oneliners/tix-cli-install.sh';
+    url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-cli-install.sh';
     dir=$source;
     arguments=' '
   }

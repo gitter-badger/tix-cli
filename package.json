@@ -7,13 +7,11 @@
     "tix-cli.js",
     "README.md",
     "bin/tix.sh",
-    "oneliners/tix-cli-install.cmd",
-    "oneliners/tix-cli-install.sh",
-    "powershell/tix-cli-dependencies.ps1"
+    "bin/node-npm-src-install.sh",
+    "bin/tix-cli-install.sh",
+    "bin/tix-full-install.cmd",
+    "bin/tix-full-install.ps1"
   ],
-  "bin": {
-    "tix": "./bin/tix.sh"
-  },
   "repository": "TixInc/TixCli",
   "keywords": [
     "TixInc",
@@ -22,6 +20,7 @@
   "homepage": "http://tixinc.github.io/TixCli/",
   "bugs": "https://github.com/TixInc/TixCli/issues",
   "directories": {
+    "bin": "./bin",
     "doc": "./doc",
     "man": "./man"
   },
