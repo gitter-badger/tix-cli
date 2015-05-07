@@ -31,7 +31,7 @@ Setup <a id="setup"></a>
 Copy/paste the oneliner below into Administrator command prompt to get Git / Node.js and TixCli installed:
 
 ``` cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/TixCli/master/powershell/tix-cli-dependencies.ps1'))
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-full-install.ps1'))"
 ```
 
 
@@ -45,7 +45,7 @@ Instructions coming soon...
 If Git and Node.js are installed on the local machine, run this oneliner at git bash or linux shell to install the CLI:
 
 ``` sh
-curl https://raw.githubusercontent.com/TixInc/TixCli/master/tix-cli.js > tix-cli.js && node tix-cli
+npm install -g tix-cli
 ```
 
 ___
@@ -91,10 +91,10 @@ var config = {
 };
 ```
 
-The TixCli by default gets installed to `C:\TixInc\TixCli` directory on Windows and `~/TixInc/TixCli` on Linux / OSX.  Other TixInc applications will get installed by TixCli to the TixInc directory for the respective platform.
+The TixCli by default gets installed to `~/TixInc/TixCli`.  Other TixInc applications will get installed by TixCli to the TixInc directory for the respective platform.
 
 
-After the initial install, the CLI may be run again at any time by navigating your shell of choice to the TixCli directory and run `node tix-cli`.
+After the initial install, the CLI may be run again at any time by executing `tix` in a shell. 
 
 Below are some of the supported commands by TixCli: ->
 
