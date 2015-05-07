@@ -13,7 +13,7 @@
 var config = {
   platform: getPlatform(),
   basePath: {
-    windows: 'c:',
+    windows: process.env['HOME'], //'c:',
     linux: process.env['HOME']
   },
   installPath: 'TixInc',
