@@ -330,9 +330,36 @@ function CliAdvanced(config, token) {
     log('Successfully cloned: ' + githubPath, 'clone');
   }
 
+  function bashConfig() {
+    if (getPlatform() === 'windows') {
+      executeAt(process.env['HOME'], function () {
+        console.log('Configuring path on windows to store npm global modules in user directory.');
+        var cmd = 'PATH=$PATH:$HOME/npm';
+        exec(cmd);
+        exec('echo ' + cmd + ' > .bashrc');
+      });
+    } else {
+      console.log('Not windows, skipping bash config.');
+    }
+  }
+
+  function npmConfig() {
+    if (getPlatform() === 'windows') {
+      console.log('Configuring npm to store global modules at ~/npm');
+      exec('npm config set prefix ')
+    } else {
+      console.log('Not windows, skipping npm config.');
+    }
+  }
+
   function npmLink(path) {
     exec('npm link ' + path, 'An error occurred linking ' + path + '.', true);
     log('Successfully linked: ' + path, 'npmLink');
+  }
+
+  function npmInstall() {
+    exec('npm install --dev', 'An error occurred during npm install.', true);
+    log('Successfully installed.', 'npmInstall');
   }
 
   this.isExtendedMode = false;
@@ -534,6 +561,17 @@ function CliAdvanced(config, token) {
         }
       }
     },
+    "npm-install": {
+      "desc": "Runs npm install on the specified module.",
+      "category": "install",
+      "args": {
+        "module": {
+          "alias": "m",
+          "desc": "Module that npm install is running on.",
+          "default": "TixInc.js"
+        }
+      }
+    },
     "easy-setup": {
       "alias": "s",
       "desc": "Clones, links, and run tests on all modern repositories and runs tests to ensure they are working.",
@@ -542,7 +580,19 @@ function CliAdvanced(config, token) {
         "commands": {
           "alias": "c",
           "desc": "Array of commands to run for easy setup.",
-          "default": ["clone-modern", "npm-link-modules"]
+          "default": ["clone-modern", "npm-link-modules", "npm-install"]
+        }
+      }
+    },
+    "debug": {
+      "alias": "d",
+      "desc": "Starts debugging TixInc.js module via gulp task.",
+      "category": "execution",
+      "args": {
+        "module": {
+          "alias": "m",
+          "desc": "The module to debug.",
+          "default": "TixInc.js"
         }
       }
     },
@@ -605,7 +655,7 @@ function CliAdvanced(config, token) {
 
   /** Amends each command (key) in object literal with a function returning a promise (for async). */
   function addFnQs(commandFns) {
-    _.forEach(commandFns, function(fn, commandName) {
+    _.forEach(commandFns, function (fn, commandName) {
       addFnQ(commandName, fn);
     });
   }
@@ -778,8 +828,22 @@ function CliAdvanced(config, token) {
         that.execCommand('npm-link', {path: p, module: argv.module});
       });
     },
+    "npm-install": function (argv) {
+      executeAt(toAbsPath(argv.module), function () {
+        npmInstall();
+      });
+    },
     "easy-setup": function (argv) {
+      //bashConfig();
+      //npmConfig();
       that.execCommands(argv.commands, argv);
+    },
+    "debug": function (argv) {
+      executeAt(toAbsPath(argv.module), function () {
+        //exec('npm install gulp -g', 'Error occurred installing gulp globally.', true);
+        //exec('gulp debug', 'Error occurred during gulp debug.', true);
+        exec('node bin/www');
+      });
     },
     "extended-mode": function (argv) {
       if (that.isExtendedMode) {
@@ -804,7 +868,7 @@ function CliAdvanced(config, token) {
       enableExtendedMode();
     },
     "print-process": function (argv) {
-      if(argv.node) {
+      if (argv.node) {
         console.dir(process[argv.node]);
       } else {
         console.dir(process);
@@ -831,7 +895,6 @@ function CliAdvanced(config, token) {
     that.isExtendedMode = true;
     that.printHeader();
   }
-
 
 
   function printCommands(commands) {
