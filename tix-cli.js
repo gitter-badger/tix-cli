@@ -358,7 +358,7 @@ function CliAdvanced(config, token) {
   }
 
   function npmInstall() {
-    exec('npm install --dev', 'An error occurred during npm install.', true);
+    exec('npm install', 'An error occurred during npm install.', true);
     log('Successfully installed.', 'npmInstall');
   }
 
@@ -925,10 +925,10 @@ function CliAdvanced(config, token) {
   /** Build alias object for quickly looking up a command by alias. */
   this.alias = _.chain(that.commands)
     .transform(function (result, n, commandName) {
-      if (n.alias) {
-        result[n.alias] = commandName;
-      }
-    }).value();
+                 if (n.alias) {
+                   result[n.alias] = commandName;
+                 }
+               }).value();
 
 
   function getCommand(name) {
