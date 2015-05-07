@@ -20,7 +20,7 @@ $packages = @(
     title='Python 2.7.9';
     type='download';
     url='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
-    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 TARGETDIR=$install\python279 ADDLOCAL=ALL"
+    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 TARGETDIR=$install\python ADDLOCAL=ALL"
   },
   @{
     title='MSYS2Base 20150202 Linux Virtualization Layer';
