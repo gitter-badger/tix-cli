@@ -40,8 +40,8 @@ $packages = @(
     title='MSYS2Base 20150202 Linux Virtualization Layer';
     type='download';
     url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
-    executeFile="msys64\msys2_shell.bat"
-    executeArgs="exit"
+    execute="$msys2Path"
+    arguments="exit"
   },
   @{
     title='MSYS2 Synchronize and Update packages';
@@ -135,23 +135,23 @@ function InstallMsi ($filePath, $arguments)
 }
 
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
-function InstallTarXz($filePath, $destPath, $executePath, $executeArgs)
+function InstallTarXz($filePath, $execute, $args)
 {
     # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
     $argumentsXz = "x -aoa $filePath"
-    Write-Host "Decompressing xz: 7z $argumentsXz"
-    Start-Process 7z -ArgumentList $argumentsXz -Wait -PassThru
+    Write-Host "Decompressing xz: $7zPath $argumentsXz"
+    Start-Process $7zPath -ArgumentList $argumentsXz -Wait -PassThru
     Write-Host "Finished decompressing"
 
     # Unzip: x (Extract w/ full paths) -aoa (Overwrite files:no prompt) -ttar (tar file) -o (dest)
     $filePathTar = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
-    $argumentsTar = "x -aoa -ttar -o$destPath $filePathTar"
-    Write-Host "Unzipping tar: 7z $argumentsTar"
-    Start-Process 7z -ArgumentList $argumentsTar -Wait -PassThru
+    $argumentsTar = "x -aoa -ttar -o$install $filePathTar"
+    Write-Host "Unzipping tar: $7zPath $argumentsTar"
+    Start-Process $7zPath -ArgumentList $argumentsTar -Wait -PassThru
     Write-Host "Finished unzipping"
 
-    Write-Host "Installing $executePath $executeArgs"
-    Start-Process $executePath -ArgumentList $executeArgs -Wait -PassThru
+    Write-Host "Installing: $execute $args"
+    Start-Process $execute -ArgumentList $args -Wait -PassThru
     Write-Host "Finished installing"
 }
 
@@ -182,10 +182,9 @@ foreach ($package in $packages) {
       }
       ElseIf($ext -eq '.xz')
       {
-        $executeFile = $package.executeFile
-        $executeArgs = $package.executeArgs
-        $executePath = "$install\$executeFile"
-        InstallTarXz $filePath $install $executePath $executeArgs
+        $execute = $package.execute
+        $args = $package.arguments
+        InstallTarXz $filePath $execute $args
       }
       Else
       {
