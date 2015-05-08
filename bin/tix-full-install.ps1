@@ -137,7 +137,6 @@ function InstallMsi ($filePath, $arguments)
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
 function InstallTarXz($filePath, $destPath, $executePath, $executeArgs)
 {
-  <#
     # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
     $argumentsXz = "x -aoa $filePath"
     Write-Host "Decompressing xz: 7z $argumentsXz"
@@ -150,7 +149,6 @@ function InstallTarXz($filePath, $destPath, $executePath, $executeArgs)
     Write-Host "Unzipping tar: 7z $argumentsTar"
     Start-Process 7z -ArgumentList $argumentsTar -Wait -PassThru
     Write-Host "Finished unzipping"
-    #>
 
     Write-Host "Installing $executePath $executeArgs"
     Start-Process $executePath -ArgumentList $executeArgs -Wait -PassThru
