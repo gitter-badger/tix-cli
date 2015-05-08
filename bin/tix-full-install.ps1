@@ -6,43 +6,56 @@
 # downloaded.                                                    #
 ##################################################################
 
+$ErrorActionPreference = "Stop"
+
 $source = "$HOME\src"
 $install = "$HOME\local"
+
+$repo = "https://raw.githubusercontent.com/TixInc/TixCli/master"
+
+$7zDir = "$install\7z"
+$7zPath = "$7zDir\7z.exe"
+$pythonDir = "$install\python"
+$pythonPath = "$pythonPath\python.exe"
+$msys2Dir = "$install\msys64"
+$msys2Path = "$msys2Dir\msys2_shell.bat"
+
+# Switch over to sym link in local bin path
+$env:Path += ";$7zDir;$pythonDir;$msys2Dir"
 
 $packages = @(
   @{
     title='7-Zip for Windows';
     type='download';
     url='http://www.7-zip.org/a/7z938-x64.msi';
-    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 INSTALLDIR=`"$install\7z`""
+    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 INSTALLDIR=`"$7zDir`""
   },
   @{
     title='Python 2.7.9';
     type='download';
     url='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
-    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 TARGETDIR=$install\python ADDLOCAL=ALL"
+    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 TARGETDIR=`"$pythonPath`""
   },
   @{
     title='MSYS2Base 20150202 Linux Virtualization Layer';
     type='download';
     url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
-    destName='msys2';
-    executeFile='msys2_shell.bat'
+    executeFile="msys64\msys2_shell.bat"
+    executeArgs="exit"
   },
   @{
     title='MSYS2 Synchronize and Update packages';
     type='download';
-    url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/msys2-sync-update.sh'
-  },
-  @{
-    title='MSYS2 Post Install';
-    type='execute';
-    path="$install\msys2\msys2_shell.bat";
+    url='$repo/bin/msys2-sync-update.sh';
+    execute="$msys2Path";
+    arguments="$source\msys2-sync-update.sh"
   },
   @{
     title='Tix Post Install Script';
     type='download';
-    url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-full-post-install.sh';
+    url='$repo/bin/tix-full-post-install.sh';
+    execute="$msys2Path";
+    arguments="$source\tix-full-post-install.sh"
   }
 
   # old scripts
@@ -72,6 +85,35 @@ $packages = @(
 
 If (!(Test-Path -Path $source -PathType Container)) {New-Item -Path $source -ItemType Directory | Out-Null}
 
+Function New-SymLink ($link, $target)
+{
+    if (test-path -pathtype container $target)
+    {
+        $command = "cmd /c mklink /d"
+    }
+    else
+    {
+        $command = "cmd /c mklink"
+    }
+
+    invoke-expression "$command $link $target"
+}
+
+Function Remove-SymLink ($link)
+{
+    if (test-path -pathtype container $link)
+    {
+        $command = "cmd /c rmdir"
+    }
+    else
+    {
+        $command = "cmd /c del"
+    }
+
+    invoke-expression "$command $link"
+}
+
+
 # Downloads a file from url to directory
 function DownloadFile
 {
@@ -92,23 +134,29 @@ function InstallMsi ($filePath, $arguments)
     Write-Host "Finished installing $filePath"
 }
 
-function InstallTarXz($filePath, $destPath, $executePath)
+## Decompresses, unzips, and installs the contents of a .tar.xz package.
+function InstallTarXz($filePath, $destPath, $executePath, $executeArgs)
 {
-    Write-Host "Installing $filePath to $destPath and executing $executePath"
-    $arguments = "x $filePath -so | 7z x -aoa -si -ttar -o`"$destPath`""
-    Write-Host "Installing tar.xz $filePath to $destPath with $arguments"
-    Start-Process 7z -ArgumentList $arguments -Wait -PassThru
-    Write-Host "Finished unzipping $destPath"
-    Start-Process $executePath -Wait -PassThru
-    Write-Host "Finished installing $executePath"
+  <#
+    # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
+    $argumentsXz = "x -aoa $filePath"
+    Write-Host "Decompressing xz: 7z $argumentsXz"
+    Start-Process 7z -ArgumentList $argumentsXz -Wait -PassThru
+    Write-Host "Finished decompressing"
+
+    # Unzip: x (Extract w/ full paths) -aoa (Overwrite files:no prompt) -ttar (tar file) -o (dest)
+    $filePathTar = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
+    $argumentsTar = "x -aoa -ttar -o$destPath $filePathTar"
+    Write-Host "Unzipping tar: 7z $argumentsTar"
+    Start-Process 7z -ArgumentList $argumentsTar -Wait -PassThru
+    Write-Host "Finished unzipping"
+    #>
+
+    Write-Host "Installing $executePath $executeArgs"
+    Start-Process $executePath -ArgumentList $executeArgs -Wait -PassThru
+    Write-Host "Finished installing"
 }
 
-function InstallSh ($filePath)
-{
-    Write-Host "Executing script at $filePath"
-    Start-Process $filePath -Wait -PassThru
-    Write-Host "Finished executing script at $filePath"
-}
 
 function Install ($filePath, $arguments)
 {
@@ -119,10 +167,9 @@ function Install ($filePath, $arguments)
 
 #Once we've downloaded all our files lets install them.
 foreach ($package in $packages) {
-    Write-Host 'Processing started...'
     $title = $package.title
     $type = $package.type
-    Write-Host 'Processing ' + $title + ' as ' + $type
+    Write-Host "Processing $title as $type"
     If($type -eq 'download') {
       $url = $package.url
       $fileName = Split-Path $url -Leaf
@@ -138,22 +185,26 @@ foreach ($package in $packages) {
       ElseIf($ext -eq '.xz')
       {
         $executeFile = $package.executeFile
-        $destPath = "$install\$destName"
-        $executePath = "$destPath\$executeFile"
-        InstallTarXz $filePath $destPath $executePath
-      }
-      ElseIf($ext -eq '.sh')
-      {
-        InstallSh $filePath
+        $executeArgs = $package.executeArgs
+        $executePath = "$install\$executeFile"
+        InstallTarXz $filePath $install $executePath $executeArgs
       }
       Else
       {
-        Install $filePath $package.arguments
+        If($package.execute) {
+          $execute = $package.execute
+          $args = $package.arguments
+          Install $execute $args
+        }
+        Else {
+          Install $filePath $package.arguments
+        }
       }
     }
     Else
     {
       $path = $package.path
-      InstallSh $path
+      $args = $package.arguments
+      Install $path $args
     }
 }

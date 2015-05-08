@@ -1,7 +1,8 @@
+
 echo "Synchronizing msys2 package databases..."
-pacman -Sy
+pacman --noconfirm -Sy
 echo "Package synchronization finished."
 
 echo "Updating core msys2 packages..."
-pacman --needed -S bash pacman pacman-mirrors msys2-runtime
+pacman --noconfirm --needed -S bash pacman pacman-mirrors msys2-runtime
 echo "Core packages updated..."
