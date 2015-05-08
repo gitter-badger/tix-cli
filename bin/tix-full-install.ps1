@@ -24,17 +24,23 @@ $msys2Path = "$msys2Dir\msys2_shell.bat"
 $env:Path += ";$7zDir;$pythonDir;$msys2Dir"
 
 $packages = @(
-  @{
+ <# @{
     title='7-Zip for Windows';
     type='download';
     url='http://www.7-zip.org/a/7z938-x64.msi';
-    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 INSTALLDIR=`"$7zDir`""
+    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 /norestart INSTALLDIR=`"$7zDir`""
+  },#>
+  @{
+    title='7-Zip Command Line';
+    type='download';
+    url='http://www.7-zip.org/a/7za920.zip';
+    arguments=" "
   },
   @{
     title='Python 2.7.9';
     type='download';
     url='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
-    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 TARGETDIR=`"$pythonPath`""
+    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 /norestart TARGETDIR=`"$pythonPath`""
   },
   @{
     title='MSYS2Base 20150202 Linux Virtualization Layer';
@@ -57,33 +63,21 @@ $packages = @(
     execute="$msys2Path";
     arguments="$source\tix-full-post-install.sh exit"
   }
-
-  # old scripts
-  <#
-  @{
-    title='Git For Windows 1.9.5';
-    url='https://github.com/msysgit/msysgit/releases/download/Git-1.9.5-preview20150319/Git-1.9.5-preview20150319.exe';
-    arguments='/SILENT /SUPPRESSMSGBOXES /COMPONENTS="icons,ext\reg\shellhere,assoc,assoc_sh"'
-  },
-  @{
-    title='Node.js 0.12.2';
-    url='http://nodejs.org/dist/v0.12.2/x64/node-v0.12.2-x64.msi';
-    arguments='/qr'
-  },
-  @{
-     title='Node.js and NPM From Source';
-     url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/node-npm-src-install.sh';
-  },
-  @{
-    title='TixCli';
-    url='https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-cli-install.sh';
-  }
-  #>
 )
 
 
 
 If (!(Test-Path -Path $source -PathType Container)) {New-Item -Path $source -ItemType Directory | Out-Null}
+
+Function Expand-Zip ($file, $destination)
+{
+  $shell = new-object -com shell.application
+  $zip = $shell.NameSpace($file)
+  foreach($item in $zip.items())
+  {
+    $shell.Namespace($destination).copyhere($item)
+  }
+}
 
 Function New-SymLink ($link, $target)
 {
