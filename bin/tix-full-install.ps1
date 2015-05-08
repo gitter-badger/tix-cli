@@ -41,7 +41,7 @@ $packages = @(
     type='download';
     url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
     execute="$msys2Path"
-    arguments="msys2-base-x86_64-20150202 exit"
+    arguments="exit"
   },
   @{
     title='MSYS2 Synchronize and Update packages';
