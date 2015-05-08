@@ -13,13 +13,13 @@
     "bin/tix-full-install.cmd",
     "bin/tix-full-install.ps1"
   ],
-  "repository": "TixInc/TixCli",
+  "repository": "TixInc/tix-cli",
   "keywords": [
     "TixInc",
-    "TixCli"
+    "tix-cli"
   ],
-  "homepage": "http://tixinc.github.io/TixCli/",
-  "bugs": "https://github.com/TixInc/TixCli/issues",
+  "homepage": "http://tixinc.github.io/tix-cli",
+  "bugs": "https://github.com/TixInc/tix-cli/issues",
   "directories": {
     "bin": "./bin",
     "doc": "./doc",
