@@ -34,7 +34,7 @@ $packages = @(
     title='7-Zip Command Line';
     type='download';
     url='http://www.7-zip.org/a/7za920.zip';
-    arguments=" "
+    destPath="$7zDir"
   },
   @{
     title='Python 2.7.9';
@@ -52,14 +52,14 @@ $packages = @(
   @{
     title='MSYS2 Synchronize and Update packages';
     type='download';
-    url='$repo/bin/msys2-sync-update.sh';
+    url='$repo/bin/msys2-sync-update.sh?' + Get-Random;
     execute="$msys2Path";
     arguments="$source\msys2-sync-update.sh exit"
   },
   @{
     title='Tix Post Install Script';
     type='download';
-    url='$repo/bin/tix-full-post-install.sh';
+    url='$repo/bin/tix-full-post-install.sh?' + Get-Random;
     execute="$msys2Path";
     arguments="$source\tix-full-post-install.sh exit"
   }
@@ -67,7 +67,10 @@ $packages = @(
 
 
 
-If (!(Test-Path -Path $source -PathType Container)) {New-Item -Path $source -ItemType Directory | Out-Null}
+If (!(Test-Path -Path $source -PathType Container))
+{
+  New-Item -Path $source -ItemType Directory | Out-Null
+}
 
 Function Expand-Zip ($file, $destination)
 {
@@ -109,7 +112,7 @@ Function Remove-SymLink ($link)
 
 
 # Downloads a file from url to directory
-function DownloadFile
+Function Download-File
 {
     param( [string]$url, [string]$filePath )
 
@@ -120,7 +123,7 @@ function DownloadFile
     }
 }
 
-function InstallMsi ($filePath, $arguments)
+Function Install-Msi ($filePath, $arguments)
 {
     $command = "/i $filePath $arguments"
     Write-Host "Installing msi $filePath with $command"
@@ -129,7 +132,7 @@ function InstallMsi ($filePath, $arguments)
 }
 
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
-function InstallTarXz($filePath, $execute, $arguments)
+Function Install-Tar-Xz($filePath, $execute, $arguments)
 {
     # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
     $argumentsXz = "x -aoa $filePath"
@@ -149,16 +152,26 @@ function InstallTarXz($filePath, $execute, $arguments)
     Write-Host "Finished installing"
 }
 
+Function Install-Zip($zipPath) {
+   Expand-Zip $zipPath 
+}
 
-function Install ($filePath, $arguments)
+Function Execute-With-Args ($filePath, $arguments)
 {
     Write-Host "Installing $filePath with $arguments"
     Start-Process $filePath -ArgumentList $arguments -Wait -PassThru
     Write-Host "Finished installing $filePath"
 }
 
+Function Execute ($filePath)
+{
+    Write-Host "Installing $filePath"
+    Start-Process $filePath -Wait -PassThru
+    Write-Host "Finished installing $filePath"
+}
+
 #Once we've downloaded all our files lets install them.
-foreach ($package in $packages) {
+ForEach ($package in $packages) {
     $title = $package.title
     $type = $package.type
     Write-Host "Processing $title as $type"
@@ -166,36 +179,58 @@ foreach ($package in $packages) {
       $url = $package.url
       $fileName = Split-Path $url -Leaf
       $filePath = Join-Path -Path $source -ChildPath $fileName
-      DownloadFile -url $url -filePath $filePath
+      Download-File -url $url -filePath $filePath
       $fileNameNoExt = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
       $ext = [System.IO.Path]::GetExtension($fileName)
       Write-Host "Installing $filePath with extension $ext"
       If ($ext -eq '.msi')
       {
-        InstallMsi $filePath $package.arguments
+        Install-Msi $filePath $package.arguments
       }
       ElseIf($ext -eq '.xz')
       {
         $execute = $package.execute
         $arguments = $package.arguments
-        InstallTarXz $filePath $execute $arguments
+        Install-Tar-Xz $filePath $execute $arguments
+      }
+      ElseIf($ext -eq '.zip')
+      {
+        Install-Zip $filePath 
       }
       Else
       {
-        If($package.execute) {
-          $execute = $package.execute
-          $arguments = $package.arguments
-          Install $execute $arguments
+        If($package.execute)
+        {
+          If($package.arguments)
+          {
+            Execute-With-Args $package.execute $package.arguments
+          }
+          Else
+          {
+            Execute $package.execute
+          }
         }
         Else {
-          Install $filePath $package.arguments
+          If($package.arguments)
+          {
+            Execute-With-Args $filePath $package.arguments
+          }
+          Else
+          {
+            Execute $filePath
+          }
         }
       }
     }
     Else
     {
-      $path = $package.path
-      $arguments = $package.arguments
-      Install $path $arguments
+          If($package.arguments)
+          {
+            Execute-With-Args $package.path $package.arguments
+          }
+          Else
+          {
+            Execute $package.path
+          }
     }
 }
