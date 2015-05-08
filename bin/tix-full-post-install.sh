@@ -1,9 +1,9 @@
 echo "Updating remaining msys2 packages..."
-pacman --noconfirm --force -Su
+pacman --noconfirm -Su
 echo "Remaining packages updated."
 
 echo "Installing git..."
-pacman --noconfirm --force -S git
+pacman --noconfirm -S git
 echo "git install finished."
 
 echo "Running node and npm install script..."
