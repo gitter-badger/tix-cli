@@ -41,21 +41,21 @@ $packages = @(
     type='download';
     url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
     execute="$msys2Path"
-    arguments="exit"
+    arguments="msys2-base-x86_64-20150202 exit"
   },
   @{
     title='MSYS2 Synchronize and Update packages';
     type='download';
     url='$repo/bin/msys2-sync-update.sh';
     execute="$msys2Path";
-    arguments="$source\msys2-sync-update.sh"
+    arguments="$source\msys2-sync-update.sh exit"
   },
   @{
     title='Tix Post Install Script';
     type='download';
     url='$repo/bin/tix-full-post-install.sh';
     execute="$msys2Path";
-    arguments="$source\tix-full-post-install.sh"
+    arguments="$source\tix-full-post-install.sh exit"
   }
 
   # old scripts
@@ -135,7 +135,7 @@ function InstallMsi ($filePath, $arguments)
 }
 
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
-function InstallTarXz($filePath, $execute, $args)
+function InstallTarXz($filePath, $execute, $arguments)
 {
     # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
     $argumentsXz = "x -aoa $filePath"
@@ -150,8 +150,8 @@ function InstallTarXz($filePath, $execute, $args)
     Start-Process $7zPath -ArgumentList $argumentsTar -Wait -PassThru
     Write-Host "Finished unzipping"
 
-    Write-Host "Installing: $execute $args"
-    Start-Process $execute -ArgumentList $args -Wait -PassThru
+    Write-Host "Installing: $execute $arguments"
+    Start-Process $execute -ArgumentList $arguments -Wait -PassThru
     Write-Host "Finished installing"
 }
 
@@ -183,15 +183,15 @@ foreach ($package in $packages) {
       ElseIf($ext -eq '.xz')
       {
         $execute = $package.execute
-        $args = $package.arguments
-        InstallTarXz $filePath $execute $args
+        $arguments = $package.arguments
+        InstallTarXz $filePath $execute $arguments
       }
       Else
       {
         If($package.execute) {
           $execute = $package.execute
-          $args = $package.arguments
-          Install $execute $args
+          $arguments = $package.arguments
+          Install $execute $arguments
         }
         Else {
           Install $filePath $package.arguments
@@ -201,7 +201,7 @@ foreach ($package in $packages) {
     Else
     {
       $path = $package.path
-      $args = $package.arguments
-      Install $path $args
+      $arguments = $package.arguments
+      Install $path $arguments
     }
 }
