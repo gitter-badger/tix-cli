@@ -23,6 +23,11 @@ $msys2Path = "$msys2Dir\msys2_shell.bat"
 # Switch over to sym link in local bin path
 $env:Path += ";$7zDir;$pythonDir;$msys2Dir"
 
+$downloads = @(
+
+
+               )
+
 $packages = @(
  <# @{
     title='7-Zip for Windows';
@@ -153,7 +158,7 @@ Function Install-Tar-Xz($filePath, $execute, $arguments)
 }
 
 Function Install-Zip($zipPath) {
-   Expand-Zip $zipPath 
+   Expand-Zip $zipPath
 }
 
 Function Execute-With-Args ($filePath, $arguments)
@@ -195,7 +200,7 @@ ForEach ($package in $packages) {
       }
       ElseIf($ext -eq '.zip')
       {
-        Install-Zip $filePath 
+        Install-Zip $filePath
       }
       Else
       {

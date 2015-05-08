@@ -4,10 +4,23 @@ tix-cli
 TixCli is a [command line interface](http://en.wikipedia.org/wiki/Command-line_interface) to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.
 
 
+### Basic Install
+
 ```sh
 npm install -g tix-cli
 ```
 
+### Install and go to tix shell
+
+```sh
+npm install -g tix-cli && tix
+```
+
+### Install and go to tix shell extended (private repository access and )
+
+```sh
+npm install -g tix-cli && tix -ix
+```
 
 ### Table of Contents
 
@@ -99,7 +112,7 @@ var config = {
 The TixCli by default gets installed to `~/TixInc/TixCli`.  Other TixInc applications will get installed by TixCli to the TixInc directory for the respective platform.
 
 
-After the initial install, the CLI may be run again at any time by executing `tix` in a shell. 
+After the initial install, the CLI may be run again at any time by executing `tix` in a shell.
 
 Below are some of the supported commands by TixCli: ->
 
