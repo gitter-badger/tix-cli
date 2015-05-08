@@ -40,7 +40,7 @@ $packages = @(
     title='MSYS2Base 20150202 Linux Virtualization Layer';
     type='download';
     url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
-    execute="$msys2Path"
+    execute="$msys2Path";
     arguments="exit"
   },
   @{
