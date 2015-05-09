@@ -17,10 +17,21 @@ $binFiles = @(
     FileUrl='http://www.7-zip.org/a/7za920.zip';
     FilePath=(Join-Path $binPath 7za920.zip)
   },
+  <# Going to use python portable instead
   @{
     Title='Python 2.7.9';
     FileUrl='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
     FilePath=(Join-Path $binPath python-2.7.9.msi)
+  },
+  @{
+    Title='Python Portable 2.7.6.1';
+    FileUrl='https://s3-us-west-2.amazonaws.com/tixinc/python/python_2761.7z';
+    FilePath=(Join-Path $binPath python_2761.7z)
+  },#>
+  @{
+    Title='Python Portable 2.7.6.1 Core';
+    FileUrl='https://s3-us-west-2.amazonaws.com/tixinc/python/python_2761_core.7z';
+    FilePath=(Join-Path $binPath python_2761_core.7z)
   },
   @{
     Title='MSYS2Base 20150202 Linux Virtualization Layer';

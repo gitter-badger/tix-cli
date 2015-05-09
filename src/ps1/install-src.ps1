@@ -6,24 +6,72 @@
 # downloaded.                                                    #
 ##################################################################
 
-. "$HOME/src/ps1/extensions.ps1"
-
 $ErrorActionPreference = "Stop"
 
-$source = "$HOME\src"
-$install = "$HOME\local"
+# Source the extension script to get additional functions.
+. Join-Path $HOME src\ps1\extensions.ps1
 
-$repo = "https://raw.githubusercontent.com/TixInc/TixCli/master"
+# Declare objects to store paths of source files (~/src) and install (~/local) paths
+$base=@{
+  src=Join-Path $HOME src
+  local=Join-Path $HOME local
+}
 
+$src=@{
+  bin=Join-Path $base.src bin
+  cmd=Join-Path $base.src cmd
+  ps1=Join-Path $base.src ps1
+  sh=Join-Path $base.src sh
+}
+
+$local=@{
+  bin=Join-Path $base.local bin
+}
+
+Write-Host ($src| Format-List | Out-String)
+
+
+$install=@{
+  zips=@(
+    @{
+
+    }
+  ),
+  7zs=@(
+    @{
+
+    }
+  ),
+  sh=@(
+    @{
+      
+    }
+  )
+}
+
+
+<#
 $7zDir = "$install\7z"
 $7zPath = "$7zDir\7z.exe"
 $pythonDir = "$install\python"
 $pythonPath = "$pythonPath\python.exe"
 $msys2Dir = "$install\msys64"
 $msys2Path = "$msys2Dir\msys2_shell.bat"
+#>
 
 # Switch over to sym link in local bin path
-$env:Path += ";$7zDir;$pythonDir;$msys2Dir"
+#$env:Path += ";$7zDir;$pythonDir;$msys2Dir"
+
+$zip = @(
+
+)
+
+$7z = @(
+)
+
+$tarXz = @(
+
+)
 
 $downloads = @(
 
@@ -36,7 +84,7 @@ $packages = @(
     type='download';
     url='http://www.7-zip.org/a/7z938-x64.msi';
     arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 /norestart INSTALLDIR=`"$7zDir`""
-  },#>
+  },
   @{
     title='7-Zip Command Line';
     type='download';
@@ -70,15 +118,18 @@ $packages = @(
     execute="$msys2Path";
     arguments="$source\tix-full-post-install.sh exit"
   }
+  #>
 )
 
 
+<#
 
 If (!(Test-Path -Path $source -PathType Container))
 {
   New-Item -Path $source -ItemType Directory | Out-Null
 }
 
+#>
 
 
 Function Install-Msi ($filePath, $arguments)
