@@ -1,25 +1,37 @@
 ##################################################################
 # Downloads basic Windows dependencies for TixInc applications.  #
-#                                                                #
-# Specify source to control the directory that will be used      #
-# to download installation files and $packages to control whats  #
-# downloaded.                                                    #
 ##################################################################
-
-#Invoke-WebRequest [-Uri] <Uri> [-Body <Object> ] [-Certificate <X509Certificate> ] [-CertificateThumbprint <String> ] [-ContentType <String> ] [-Credential <PSCredential> ] [-DisableKeepAlive] [-Headers <IDictionary> ] [-InFile <String> ] [-InformationAction <System.Management.Automation.ActionPreference> {SilentlyContinue | Stop | Continue | Inquire | Ignore | Suspend} ] [-InformationVariable <System.String> ] [-MaximumRedirection <Int32> ] [-Method <WebRequestMethod> {Default | Get | Head | Post | Put | Delete | Trace | Options | Merge | Patch} ] [-OutFile <String> ] [-PassThru] [-Proxy <Uri> ] [-ProxyCredential <PSCredential> ] [-ProxyUseDefaultCredentials] [-SessionVariable <String> ] [-TimeoutSec <Int32> ] [-TransferEncoding <String> {chunked | compress | deflate | gzip | identity} ] [-UseBasicParsing] [-UseDefaultCredentials] [-UserAgent <String> ] [-WebSession <WebRequestSession> ] [ <CommonParameters>]
-
-#$links = Invoke-WebRequest -Uri https://github.com/TixInc/tix-cli/tree/master/bin|Select -exp Links|Where{$_.class -eq "js-directory-link"}|Select -exp href
 
 $baseUri = 'https://github.com'
 $rawBaseUri = 'https://raw.githubusercontent.com/TixInc/tix-cli/master/src'
 $srcUri = '/TixInc/tix-cli/tree/master/src'
-$srcPath = "$HOME\src"
+$srcPath = Join-Path $HOME src
+$binPath = Join-Path $srcPath bin
 $fileFilter = '*.*'
 $classFilter = 'js-directory-link'
 
+# Each of these get downloaded to bin path
+$binFiles = @(
+ @{
+    Title='7-Zip Command Line';
+    FileUrl='http://www.7-zip.org/a/7za920.zip';
+    FilePath=(Join-Path $binPath 7za920.zip)
+  },
+  @{
+    Title='Python 2.7.9';
+    FileUrl='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
+    FilePath=(Join-Path $binPath python-2.7.9.msi)
+  },
+  @{
+    Title='MSYS2Base 20150202 Linux Virtualization Layer';
+    FileUrl='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
+    FilePath=(Join-Path $binPath msys2-base-x86_64-20150202.tar.xz)
+  }
+)
+
+# Recursive powershell!!!
 Function Scrape-Files-Recursive ($relativeUri, $relativeUriOut, $relativePath) {
   $links = Invoke-WebRequest -Uri "$baseUri$relativeUri" -TimeoutSec 20|Select -Exp Links|Where{$_.class -Eq "js-directory-link"}
-
 
   ForEach ($dirLink in $links|Where{$_.innerText -NotLike $fileFilter}) {
     # gets the url of the directory
@@ -46,10 +58,12 @@ Function Scrape-Files-Recursive ($relativeUri, $relativeUriOut, $relativePath) {
   }
 }
 
+# Recursively scrape github raw repo for the FilePath FileUrl objects
 $fileMaps=Scrape-Files-Recursive $srcUri $rawBaseUri $srcPath
 
 Write-Host ($fileMaps | Format-List | Out-String)
 
+# Takes a pipe of FileUrl FilePath, creates the directories, and downloads the file
 Filter Download-Files
 {
     $fileUrl = $_.FileUrl
@@ -64,4 +78,6 @@ Filter Download-Files
     }
 }
 
+#Download all github raw source files and binary files
 $fileMaps|Download-Files
+$binFiles|Download-Files
