@@ -11,7 +11,7 @@
 #$links = Invoke-WebRequest -Uri https://github.com/TixInc/tix-cli/tree/master/bin|Select -exp Links|Where{$_.class -eq "js-directory-link"}|Select -exp href
 
 $baseUri = 'https://github.com'
-$srcUri = '/TixInc/tix-cli/tree/master/bin'
+$srcUri = '/TixInc/tix-cli/tree/master/src'
 $fileFilter = '*.*'
 $classFilter = 'js-directory-link'
 
@@ -38,10 +38,8 @@ Function Scrape-Files-Recursive ($relativeUri, $relativePath) {
     FileUrl=$fileUrl;
     FilePath= $filePath;
   }
-
 }
 
 $fileMaps=Scrape-Files-Recursive $srcUri ''
 
-Write-Host $fileMaps
-#Write-Host ($fileMaps | Format-Table | Out-String)
+Write-Host ($fileMaps | Format-Table | Out-String)

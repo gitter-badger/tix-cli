@@ -48,3 +48,5 @@ Function Download-File
         $webClient.DownloadFile("$url", "$filePath")
     }
 }
+
+Write-Host 'Extensions sourced.'

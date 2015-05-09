@@ -6,6 +6,8 @@
 # downloaded.                                                    #
 ##################################################################
 
+. ~/src/ps1/extensions.ps1
+
 $ErrorActionPreference = "Stop"
 
 $source = "$HOME\src"

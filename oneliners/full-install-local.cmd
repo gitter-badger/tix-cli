@@ -1,1 +1,0 @@
-@powershell -NoProfile -ExecutionPolicy unrestricted -File "..\bin\tix-full-install.ps1"

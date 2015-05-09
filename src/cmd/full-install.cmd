@@ -1,0 +1,1 @@
+@powershell -NoProfile -ExecutionPolicy unrestricted -File ~/src/full-install.ps1

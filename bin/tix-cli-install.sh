@@ -1,1 +1,1 @@
-curl https://raw.githubusercontent.com/TixInc/tix-cli/master/tix-cli.js > ~/TixInc/TixCli/tix-cli.js && node ~/TixInc/TixCli/tix-cli
+curl https://raw.githubusercontent.com/TixInc/tix-cli/master/tix-cli.js > ~/tixinc/tix-cli/tix-cli.js && node ~/tixinc/tix-cli/tix-cli
