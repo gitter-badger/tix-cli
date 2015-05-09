@@ -49,4 +49,12 @@ Function Download-File
     }
 }
 
+Filter Download-Files
+{
+    $fileUrl = $_.FileUrl
+    $filePath = $_.FilePath
+
+    Download-File $fileUrl $filePath
+}
+
 Write-Host 'Extensions sourced.'

@@ -11,35 +11,57 @@
 #$links = Invoke-WebRequest -Uri https://github.com/TixInc/tix-cli/tree/master/bin|Select -exp Links|Where{$_.class -eq "js-directory-link"}|Select -exp href
 
 $baseUri = 'https://github.com'
+$rawBaseUri = 'https://raw.githubusercontent.com/TixInc/tix-cli/master/src'
 $srcUri = '/TixInc/tix-cli/tree/master/src'
+$srcPath = "$HOME\src"
 $fileFilter = '*.*'
 $classFilter = 'js-directory-link'
 
-Function Scrape-Files-Recursive ($relativeUri, $relativePath) {
+Function Scrape-Files-Recursive ($relativeUri, $relativeUriOut, $relativePath) {
   $links = Invoke-WebRequest -Uri "$baseUri$relativeUri" -TimeoutSec 20|Select -Exp Links|Where{$_.class -Eq "js-directory-link"}
 
 
   ForEach ($dirLink in $links|Where{$_.innerText -NotLike $fileFilter}) {
     # gets the url of the directory
     $dirUrl = $dirLink|Select -Exp href
-    # gets the path name and joins it to the current recursive relative path for the directory.
-    $dirPath = $dirLink|Select -Exp innerText|%{ "$relativePath\$_" }
-    Scrape-Files-Recursive $dirUrl $dirPath
+    $relativePathComponent = $dirLink|Select -Exp innerText
+    ForEach($component in $relativePathComponent) {
+      $dirOutUrl = "$relativeUriOut/$component"
+      # gets the path name and joins it to the current recursive relative path for the directory.
+      $dirPath = Join-Path $relativePath $component
+      Scrape-Files-Recursive $dirUrl $dirOutUrl $dirPath
+    }
   }
 
   # Gets file urls and pipes them back up the chain
   $fileLinks = $links|Where{$_.innerText -Like $fileFilter}
-  $filePath = $fileLinks|Select -Exp innerText|%{ "$relativePath\$_" }
-  $fileUrl = $fileLinks|Select -Exp href|%{ "$baseUri$_" }
 
-
-  # Return an object with the absolute url of the resource and the path that it should map to
-  New-Object PSObject -Property @{
-    FileUrl=$fileUrl;
-    FilePath= $filePath;
+  ForEach($fileLink in $fileLinks) {
+    $fileUrl = "$relativeUriOut/$($fileLink.innerText)"
+    $filePath = Join-Path $relativePath $fileLink.innerText
+    (New-Object PSObject -Property @{
+      FileUrl=$fileUrl;
+      FilePath= $filePath;
+    })
   }
 }
 
-$fileMaps=Scrape-Files-Recursive $srcUri ''
+$fileMaps=Scrape-Files-Recursive $srcUri $rawBaseUri $srcPath
 
-Write-Host ($fileMaps | Format-Table | Out-String)
+Write-Host ($fileMaps | Format-List | Out-String)
+
+Filter Download-Files
+{
+    $fileUrl = $_.FileUrl
+    $filePath = $_.FilePath
+    If (!(Test-Path -Path $filePath -PathType Leaf)) {
+        Write-Host "Downloading $fileUrl to $filePath"
+        $dir = Split-Path $filePath -Parent
+        If(!(Test-Path -Path $dir -PathType Container)) {
+          New-Item -Path $dir -type Directory
+        }
+        Invoke-WebRequest "$fileUrl" -OutFile "$filePath"
+    }
+}
+
+$fileMaps|Download-Files

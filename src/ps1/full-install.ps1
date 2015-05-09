@@ -6,7 +6,7 @@
 # downloaded.                                                    #
 ##################################################################
 
-. ~/src/ps1/extensions.ps1
+. "$HOME/src/ps1/extensions.ps1"
 
 $ErrorActionPreference = "Stop"
 
