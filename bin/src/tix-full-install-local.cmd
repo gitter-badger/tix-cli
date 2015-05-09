@@ -1,1 +1,0 @@
-@powershell -NoProfile -ExecutionPolicy unrestricted -File "C:\Users\ColeChamberlain\TixInc\TixCliSrc\bin\tix-full-install.ps1"

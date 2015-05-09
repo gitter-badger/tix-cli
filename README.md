@@ -10,17 +10,23 @@ TixCli is a [command line interface](http://en.wikipedia.org/wiki/Command-line_i
 npm install -g tix-cli
 ```
 
-### Install and go to tix shell
+### Install and start interactive tix shell
 
 ```sh
 npm install -g tix-cli && tix
 ```
 
-### Install and go to tix shell extended (private repository access and )
+### Install and start tix shell extended (private repository and deployment access)
 
 ```sh
 npm install -g tix-cli && tix -ix
 ```
+
+### Install and start tix shell in leet mode...
+```sh
+npm install -g tix-cli && tix --1337
+```
+
 
 ### Table of Contents
 
