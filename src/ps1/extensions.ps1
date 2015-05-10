@@ -31,23 +31,28 @@ Function Expand-7z($filePath, $destDir) {
     Execute-7z "x -aoa -o$destDir $filePath"
 }
 
-Function Decompress-Xz($filePath) {
+Filter Decompress-Xz {
     # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
-    $arguments = "x -aoa $filePath"
+    $arguments = "x -aoa " + $_.filePath
     Execute-7z $arguments
     # Return path of tar on stdout
-    [System.IO.Path]::GetFileNameWithoutExtension($filePath)
+    $_.filePath = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
+    $_
 }
 
-Function Expand-Tar($filePath, $destDir) {
+Filter Expand-Tar {
+    $arguments = "x -aoa -ttar -o" + $_.destDir + " " + $_.filePath
     # Unzip: x (Extract w/ full paths) -aoa (Overwrite files:no prompt) -ttar (tar file) -o (dest)
-    Execute-7z "x -aoa -ttar -o$destDir $filePath"
+    Execute-7z $arguments
 }
 
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
 Function Expand-TarXz($filePath, $destDir) {
-    $tarPath=Decompress-Xz $filePath
-    Expand-Tar $tarPath $destDir
+    $arguments = @{
+        filePath=$filePath
+        destDir=$destDir
+    }
+    $arguments|Decompress-Xz|Expand-Tar
 }
 
 Function Install-Msi ($filePath, $arguments) {
@@ -114,6 +119,11 @@ Filter Download-Files {
 
 Filter Write-PipeTable {
     Write-Host ($_ | Format-Table | Out-String)
+    $_
+}
+
+Filter Write-PipeList {
+    Write-Host ($_ | Format-List | Out-String)
     $_
 }
 
