@@ -32,11 +32,11 @@ Filter Install-TarXz {
   New-SymLinkBin $_.link
 }
 
-Filter Execute-Ps1 {
-  Execute $_.src
+Filter Run-Ps1 {
+  Execute-Ps1 $_.src
 }
 
-Filter Execute-Sh {
+Filter Run-Sh {
 
 }
 
@@ -51,10 +51,10 @@ Write-Host "--Installing tar.xz archives--"
 $installs.tarXz|Write-PipeTable|Install-TarXz
 
 Write-Host "--Executing ps1 scripts--"
-$installs.ps1|Write-PipeTable|Execute-Ps1
+$installs.ps1|Write-PipeTable|Run-Ps1
 
 Write-Host "--Executing sh scripts--"
-$installs.sh|Write-PipeTable|Execute-Sh
+$installs.sh|Write-PipeTable|Run-Sh
 
 
 $packages = @(

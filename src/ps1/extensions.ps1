@@ -31,28 +31,28 @@ Function Expand-7z($filePath, $destDir) {
     Execute-7z "x -aoa -o$destDir $filePath"
 }
 
-Filter Decompress-Xz {
+Function Decompress-Xz ($filePath) {
     # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
-    $arguments = "x -aoa " + $_.filePath
+    $arguments = "x -aoa $filePath"
     Execute-7z $arguments
     # Return path of tar on stdout
-    $_.filePath = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
-    $_
 }
 
-Filter Expand-Tar {
-    $arguments = "x -aoa -ttar -o" + $_.destDir + " " + $_.filePath
+Function Expand-Tar ($filePath, $destDir) {
+    $arguments = "x -aoa -ttar -o" + $destDir + " " + $filePath
     # Unzip: x (Extract w/ full paths) -aoa (Overwrite files:no prompt) -ttar (tar file) -o (dest)
     Execute-7z $arguments
 }
 
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
 Function Expand-TarXz($filePath, $destDir) {
-    $arguments = @{
-        filePath=$filePath
-        destDir=$destDir
-    }
-    $arguments|Decompress-Xz|Expand-Tar
+    Decompress-Xz $filePath
+    $tarPath = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
+    Expand-Tar $tarPath $destDir
+}
+
+Function Execute-Ps1($filePath) {
+    Execute powershell.exe "-File=$filePath"
 }
 
 Function Install-Msi ($filePath, $arguments) {
