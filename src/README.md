@@ -57,7 +57,7 @@ Scripts
 
 To install the platform, open Windows command prompt (Start > "cmd.exe" > <enter>) and run:
 
-```bat
+```cmd
 @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));" && powershell -NoProfile -ExecutionPolicy unrestricted -File %HOMEPATH%\src\ps1\install-src.ps1
 ```
 
@@ -72,6 +72,21 @@ This will kick off the following chain in this order:
   * Hard link executables from the ~/local directories to ~/local/bin
   * Execute additional powershell scripts to configure shell
   * Execute shell scripts to configure linux environment
+
+
+
+Alternate Cmd.exe Scripts
+-------------------------
+
+[**Download updated sources to ~/src but do not install (same filenames will be skipped):**](cmd/download-install-src.cmd)
+```cmd
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));"
+```
+
+[**Install the current ~/src configuration to ~/local:**](cmd/install-src.cmd)
+```cmd
+@powershell -NoProfile -ExecutionPolicy unrestricted -File %HOMEPATH%\src\ps1\install-src.ps1
+```
 
 ___
 

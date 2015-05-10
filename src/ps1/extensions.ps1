@@ -55,6 +55,10 @@ Function Execute-Ps1($filePath) {
     Execute powershell.exe "-File=$filePath"
 }
 
+Function Execute-Sh($filePath) {
+    Execute msys2_shell.bat ""
+}
+
 Function Install-Msi ($filePath, $arguments) {
     Execute msiexec.exe "/i $filePath $arguments"
 }

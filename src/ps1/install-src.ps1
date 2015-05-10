@@ -58,6 +58,7 @@ $installs.sh|Write-PipeTable|Execute-ShScripts
 
 
  <#
+ 8:30 9, 11
   @{
     title='MSYS2Base 20150202 Linux Virtualization Layer';
     url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';

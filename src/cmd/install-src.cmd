@@ -1,1 +1,1 @@
-powershell -NoProfile -ExecutionPolicy unrestricted -File ../ps1/install-src.ps1
+powershell -NoProfile -ExecutionPolicy unrestricted -File %HOMEPATH%\src\ps1\install-src.ps1
