@@ -63,7 +63,7 @@ Function Scrape-Files-Recursive ($relativeUri, $relativeUriOut, $relativePath) {
     $fileUrl = "$relativeUriOut/$($fileLink.innerText)"
     $filePath = Join-Path $relativePath $fileLink.innerText
     (New-Object PSObject -Property @{
-      fileUrl="$fileUrl?$(Get-Random)";
+      fileUrl="$fileUrl";
       filePath= $filePath;
     })
   }
@@ -74,9 +74,14 @@ $fileMaps=Scrape-Files-Recursive $srcUri $rawBaseUri $srcPath
 
 Write-Host ($fileMaps | Format-List | Out-String)
 
+Filter Append-Random {
+  $_.fileUrl += "?$(Get-Random)"
+  $_
+}
+
+
 # Takes a pipe of FileUrl FilePath, creates the directories, and downloads the file
-Filter Download-Files
-{
+Filter Download-Files {
     $fileUrl = $_.fileUrl
     $filePath = $_.filePath
     If (!(Test-Path -Path $filePath -PathType Leaf)) {
@@ -90,5 +95,5 @@ Filter Download-Files
 }
 
 #Download all github raw source files and binary files
-$fileMaps|Download-Files
+$fileMaps|Append-Random|Download-Files
 $binFiles|Download-Files
