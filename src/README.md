@@ -55,8 +55,7 @@ Paths
 Scripts
 -------
 
-To install the platform, open Windows command prompt (Start > "cmd.exe" > <enter>) and run:
-
+[To get the platform, open Windows command prompt (Start > "cmd.exe" > [enter]) and run:](cmd/download-install-src.cmd)
 ```cmd
 @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));" && powershell -NoProfile -ExecutionPolicy unrestricted -File %HOMEPATH%\src\ps1\install-src.ps1
 ```
@@ -75,8 +74,8 @@ This will kick off the following chain in this order:
 
 
 
-Alternate Cmd.exe Scripts
--------------------------
+Other Cmd.exe Scripts
+---------------------
 
 [**Download updated sources to ~/src but do not install (same filenames will be skipped):**](cmd/download-install-src.cmd)
 ```cmd
