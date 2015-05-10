@@ -13,30 +13,24 @@ $classFilter = 'js-directory-link'
 # Each of these get downloaded to bin path
 $binFiles = @(
  @{
-    title='7-Zip Command Line';
-    fileUrl='http://www.7-zip.org/a/7za920.zip';
-    filePath=(Join-Path $binPath 7za920.zip)
+    title='7-Zip Command Line'
+    src='http://www.7-zip.org/a/7za920.zip'
+    dest=Join-Path $binPath 7za920.zip
   },
-  <# Going to use python portable instead
-  @{
-    title='Python 2.7.9';
-    fileUrl='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
-    filePath=(Join-Path $binPath python-2.7.9.msi)
-  },
-  @{
-    title='Python Portable 2.7.6.1';
-    fileUrl='https://s3-us-west-2.amazonaws.com/tixinc/python/python_2761.7z';
-    filePath=(Join-Path $binPath python_2761.7z)
-  },#>
   @{
     title='Python Portable 2.7.6.1 Core';
-    fileUrl='https://s3-us-west-2.amazonaws.com/tixinc/python/python_2761_core.7z';
-    filePath=(Join-Path $binPath python_2761_core.7z)
+    src='https://s3-us-west-2.amazonaws.com/tixinc/python/python_2761_core.7z'
+    dest=Join-Path $binPath python_2761_core.7z
   },
   @{
-    title='MSYS2Base 20150202 Linux Virtualization Layer';
-    fileUrl='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
-    filePath=(Join-Path $binPath msys2-base-x86_64-20150202.tar.xz)
+    title='cmder - Portable console emulator for windows'
+    src='https://s3-us-west-2.amazonaws.com/tixinc/cmder/cmder_mini.7z'
+    dest=Join-Path $binPath cmder_mini.7z
+  },
+  @{
+    title='MSYS2Base 20150202 Linux Virtualization Layer'
+    src='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz'
+    dest=Join-Path $binPath msys2-base.tar.xz
   }
 )
 
@@ -60,37 +54,37 @@ Function Scrape-Files-Recursive ($relativeUri, $relativeUriOut, $relativePath) {
   $fileLinks = $links|Where{$_.innerText -Like $fileFilter}
 
   ForEach($fileLink in $fileLinks) {
-    $fileUrl = "$relativeUriOut/$($fileLink.innerText)"
-    $filePath = Join-Path $relativePath $fileLink.innerText
+    $src = "$relativeUriOut/$($fileLink.innerText)"
+    $dest= Join-Path $relativePath $fileLink.innerText
     (New-Object PSObject -Property @{
-      fileUrl="$fileUrl";
-      filePath= $filePath;
+      src="$src";
+      dest=$dest;
     })
   }
 }
 
-# Recursively scrape github raw repo for the FilePath FileUrl objects
+# Recursively scrape github raw repo for the dest src objects
 $fileMaps=Scrape-Files-Recursive $srcUri $rawBaseUri $srcPath
 
 Write-Host ($fileMaps | Format-List | Out-String)
 
 Filter Append-Random {
-  $_.fileUrl += "?$(Get-Random)"
+  $_.src += "?$(Get-Random)"
   $_
 }
 
 
-# Takes a pipe of FileUrl FilePath, creates the directories, and downloads the file
+# Takes a pipe of src dest, creates the directories, and downloads the file
 Filter Download-Files {
-    $fileUrl = $_.fileUrl
-    $filePath = $_.filePath
-    If (!(Test-Path -Path $filePath -PathType Leaf)) {
-        Write-Host "Downloading $fileUrl to $filePath"
-        $dir = Split-Path $filePath -Parent
+    $src = $_.src
+    $dest= $_.dest
+    If (!(Test-Path -Path $dest -PathType Leaf)) {
+        Write-Host "Downloading $src to $dest"
+        $dir = Split-Path $dest -Parent
         If(!(Test-Path -Path $dir -PathType Container)) {
           New-Item -Path $dir -type Directory
         }
-        Invoke-WebRequest "$fileUrl" -OutFile "$filePath"
+        Invoke-WebRequest "$src" -OutFile "$dest"
     }
 }
 

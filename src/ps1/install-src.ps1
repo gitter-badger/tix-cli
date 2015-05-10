@@ -17,44 +17,44 @@ Function New-SymLinkBin($target) {
   New-HardLinkIn $local.bin $target
 }
 
-Filter Install-Zip {
+Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
   New-SymLinkBin $_.link
 }
 
-Filter Install-7z {
+Filter Expand-7zArchives {
   Expand-7z $_.src $_.dest
   New-SymLinkBin $_.link
 }
 
-Filter Install-TarXz {
+Filter Expand-TarXzArchives {
   Expand-TarXz $_.src $_.dest
   New-SymLinkBin $_.link
 }
 
-Filter Run-Ps1 {
+Filter Execute-Ps1Scripts {
   Execute-Ps1 $_.src
 }
 
-Filter Run-Sh {
-
+Filter Execute-ShScripts {
+  Execute-Sh $_.src
 }
 
 
 Write-Host "--Installing zip archives--"
-$installs.zip|Write-PipeTable|Install-Zip
+#$installs.zip|Write-PipeTable|Install-ZipArchives
 
 Write-Host "--Installing 7z archives--"
-$installs.sevenZ|Write-PipeTable|Install-7z
+#$installs.sevenZ|Write-PipeTable|Install-7zArchives
 
 Write-Host "--Installing tar.xz archives--"
-$installs.tarXz|Write-PipeTable|Install-TarXz
+$installs.tarXz|Write-PipeTable|Install-TarXzArchives
 
 Write-Host "--Executing ps1 scripts--"
-$installs.ps1|Write-PipeTable|Run-Ps1
+#$installs.ps1|Write-PipeTable|Execute-Ps1Scripts
 
 Write-Host "--Executing sh scripts--"
-$installs.sh|Write-PipeTable|Run-Sh
+$installs.sh|Write-PipeTable|Execute-ShScripts
 
 
 $packages = @(

@@ -18,13 +18,19 @@ $installs.Add('sevenZ', @(
     src=Join-Path $src.bin python_2761_core.7z
     dest=Join-Path $base.local python
     link=Join-Path $base.local python\App\python.exe
+  },
+  @{
+    title='cmder - Portable console emulator for windows'
+    src=Join-Path $src.bin cmder_mini.7z
+    dest=Join-Path $base.local cmder
+    link=Join-Path $base.local cmder\Cmder.exe
   }
 ))
 # Defines tar.xz files that need to be decompressed
 $installs.Add('tarXz', @(
   @{
     title='msys2 Core Files (Arch Linux Emulation)'
-    src=Join-Path $src.bin msys2-base-x86_64-20150202.tar.xz
+    src=Join-Path $src.bin msys2-base.tar.xz
     dest=$base.local
     link=Join-Path $base.local msys64\msys2_shell.bat
   }
