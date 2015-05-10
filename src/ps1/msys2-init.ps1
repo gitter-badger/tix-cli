@@ -1,4 +1,5 @@
-. ..\ps1\paths.ps1
-. ..\ps1\extensions.ps1
+param($RootPath=$HOME)
+. $RootPath\src\ps1\extensions-path.ps1 -RootPath $RootPath
+
 
 Execute msys2_shell.bat "exit"

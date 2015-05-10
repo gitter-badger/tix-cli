@@ -55,9 +55,9 @@ Paths
 Scripts
 -------
 
-[**To get the platform, open Windows command prompt (Start > "cmd.exe" > [enter]) and run:**](cmd/download-install-src.cmd)
+[**To download and install the platform, open Windows command prompt (Start > "cmd.exe" > [enter]) and run:**](cmd/download-install-src.cmd)
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));" && powershell -NoProfile -ExecutionPolicy unrestricted -File %HOMEPATH%\src\ps1\install-src.ps1
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));" -Install
 ```
 
 This will kick off the following chain in this order:
@@ -84,7 +84,12 @@ Other Cmd.exe Scripts
 
 [**Install the current ~/src configuration to ~/local:**](cmd/install-src.cmd)
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -File %HOMEPATH%\src\ps1\install-src.ps1
+@powershell -NoProfile -ExecutionPolicy unrestricted -File ~\src\ps1\install-src.ps1
+```
+
+**Download and install to a custom directory (C:\\nix):**
+```cmd
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));" -RootPath C:\nix -Install
 ```
 
 ___

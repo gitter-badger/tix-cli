@@ -6,11 +6,8 @@
 # downloaded.                                                    #
 ##################################################################
 
-#$ErrorActionPreference="Stop"
-
-# Source the extension script to get additional functions and install paths to get path objects
-. ..\ps1\extensions.ps1
-. ..\ps1\install-config.ps1
+param($RootPath=$HOME)
+. $RootPath\src\ps1\install-config.ps1 -RootPath $RootPath
 
 
 Function New-SymLinkBin($target) {
@@ -58,7 +55,7 @@ $installs.sh|Write-PipeTable|Execute-ShScripts
 
 
  <#
- 8:30 9, 11
+  1:20
   @{
     title='MSYS2Base 20150202 Linux Virtualization Layer';
     url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';

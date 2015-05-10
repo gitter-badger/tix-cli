@@ -2,10 +2,14 @@
 # Downloads basic Windows dependencies for TixInc applications.  #
 ##################################################################
 
+# $RootPath is the directory to install src and local file systems to.
+# $Install is a flag that can be set to kick off the installation when download is finished.
+param($RootPath=$HOME, [switch]$Install)
+
 $baseUri = 'https://github.com'
 $rawBaseUri = 'https://raw.githubusercontent.com/TixInc/tix-cli/master/src'
 $srcUri = '/TixInc/tix-cli/tree/master/src'
-$srcPath = Join-Path $HOME src
+$srcPath = Join-Path $RootPath src
 $binPath = Join-Path $srcPath bin
 $fileFilter = '*.*'
 $classFilter = 'js-directory-link'
@@ -91,3 +95,9 @@ Filter Download-Files {
 #Download all github raw source files and binary files
 $fileMaps|Append-Random|Download-Files
 $binFiles|Download-Files
+Write-Host '--Download complete--'
+
+If($Install) {
+  Write-Host "--Installing in $RootPath--"
+  Invoke-Expression $srcPath\ps1\install-src.ps1 -RootPath $RootPath
+}

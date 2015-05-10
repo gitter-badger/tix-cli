@@ -1,4 +1,5 @@
-. ..\ps1\paths.ps1
+param($RootPath=$HOME)
+. $RootPath\src\ps1\extensions-path.ps1 -RootPath $RootPath
 
 # Create installs hash table and add various installation definitions to it
 $installs=@{}
@@ -48,4 +49,4 @@ $installs.Add('sh', @(
   }
 ))
 
-Write-Host 'Install config sourced.'
+Write-Host '--install-config.ps1 sourced--'
