@@ -99,5 +99,5 @@ Write-Host '--Download complete--'
 
 If($Install) {
   Write-Host "--Installing in $RootPath--"
-  Invoke-Expression $srcPath\ps1\install-src.ps1 -RootPath $RootPath
+  Invoke-Expression "$srcPath\ps1\install-src.ps1 -RootPath $RootPath"
 }
