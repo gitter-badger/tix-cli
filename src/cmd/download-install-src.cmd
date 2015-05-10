@@ -1,1 +1,1 @@
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1'));" && %HOMEPATH%\src\cmd\install-src.cmd
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString("https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?Get-Random"));" && powershell -NoProfile -ExecutionPolicy unrestricted -File %HOMEPATH%\src\ps1\install-src.ps1

@@ -13,30 +13,30 @@ $classFilter = 'js-directory-link'
 # Each of these get downloaded to bin path
 $binFiles = @(
  @{
-    Title='7-Zip Command Line';
-    FileUrl='http://www.7-zip.org/a/7za920.zip';
-    FilePath=(Join-Path $binPath 7za920.zip)
+    title='7-Zip Command Line';
+    fileUrl='http://www.7-zip.org/a/7za920.zip';
+    filePath=(Join-Path $binPath 7za920.zip)
   },
   <# Going to use python portable instead
   @{
-    Title='Python 2.7.9';
-    FileUrl='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
-    FilePath=(Join-Path $binPath python-2.7.9.msi)
+    title='Python 2.7.9';
+    fileUrl='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
+    filePath=(Join-Path $binPath python-2.7.9.msi)
   },
   @{
-    Title='Python Portable 2.7.6.1';
-    FileUrl='https://s3-us-west-2.amazonaws.com/tixinc/python/python_2761.7z';
-    FilePath=(Join-Path $binPath python_2761.7z)
+    title='Python Portable 2.7.6.1';
+    fileUrl='https://s3-us-west-2.amazonaws.com/tixinc/python/python_2761.7z';
+    filePath=(Join-Path $binPath python_2761.7z)
   },#>
   @{
-    Title='Python Portable 2.7.6.1 Core';
-    FileUrl='https://s3-us-west-2.amazonaws.com/tixinc/python/python_2761_core.7z';
-    FilePath=(Join-Path $binPath python_2761_core.7z)
+    title='Python Portable 2.7.6.1 Core';
+    fileUrl='https://s3-us-west-2.amazonaws.com/tixinc/python/python_2761_core.7z';
+    filePath=(Join-Path $binPath python_2761_core.7z)
   },
   @{
-    Title='MSYS2Base 20150202 Linux Virtualization Layer';
-    FileUrl='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
-    FilePath=(Join-Path $binPath msys2-base-x86_64-20150202.tar.xz)
+    title='MSYS2Base 20150202 Linux Virtualization Layer';
+    fileUrl='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
+    filePath=(Join-Path $binPath msys2-base-x86_64-20150202.tar.xz)
   }
 )
 
@@ -63,8 +63,8 @@ Function Scrape-Files-Recursive ($relativeUri, $relativeUriOut, $relativePath) {
     $fileUrl = "$relativeUriOut/$($fileLink.innerText)"
     $filePath = Join-Path $relativePath $fileLink.innerText
     (New-Object PSObject -Property @{
-      FileUrl=$fileUrl;
-      FilePath= $filePath;
+      fileUrl="$fileUrl?$(Get-Random)";
+      filePath= $filePath;
     })
   }
 }
@@ -77,8 +77,8 @@ Write-Host ($fileMaps | Format-List | Out-String)
 # Takes a pipe of FileUrl FilePath, creates the directories, and downloads the file
 Filter Download-Files
 {
-    $fileUrl = $_.FileUrl
-    $filePath = $_.FilePath
+    $fileUrl = $_.fileUrl
+    $filePath = $_.filePath
     If (!(Test-Path -Path $filePath -PathType Leaf)) {
         Write-Host "Downloading $fileUrl to $filePath"
         $dir = Split-Path $filePath -Parent

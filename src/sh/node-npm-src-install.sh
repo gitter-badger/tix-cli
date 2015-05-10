@@ -1,8 +1,8 @@
 # this way is best if you want to stay up to date
 # or submit patches to node or npm
 
-mkdir ~/local
-mkdir ~/src
+#mkdir ~/local
+#mkdir ~/src
 
 echo 'export PATH=$HOME/local/bin:$PATH' >> ~/.bashrc
 . ~/.bashrc

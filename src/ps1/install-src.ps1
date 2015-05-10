@@ -6,178 +6,43 @@
 # downloaded.                                                    #
 ##################################################################
 
-$ErrorActionPreference = "Stop"
+#$ErrorActionPreference="Stop"
 
-# Source the extension script to get additional functions.
-. Join-Path $HOME src\ps1\extensions.ps1
+# Source the extension script to get additional functions and install paths to get path objects
+. ..\ps1\extensions.ps1
+. ..\ps1\install-config.ps1
 
-# Declare objects to store paths of source files (~/src) and install (~/local) paths
-$base=@{
-  src=Join-Path $HOME src
-  local=Join-Path $HOME local
+
+Function New-SymLinkBin($target) {
+  New-HardLinkIn $local.bin $target
 }
 
-$src=@{
-  bin=Join-Path $base.src bin
-  cmd=Join-Path $base.src cmd
-  ps1=Join-Path $base.src ps1
-  sh=Join-Path $base.src sh
+Filter Install-Zip {
+  #Write-Host ($_ | Format-Table | Out-String)
+  Expand-Zip $_.src $_.dest
+  New-SymLinkBin $_.link
 }
 
-$local=@{
-  bin=Join-Path $base.local bin
+Filter Install-7z {
+  #Write-Host ($_ | Format-Table | Out-String)
+  Expand-7z $_.src $_.dest
+  New-SymLinkBin $_.link
 }
 
-Write-Host ($src| Format-List | Out-String)
+Filter Install-TarXz {
 
 
-$install=@{
-  zips=@(
-    @{
-
-    }
-  ),
-  7zs=@(
-    @{
-
-    }
-  ),
-  sh=@(
-    @{
-      
-    }
-  )
 }
 
+Write-Host "--Installing zip archives--"
+$installs.zip|Write-PipeTable|Install-Zip
 
-<#
-$7zDir = "$install\7z"
-$7zPath = "$7zDir\7z.exe"
-$pythonDir = "$install\python"
-$pythonPath = "$pythonPath\python.exe"
-$msys2Dir = "$install\msys64"
-$msys2Path = "$msys2Dir\msys2_shell.bat"
-#>
+Write-Host "--Installing 7z archives--"
+$installs.sevenZ|Write-PipeTable|Install-7z
 
-# Switch over to sym link in local bin path
-#$env:Path += ";$7zDir;$pythonDir;$msys2Dir"
+Write-Host "--Installing tar.xz archives--"
+$installs.tarXz|Write-PipeTable|Install-TarXz
 
-$zip = @(
-
-)
-
-$7z = @(
-)
-
-$tarXz = @(
-
-)
-
-$downloads = @(
-
-
-)
-
-$packages = @(
- <# @{
-    title='7-Zip for Windows';
-    type='download';
-    url='http://www.7-zip.org/a/7z938-x64.msi';
-    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 /norestart INSTALLDIR=`"$7zDir`""
-  },
-  @{
-    title='7-Zip Command Line';
-    type='download';
-    url='http://www.7-zip.org/a/7za920.zip';
-    destPath="$7zDir"
-  },
-  @{
-    title='Python 2.7.9';
-    type='download';
-    url='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
-    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 /norestart TARGETDIR=`"$pythonPath`""
-  },
-  @{
-    title='MSYS2Base 20150202 Linux Virtualization Layer';
-    type='download';
-    url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
-    execute="$msys2Path";
-    arguments="exit"
-  },
-  @{
-    title='MSYS2 Synchronize and Update packages';
-    type='download';
-    url='$repo/bin/msys2-sync-update.sh?' + Get-Random;
-    execute="$msys2Path";
-    arguments="$source\msys2-sync-update.sh exit"
-  },
-  @{
-    title='Tix Post Install Script';
-    type='download';
-    url='$repo/bin/tix-full-post-install.sh?' + Get-Random;
-    execute="$msys2Path";
-    arguments="$source\tix-full-post-install.sh exit"
-  }
-  #>
-)
-
-
-<#
-
-If (!(Test-Path -Path $source -PathType Container))
-{
-  New-Item -Path $source -ItemType Directory | Out-Null
-}
-
-#>
-
-
-Function Install-Msi ($filePath, $arguments)
-{
-    $command = "/i $filePath $arguments"
-    Write-Host "Installing msi $filePath with $command"
-    Start-Process msiexec.exe -ArgumentList $command -Wait -PassThru
-    Write-Host "Finished installing $filePath"
-}
-
-## Decompresses, unzips, and installs the contents of a .tar.xz package.
-Function Install-Tar-Xz($filePath, $execute, $arguments)
-{
-    # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
-    $argumentsXz = "x -aoa $filePath"
-    Write-Host "Decompressing xz: $7zPath $argumentsXz"
-    Start-Process $7zPath -ArgumentList $argumentsXz -Wait -PassThru
-    Write-Host "Finished decompressing"
-
-    # Unzip: x (Extract w/ full paths) -aoa (Overwrite files:no prompt) -ttar (tar file) -o (dest)
-    $filePathTar = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
-    $argumentsTar = "x -aoa -ttar -o$install $filePathTar"
-    Write-Host "Unzipping tar: $7zPath $argumentsTar"
-    Start-Process $7zPath -ArgumentList $argumentsTar -Wait -PassThru
-    Write-Host "Finished unzipping"
-
-    Write-Host "Installing: $execute $arguments"
-    Start-Process $execute -ArgumentList $arguments -Wait -PassThru
-    Write-Host "Finished installing"
-}
-
-Function Install-Zip($zipPath) {
-   Expand-Zip $zipPath
-}
-
-Function Execute-With-Args ($filePath, $arguments)
-{
-    Write-Host "Installing $filePath with $arguments"
-    Start-Process $filePath -ArgumentList $arguments -Wait -PassThru
-    Write-Host "Finished installing $filePath"
-}
-
-Function Execute ($filePath)
-{
-    Write-Host "Installing $filePath"
-    Start-Process $filePath -Wait -PassThru
-    Write-Host "Finished installing $filePath"
-}
 
 #Once we've downloaded all our files lets install them.
 ForEach ($package in $packages) {
@@ -185,13 +50,6 @@ ForEach ($package in $packages) {
     $type = $package.type
     Write-Host "Processing $title as $type"
     If($type -eq 'download') {
-      $url = $package.url
-      $fileName = Split-Path $url -Leaf
-      $filePath = Join-Path -Path $source -ChildPath $fileName
-      Download-File -url $url -filePath $filePath
-      $fileNameNoExt = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
-      $ext = [System.IO.Path]::GetExtension($fileName)
-      Write-Host "Installing $filePath with extension $ext"
       If ($ext -eq '.msi')
       {
         Install-Msi $filePath $package.arguments
@@ -243,3 +101,60 @@ ForEach ($package in $packages) {
           }
     }
 }
+
+
+<#
+$msys2Dir = "$install\msys64"
+$msys2Path = "$msys2Dir\msys2_shell.bat"
+#>
+
+# Switch over to sym link in local bin path
+#$env:Path += ";$7zDir;$pythonDir;$msys2Dir"
+
+$packages = @(
+ <# @{
+    title='7-Zip for Windows';
+    url='http://www.7-zip.org/a/7z938-x64.msi';
+    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 /norestart INSTALLDIR=`"$7zDir`""
+  },
+  @{
+    title='7-Zip Command Line';
+    url='http://www.7-zip.org/a/7za920.zip';
+    destPath="$7zDir"
+  },
+  @{
+    title='Python 2.7.9';
+    url='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
+    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 /norestart TARGETDIR=`"$pythonPath`""
+  },
+  @{
+    title='MSYS2Base 20150202 Linux Virtualization Layer';
+    url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
+    execute="$msys2Path";
+    arguments="exit"
+  },
+  @{
+    title='MSYS2 Synchronize and Update packages';
+    url='$repo/bin/msys2-sync-update.sh?' + Get-Random;
+    execute="$msys2Path";
+    arguments="$source\msys2-sync-update.sh exit"
+  },
+  @{
+    title='Tix Post Install Script';
+    url='$repo/bin/tix-full-post-install.sh?' + Get-Random;
+    execute="$msys2Path";
+    arguments="$source\tix-full-post-install.sh exit"
+  }
+  #>
+)
+
+
+<#
+
+If (!(Test-Path -Path $source -PathType Container))
+{
+  New-Item -Path $source -ItemType Directory | Out-Null
+}
+
+#>
+
