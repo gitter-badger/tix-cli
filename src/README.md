@@ -32,12 +32,13 @@ Linux comes in many flavors with differing goals.  There are also multiple ports
 
 This project aims to allow a complete silent portable install and configuration of Linux development tools (shell, git, node.js) to the users home directory.  This should bypass a lot of issues that are caused by Windows UAC.
 
+___
 
 Paths
 -----
 
 * ~/
-  * The users home directory (C:\\Users\\<Username>\\)
+  * The users home directory (C:\\Users\\[Username]\\)
 * ~/src
   * The directory that all source code is downloaded to in preparation for installation.  Future updates of tools will download updated source here in preparation for installation.
   * The [src](https://github.com/TixInc/tix-cli/tree/master/src) folder of this repository (master branch), is recursively walked and downloaded to the local machine.
@@ -72,8 +73,10 @@ This will kick off the following chain in this order:
   * Execute additional powershell scripts to configure shell
   * Execute shell scripts to configure linux environment
 
+___
 
 Links
 -----
-[Better Windows Command Line from Scott Hanselman](http://www.hanselman.com/blog/MakingABetterSomewhatPrettierButDefinitelyMoreFunctionalWindowsCommandLine.aspx)
-[Was the Windows Registry a Good Idea?](http://blog.codinghorror.com/was-the-windows-registry-a-good-idea/)
+
+* [Better Windows Command Line from Scott Hanselman](http://www.hanselman.com/blog/MakingABetterSomewhatPrettierButDefinitelyMoreFunctionalWindowsCommandLine.aspx)
+* [Was the Windows Registry a Good Idea?](http://blog.codinghorror.com/was-the-windows-registry-a-good-idea/)
