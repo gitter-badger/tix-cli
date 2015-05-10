@@ -4,22 +4,25 @@ tix-cli
 TixCli is a [command line interface](http://en.wikipedia.org/wiki/Command-line_interface) to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.
 
 
-##### Full Install
+No Shell?
+---------
 
-[**To download and install the platform, open Windows command prompt (Start > "cmd.exe" > [enter]) and run:**](cmd/download-install-src.cmd)
+##### Full Install (Windows command prompt)
+
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)')) -Install"
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|iex -Install"
 ```
 
 
-##### Basic Install
+Got Shell?
+----------
 
+##### Basic Install
 ```sh
 npm install -g tix-cli
 ```
 
 ##### Install and start interactive tix shell
-
 ```sh
 npm install -g tix-cli && tix
 ```
