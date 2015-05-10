@@ -1,10 +1,10 @@
-param($Install=FALSE,$RootPath=$HOME)
-# $Install is a flag that can be set to kick off the installation when download is finished.
-# $RootPath is the directory to install src and local file systems to.
-
+param($RootPath=$HOME, [switch]$Install)
 ##################################################################
 # Downloads basic Windows dependencies for TixInc applications.  #
 ##################################################################
+
+# $RootPath is the directory to install src and local file systems to.
+# $Install is a flag that can be set to kick off the installation when download is finished.
 
 $baseUri = 'https://github.com'
 $rawBaseUri = 'https://raw.githubusercontent.com/TixInc/tix-cli/master/src'
