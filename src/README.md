@@ -55,7 +55,7 @@ Paths
 Scripts
 -------
 
-[To get the platform, open Windows command prompt (Start > "cmd.exe" > [enter]) and run:](cmd/download-install-src.cmd)
+[**To get the platform, open Windows command prompt (Start > "cmd.exe" > [enter]) and run:**](cmd/download-install-src.cmd)
 ```cmd
 @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));" && powershell -NoProfile -ExecutionPolicy unrestricted -File %HOMEPATH%\src\ps1\install-src.ps1
 ```
