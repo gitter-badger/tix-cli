@@ -42,37 +42,22 @@ Filter Execute-ShScripts {
 
 
 Write-Host "--Installing zip archives--"
-#$installs.zip|Write-PipeTable|Install-ZipArchives
+$installs.zip|Write-PipeTable|Install-ZipArchives
 
 Write-Host "--Installing 7z archives--"
-#$installs.sevenZ|Write-PipeTable|Install-7zArchives
+$installs.sevenZ|Write-PipeTable|Install-7zArchives
 
 Write-Host "--Installing tar.xz archives--"
 $installs.tarXz|Write-PipeTable|Install-TarXzArchives
 
 Write-Host "--Executing ps1 scripts--"
-#$installs.ps1|Write-PipeTable|Execute-Ps1Scripts
+$installs.ps1|Write-PipeTable|Execute-Ps1Scripts
 
 Write-Host "--Executing sh scripts--"
 $installs.sh|Write-PipeTable|Execute-ShScripts
 
 
-$packages = @(
- <# @{
-    title='7-Zip for Windows';
-    url='http://www.7-zip.org/a/7z938-x64.msi';
-    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 /norestart INSTALLDIR=`"$7zDir`""
-  },
-  @{
-    title='7-Zip Command Line';
-    url='http://www.7-zip.org/a/7za920.zip';
-    destPath="$7zDir"
-  },
-  @{
-    title='Python 2.7.9';
-    url='https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi';
-    arguments="/qb ALLUSERS=2 MSIINSTALLPERUSER=1 /norestart TARGETDIR=`"$pythonPath`""
-  },
+ <#
   @{
     title='MSYS2Base 20150202 Linux Virtualization Layer';
     url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
@@ -92,4 +77,3 @@ $packages = @(
     arguments="$source\tix-full-post-install.sh exit"
   }
   #>
-)
