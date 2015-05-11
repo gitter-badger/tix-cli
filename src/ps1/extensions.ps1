@@ -1,3 +1,7 @@
+param($RootPath=$HOME)
+$localPath=Join-Path $RootPath local
+$7zaPath=Join-Path $localPath '7z\7za.exe'
+
 Filter Write-PipeTable {
     Param( [switch]$PassThru )
     Write-Host ($_ | Format-Table | Out-String)
@@ -46,9 +50,10 @@ Function Execute($filePath, $arguments)
 }
 
 
+
 Function Execute-7z($arguments) {
-    Write-Host "7za.exe $arguments"
-    Execute 7za.exe $arguments
+    Write-Host "$7zaPath $arguments"
+    Execute $7zaPath $arguments
 }
 
 Function Expand-7z($filePath, $destDir) {
@@ -77,7 +82,7 @@ Function Expand-Tar ($filePath, $destDir) {
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
 Function Expand-TarXz($filePath, $destDir) {
   $destDir|Ensure-Directory
-  Execute-7z "x $filePath -so | 7za.exe x -aoa -si -ttar -o$destDir"
+  Execute-7z "x $filePath -so | $7zaPath x -aoa -si -ttar -o$destDir"
   #7z x "somename.tar.gz" -so | 7z x -aoa -si -ttar -o"somename"
     #$tarPath=Decompress-Xz $filePath
     #Expand-Tar $tarPath $destDir

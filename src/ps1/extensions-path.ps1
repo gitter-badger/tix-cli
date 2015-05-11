@@ -40,6 +40,4 @@ Function Add-Path ($path) {
     $path|Out-File $pathConfig -Append
 }
 
-Add-Path $local.bin
-
 Write-Host '--extensions-path.ps1 sourced--'
