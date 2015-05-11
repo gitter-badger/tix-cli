@@ -75,7 +75,8 @@ Function Expand-Tar ($filePath, $destDir) {
 
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
 Function Expand-TarXz($filePath, $destDir) {
-  Execute-7z "x -aoa -so $filePath | 7za.exe x -aoa -si -ttar -o$destDir"
+  Execute-7z "x $filePath -so | 7za.exe x -aoa -si -ttar -o$destDir"
+  #7z x "somename.tar.gz" -so | 7z x -aoa -si -ttar -o"somename"
     #$tarPath=Decompress-Xz $filePath
     #Expand-Tar $tarPath $destDir
 }
