@@ -80,7 +80,12 @@ $installs.Add('sh', @(
   #>
   @{
     title='tix-cli && node full install'
-    command=Join-Path $src.sh install-node-tix-cli.sh
+    command="bash $src.sh\install-node-tix-cli.sh"
+  }
+))
+$installs.Add('hardLinks', @(
+  @{
+    link=Join-Path $local cmder\bin\
   }
 ))
 
