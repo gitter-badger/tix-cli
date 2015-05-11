@@ -66,15 +66,16 @@ Function Decompress-Xz ($filePath) {
 }
 
 Function Expand-Tar ($filePath, $destDir) {
-    $arguments = "x -aoa -so -ttar $filePath" > $destDir
+    $arguments = "x -aoa -si -so -ttar $filePath" | $destDir
     # Unzip: x (Extract w/ full paths) -aoa (Overwrite files:no prompt) -ttar (tar file) -o (dest)
     Execute-7z $arguments
 }
 
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
 Function Expand-TarXz($filePath, $destDir) {
-    $tarPath=Decompress-Xz $filePath
-    Expand-Tar $tarPath $destDir
+  Execute-7z "x -aoa -so $filePath | 7za.exe x -aoa -si -ttar -o$destDir"
+    #$tarPath=Decompress-Xz $filePath
+    #Expand-Tar $tarPath $destDir
 }
 
 Function Execute-Ps1($filePath) {
