@@ -80,7 +80,7 @@ $installs.Add('sh', @(
   #>
   @{
     title='tix-cli && node full install'
-    command="bash $src.sh\install-node-tix-cli.sh"
+    command="bash -x $src.sh\install-node-tix-cli.sh"
   }
 ))
 $installs.Add('hardLinks', @(
