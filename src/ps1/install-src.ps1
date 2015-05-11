@@ -1,3 +1,6 @@
+param($RootPath=$HOME)
+. $RootPath\src\ps1\install-config.ps1 -RootPath $RootPath
+
 ##################################################################
 # Downloads basic Windows dependencies for TixInc applications.  #
 #                                                                #
@@ -5,9 +8,6 @@
 # to download installation files and $packages to control whats  #
 # downloaded.                                                    #
 ##################################################################
-
-param($RootPath=$HOME)
-. $RootPath\src\ps1\install-config.ps1 -RootPath $RootPath
 
 
 Function New-SymLinkBin($target) {
