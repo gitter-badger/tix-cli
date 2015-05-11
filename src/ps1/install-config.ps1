@@ -64,10 +64,12 @@ $installs.Add('copy', @(
   }
 ))
 $installs.Add('bat', @(
+              <#
   @{
      title='source paths script'
      filePath=Join-Path $local.bin source-paths.bat
   }
+  #>
 ))
 $installs.Add('ps1', @(
   <#

@@ -1,6 +1,9 @@
 param($RootPath=$HOME)
 $localPath=Join-Path $RootPath local
 $7zaPath=Join-Path $localPath '7z\7za.exe'
+$cmderPath=Join-Path $localPath 'bin\cmder.bat'
+$cmderaPath=Join-Path $localPath 'bin\cmdera.bat'
+
 
 Filter Write-PipeTable {
     Param( [switch]$PassThru )
@@ -50,7 +53,7 @@ Function Execute($filePath, $arguments)
 }
 
 Function Execute-Sh($command) {
-    Execute cmdera.bat $command
+    Execute $cmderaPath $command
 }
 
 
