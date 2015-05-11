@@ -31,9 +31,11 @@ Function Add-Path ($path) {
     $env:Path = $path + ';' + $env:Path
 }
 
+$path=Join-Path $local.bin "path.txt"
 Function Add-DirPath($dir) {
     Add-Path $dir
-    ';' + $dir|Out-File $local.bin\path.txt -Append
+
+    (';' + $dir)|Out-File $path -Append
 }
 
 Add-Path $local.bin
