@@ -43,7 +43,7 @@ $binFiles = @(
     title='cmder - Portable console emulator for windows'
     src='https://s3-us-west-2.amazonaws.com/tixinc/cmder/cmder_mini.7z'
     dest=Join-Path $binPath cmder.7z
-  },
+  }
   <#
   @{
     title='cmder - Portable console emulator for windows'
