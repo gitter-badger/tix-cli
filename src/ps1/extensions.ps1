@@ -59,14 +59,14 @@ Function Decompress-Xz ($filePath) {
     #$tarName = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
     $tarPath =  $filePath.Substring(0, $filePath.LastIndexOf('.'))
     # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
-    $arguments = "x -aoa $filePath"
+    $arguments = "x -aoa -so $filePath"
     Execute-7z $arguments > $tarPath
     Write-Output $tarPath
     # Return path of tar on stdout
 }
 
 Function Expand-Tar ($filePath, $destDir) {
-    $arguments = "x -aoa -ttar -o" + $destDir + " " + $filePath
+    $arguments = "x -aoa -so -ttar $filePath" > $destDir
     # Unzip: x (Extract w/ full paths) -aoa (Overwrite files:no prompt) -ttar (tar file) -o (dest)
     Execute-7z $arguments
 }
