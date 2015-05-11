@@ -21,6 +21,8 @@ $local=@{
   bin=Join-Path $base.local bin
 }
 
+New-Item
+
 Write-Host '--Creating src and local directories--'
 $src.Values|Ensure-Directory -PassThru
 $local.Values|Ensure-Directory -PassThru
@@ -32,7 +34,7 @@ Function Add-Path ($path) {
 
 Function Add-DirPath($dir) {
     Add-Path $dir
-    ';' + $dir >> $local.bin\path.txt
+    ';' + $dir|Out-File $local.bin\path.txt -Append
 }
 
 Add-Path $local.bin
