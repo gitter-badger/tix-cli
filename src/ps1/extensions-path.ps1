@@ -32,7 +32,7 @@ Function Add-Path ($path) {
 
 Function Add-DirPath($dir) {
     Add-Path $dir
-    ';' + $path >> $local.bin\path.txt
+    ';' + $dir >> $local.bin\path.txt
 }
 
 Add-Path $local.bin
