@@ -78,7 +78,7 @@ Filter Append-Random {
 }
 
 If($CleanSource) {
-  $src.Values|Remove-Item
+  $srcPath\cmd,$srcPath\ps1,$srcPath\sh|Test-Item|Remove-Item
 }
 
 # Takes a pipe of src dest, creates the directories, and downloads the file
