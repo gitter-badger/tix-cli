@@ -14,19 +14,16 @@ $binPath = Join-Path $srcPath bin
 $fileFilter = '*.*'
 $classFilter = 'js-directory-link'
 
-
-
-
 If($CleanSource) {
-  Function Remove-Path ($path) {
-    If (Test-Path $path) {
-      Remove-Item $path -Recurse
-    }
+  If (Test-Path $srcPath\cmd) {
+    Remove-Item $srcPath\cmd -Recurse
   }
-
-  Remove-Path $srcPath\cmd
-  Remove-Path $srcPath\ps1
-  Remove-Path $srcPath\sh
+  If (Test-Path $srcPath\ps1) {
+    Remove-Item $srcPath\ps1 -Recurse
+  }
+  If (Test-Path $srcPath\sh) {
+    Remove-Item $srcPath\sh -Recurse
+  }
 }
 
 
