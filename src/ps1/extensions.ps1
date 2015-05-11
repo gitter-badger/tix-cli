@@ -56,9 +56,11 @@ Function Expand-7z($filePath, $destDir) {
 }
 
 Function Decompress-Xz ($filePath) {
+    $tarPath = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
     # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
     $arguments = "x -aoa $filePath"
-    Execute-7z $arguments
+    Execute-7z $arguments > $tarPath
+    Write-Output $tarPath
     # Return path of tar on stdout
 }
 
@@ -70,8 +72,7 @@ Function Expand-Tar ($filePath, $destDir) {
 
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
 Function Expand-TarXz($filePath, $destDir) {
-    Decompress-Xz $filePath
-    $tarPath = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
+    $tarPath=Decompress-Xz $filePath
     Expand-Tar $tarPath $destDir
 }
 
@@ -132,6 +133,12 @@ Function Download-File($url, $filePath) {
 
 Filter Download-Files {
     Download-File $_.fileUrl $_.filePath
+}
+
+Function Pin-TaskBar(fileDir, fileName) {
+  $sa = new-object -c shell.application
+  $pn = $sa.namespace(fileDir).parsename(fileName)
+  $pn.invokeverb('taskbarpin')
 }
 
 Write-Host '--extensions.ps1 sourced--'

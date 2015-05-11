@@ -18,13 +18,15 @@ $installs.Add('sevenZ', @(
     title='Python Portable 2.7.6.1 Core'
     src=Join-Path $src.bin python_2761_core.7z
     dest=Join-Path $base.local python
-    link=Join-Path $base.local python\App\python.exe
+    #link=Join-Path $base.local python\App\python.exe
+    addPath=Join-Path $base.local python\App
   },
   @{
     title='cmder - Portable console emulator for windows'
     src=Join-Path $src.bin cmder_mini.7z
     dest=Join-Path $base.local cmder
-    link=Join-Path $base.local cmder\Cmder.exe
+    #link=Join-Path $base.local cmder\Cmder.exe
+    addPath=Join-Path $base.local cmder
   }
 ))
 # Defines tar.xz files that need to be decompressed
@@ -34,6 +36,7 @@ $installs.Add('tarXz', @(
     src=Join-Path $src.bin msys2-base.tar.xz
     dest=$base.local
     link=Join-Path $base.local msys64\msys2_shell.bat
+    addPath=Join-Path $base.local msys64
   }
 ))
 $installs.Add('ps1', @(
@@ -44,9 +47,9 @@ $installs.Add('ps1', @(
 ))
 # Defines shell script files that need to be executed
 $installs.Add('sh', @(
-  @{
-    title=''
-  }
+  #@{
+  #  title=''
+  #}
 ))
 
 Write-Host '--install-config.ps1 sourced--'

@@ -19,12 +19,23 @@ $src=@{
 # Paths within the local (installed) directory
 $local=@{
   bin=Join-Path $base.local bin
+  path=Join-Path $base.local bin\path.txt
 }
 
 Write-Host '--Creating src and local directories--'
 $src.Values|Ensure-Directory -PassThru
 $local.Values|Ensure-Directory -PassThru
 
-$env:Path = $local.bin + ';' + $env:Path
+
+Function Add-Path ($path) {
+    $env:Path = $path + ';' + $env:Path
+}
+
+Function Add-DirPath($dir) {
+    Add-Path $dir
+    $local.path += ';' + $path
+}
+
+Add-Path $local.bin
 
 Write-Host '--extensions-path.ps1 sourced--'

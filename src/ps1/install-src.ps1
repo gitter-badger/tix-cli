@@ -9,23 +9,38 @@ param($RootPath=$HOME)
 # downloaded.                                                    #
 ##################################################################
 
-Function New-SymLinkBin($target) {
+Function New-HardLinkBin($target) {
   New-HardLinkIn $local.bin $target
 }
 
 Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
-  New-SymLinkBin $_.link
+  If($_.link) {
+    New-HardLinkBin $_.link
+  }
+  if(!_.addPath) {
+    Add-DirPath _.addPath
+  }
 }
 
 Filter Expand-7zArchives {
   Expand-7z $_.src $_.dest
-  New-SymLinkBin $_.link
+  If($_.link) {
+    New-HardLinkBin $_.link
+  }
+  if(!_.addPath) {
+    Add-DirPath _.addPath
+  }
 }
 
 Filter Expand-TarXzArchives {
   Expand-TarXz $_.src $_.dest
-  New-SymLinkBin $_.link
+  If($_.link) {
+    New-HardLinkBin $_.link
+  }
+  if(!_.addPath) {
+    Add-DirPath _.addPath
+  }
 }
 
 Filter Execute-Ps1Scripts {
