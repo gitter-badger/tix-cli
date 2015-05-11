@@ -40,8 +40,8 @@ $binFiles = @(
     dest=Join-Path $binPath python_2761_core.7z
   },
   @{
-    title='cmder - Portable console emulator for windows'
-    src='https://s3-us-west-2.amazonaws.com/tixinc/cmder/cmder_mini.7z'
+    title='cmder full - Portable console emulator for windows'
+    src='https://s3-us-west-2.amazonaws.com/tixinc/cmder/cmder.7z'
     dest=Join-Path $binPath cmder.7z
   }
   <#

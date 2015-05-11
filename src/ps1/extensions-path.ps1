@@ -20,6 +20,7 @@ $src=@{
 # Paths within the local (installed) directory
 $local=@{
   bin=Join-Path $base.local bin
+  config=Join-Path $base.local path
 }
 
 
@@ -28,16 +29,14 @@ $src.Values|Ensure-Directory -PassThru
 $local.Values|Ensure-Directory -PassThru
 
 
-Function Add-Path ($path) {
-    $env:Path = $path + ';' + $env:Path
-}
 
-$path=Join-Path $local.bin "path"
+$path=Join-Path $local.config "path.config"
 if(Test-Path $path) {
     rm $path
 }
-Function Add-DirPath($dir) {
-    Add-Path $dir
+
+Function Add-Path ($path) {
+    $env:Path = $path + ';' + $env:Path
     $dir|Out-File $path -Append
 }
 

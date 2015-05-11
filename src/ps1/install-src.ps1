@@ -13,13 +13,6 @@ Function New-HardLinkBin($target) {
   New-HardLinkIn $local.bin $target
 }
 
-Filter Copy-Files {
-  If(Test-Path $_.dest) {
-    rm $_.dest
-  }
-  Copy-Item $_.src $_.dest
-}
-
 Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
   If($_.link) {
@@ -42,12 +35,7 @@ Filter Expand-7zArchives {
 
 Filter Expand-TarXzArchives {
   Expand-TarXz $_.src $_.dest
-  If($_.link) {
-    New-HardLinkBin $_.link
-  }
-  if($_.addPath) {
-    Add-DirPath $_.addPath
-  }
+
 }
 
 Filter Execute-Ps1Scripts {
@@ -55,11 +43,35 @@ Filter Execute-Ps1Scripts {
 }
 
 Filter Execute-ShScripts {
+  Execute-Sh $_.filePath
+}
+
+Filter Execute-InlineShScripts {
   Execute-Sh $_.command
 }
 
-Write-Host "--Copying static files--"
-$installs.copy|Write-PipeList -PassThru|Copy-Files
+Filter Add-SymLinks {
+
+}
+
+Filter Add-HardLinks {
+  If($_.link) {
+    New-HardLinkBin $_.link
+  }
+}
+
+Filter Copy-Files {
+  If(Test-Path $_.dest) {
+    rm $_.dest
+  }
+  Copy-Item $_.src $_.dest
+}
+
+Filter Add-Paths {
+  If($_.path) {
+    Add-Path $_.path
+  }
+}
 
 Write-Host "--Installing zip archives--"
 $installs.zip|Write-PipeList -PassThru|Expand-ZipArchives
@@ -75,6 +87,21 @@ $installs.ps1|Write-PipeList -PassThru|Execute-Ps1Scripts
 
 Write-Host "--Executing sh scripts--"
 $installs.sh|Write-PipeList -PassThru|Execute-ShScripts
+
+Write-Host "--Executing inline sh scripts--"
+$installs.inlineSh|Write-PipeList -PassThru|Execute-InlineShScripts
+
+Write-Host "--Adding symbolic links--"
+$installs.symLinks|Write-PipeList -PassThru|Add-SymLinks
+
+Write-Host "--Adding hard links--"
+$installs.hardLinks|Write-PipeList -PassThru|Add-HardLinks
+
+Write-Host "--Copying files--"
+$installs.copy|Write-PipeList -PassThru|Copy-Files
+
+Write-Host "--Adding to path--"
+$installs.paths|Write-PipeList -PassThru|Add-Paths
 
 
  <#
