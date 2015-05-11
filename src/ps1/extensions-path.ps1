@@ -20,7 +20,7 @@ $src=@{
 # Paths within the local (installed) directory
 $local=@{
   bin=Join-Path $base.local bin
-  config=Join-Path $base.local path
+  config=Join-Path $base.local config
 }
 
 
@@ -40,6 +40,7 @@ Function Add-Path ($path) {
     $dir|Out-File $path -Append
 }
 
+Write-Host $local.bin
 Add-Path $local.bin
 
 Write-Host '--extensions-path.ps1 sourced--'

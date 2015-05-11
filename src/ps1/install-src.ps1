@@ -15,27 +15,14 @@ Function New-HardLinkBin($target) {
 
 Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
-  If($_.link) {
-    New-HardLinkBin $_.link
-  }
-  if($_.addPath) {
-    Add-DirPath $_.addPath
-  }
 }
 
 Filter Expand-7zArchives {
   Expand-7z $_.src $_.dest
-  If($_.link) {
-    New-HardLinkBin $_.link
-  }
-  if($_.addPath) {
-    Add-DirPath $_.addPath
-  }
 }
 
 Filter Expand-TarXzArchives {
   Expand-TarXz $_.src $_.dest
-
 }
 
 Filter Execute-Ps1Scripts {
@@ -55,9 +42,7 @@ Filter Add-SymLinks {
 }
 
 Filter Add-HardLinks {
-  If($_.link) {
-    New-HardLinkBin $_.link
-  }
+  New-HardLinkBin $_.link
 }
 
 Filter Copy-Files {
@@ -68,9 +53,7 @@ Filter Copy-Files {
 }
 
 Filter Add-Paths {
-  If($_.path) {
-    Add-Path $_.path
-  }
+  Add-Path $_.path
 }
 
 Write-Host "--Installing zip archives--"
