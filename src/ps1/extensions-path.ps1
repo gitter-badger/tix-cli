@@ -32,7 +32,7 @@ Function Add-Path ($path) {
 }
 
 $path=Join-Path $local.bin "path"
-if(!(Test-Path $path)) {
+if(Test-Path $path) {
     rm $path
 }
 Function Add-DirPath($dir) {
