@@ -43,19 +43,19 @@ Filter Execute-ShScripts {
 
 
 Write-Host "--Installing zip archives--"
-$installs.zip|Write-PipeTable|Expand-ZipArchives
+$installs.zip|Write-PipeTable -PassThru|Expand-ZipArchives
 
 Write-Host "--Installing 7z archives--"
-$installs.sevenZ|Write-PipeTable|Expand-7zArchives
+$installs.sevenZ|Write-PipeTable -PassThru|Expand-7zArchives
 
 Write-Host "--Installing tar.xz archives--"
-$installs.tarXz|Write-PipeTable|Expand-TarXzArchives
+$installs.tarXz|Write-PipeTable -PassThru|Expand-TarXzArchives
 
 Write-Host "--Executing ps1 scripts--"
-$installs.ps1|Write-PipeTable|Execute-Ps1Scripts
+$installs.ps1|Write-PipeTable -PassThru|Execute-Ps1Scripts
 
 Write-Host "--Executing sh scripts--"
-$installs.sh|Write-PipeTable|Execute-ShScripts
+$installs.sh|Write-PipeTable -PassThru|Execute-ShScripts
 
 
  <#

@@ -57,8 +57,10 @@ Scripts
 
 [**To download and install the platform, open Windows command prompt (Start > "cmd.exe" > [enter]) and run:**](cmd/download-install-src.cmd)
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));" -Install
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File ~\tmp.ps1;~\tmp.ps1 -Install"
 ```
+
+
 
 This will kick off the following chain in this order:
 
@@ -77,7 +79,7 @@ This will kick off the following chain in this order:
 Other Cmd.exe Scripts
 ---------------------
 
-[**Download updated sources to ~/src but do not install (same filenames will be skipped):**](cmd/download-install-src.cmd)
+[**Download updated sources to ~/src but do not install (same filenames will be skipped):**](cmd/download-src.cmd)
 ```cmd
 @powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));"
 ```
@@ -89,7 +91,7 @@ Other Cmd.exe Scripts
 
 **Download and install to a custom directory (C:\\nix):**
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));" -RootPath C:\nix -Install
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File ~\tmp.ps1;~\tmp.ps1 -RootPath C:\nix -Install"
 ```
 
 ___

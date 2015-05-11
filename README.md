@@ -10,9 +10,8 @@ No Shell?
 ##### Full Install (Windows command prompt)
 
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|iex -Install"
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File ~\tmp.ps1;~\tmp.ps1 -Install"
 ```
-
 
 Got Shell?
 ----------
@@ -66,7 +65,7 @@ Setup <a id="setup"></a>
 Copy/paste the oneliner below into Administrator command prompt to get Git / Node.js and TixCli installed:
 
 ``` cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-full-install.ps1'))"
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-full-install.ps1'))"|$_
 ```
 
 
