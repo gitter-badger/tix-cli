@@ -1,4 +1,4 @@
-param($RootPath=$HOME, [switch]$Install, [switch]$CleanSource)
+param($RootPath=$HOME, [switch]$Install, [switch]$CleanSource, [switch]$CleanLocal)
 ##################################################################
 # Downloads basic Windows dependencies for TixInc applications.  #
 ##################################################################
@@ -11,6 +11,8 @@ $rawBaseUri = 'https://raw.githubusercontent.com/TixInc/tix-cli/master/src'
 $srcUri = '/TixInc/tix-cli/tree/master/src'
 $srcPath = Join-Path $RootPath src
 $binPath = Join-Path $srcPath bin
+$localPath = Join-Path $RootPath local
+
 $fileFilter = '*.*'
 $classFilter = 'js-directory-link'
 
@@ -23,6 +25,12 @@ If($CleanSource) {
   }
   If (Test-Path $srcPath\sh) {
     Remove-Item $srcPath\sh -Recurse
+  }
+}
+
+If($CleanLocal) {
+  If(Test-Path $localPath) {
+    Remove-Item $localPath -Recurse
   }
 }
 
