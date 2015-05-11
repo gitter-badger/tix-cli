@@ -33,7 +33,7 @@ Function Expand-Zip ($zipPath, $destDir) {
   ForEach($item in $zip.items()) {
     $shell.Namespace($destDir).CopyHere($item, 0x10)
   }
-} 
+}
 
 Function Execute($filePath, $arguments)
 {
@@ -52,7 +52,8 @@ Function Execute-7z($arguments) {
 }
 
 Function Expand-7z($filePath, $destDir) {
-    Execute-7z "x -aoa -o$destDir $filePath"
+  $destDir|Ensure-Directory
+  Execute-7z "x -aoa -o$destDir $filePath"
 }
 
 <#
@@ -75,6 +76,7 @@ Function Expand-Tar ($filePath, $destDir) {
 
 ## Decompresses, unzips, and installs the contents of a .tar.xz package.
 Function Expand-TarXz($filePath, $destDir) {
+  $destDir|Ensure-Directory
   Execute-7z "x $filePath -so | 7za.exe x -aoa -si -ttar -o$destDir"
   #7z x "somename.tar.gz" -so | 7z x -aoa -si -ttar -o"somename"
     #$tarPath=Decompress-Xz $filePath
@@ -102,7 +104,7 @@ Function New-HardLinkIn ($dir, $target) {
   $fileName = [System.IO.Path]::GetFileName($target)
   $dir|Ensure-Directory
   $link = Join-Path $dir $fileName
-  New-HardLink $link $target 
+  New-HardLink $link $target
 }
 
 Function New-SymLink ($link, $target) {
@@ -118,7 +120,7 @@ Function New-SymLinkIn ($dir, $target) {
   $fileName = [System.IO.Path]::GetFileName($target)
   $dir|Ensure-Directory
   $link = Join-Path $dir $fileName
-  New-SymLink $link $target 
+  New-SymLink $link $target
 }
 
 Function Remove-Path ($path) {
