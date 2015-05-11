@@ -15,6 +15,7 @@ $src=@{
   cmd=Join-Path $base.src cmd
   ps1=Join-Path $base.src ps1
   sh=Join-Path $base.src sh
+  xml=Join-Path $base.src xml
 }
 
 # Paths within the local (installed) directory
