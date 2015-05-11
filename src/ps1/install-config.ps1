@@ -43,7 +43,7 @@ $installs.Add('tarXz', @(
     src=Join-Path $src.bin msys2-base.tar.xz
     dest=Join-Path $base.local msys2
     #link=Join-Path $base.local msys64\msys2_shell.bat
-    addPath=Join-Path $base.local msys2\msys64
+    #addPath=Join-Path $base.local msys2\msys64
   }
 ))
 $installs.Add('copy', @(
@@ -61,6 +61,11 @@ $installs.Add('copy', @(
     title='source paths batch file'
     src=Join-Path $src.bat source-paths.bat
     dest=Join-Path $local.bin source-paths.bat
+  },
+  @{
+    title='ConEmu.xml - configuration file for cmder'
+    src=Join-Path $src.xml ConEmu.xml
+    dest=Join-Path $base.local 'cmder\config\ConEmu.xml'
   }
 ))
 $installs.Add('symLinks', @(
