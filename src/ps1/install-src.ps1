@@ -9,6 +9,10 @@ param($RootPath=$HOME)
 # downloaded.                                                    #
 ##################################################################
 
+If(Test-Path -Path $HOME\tmp.ps1) {
+  Remove-Item $HOME\tmp.ps1
+}
+
 
 Function New-SymLinkBin($target) {
   New-HardLinkIn $local.bin $target
