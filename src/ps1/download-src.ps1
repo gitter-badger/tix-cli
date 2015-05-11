@@ -14,6 +14,12 @@ $binPath = Join-Path $srcPath bin
 $fileFilter = '*.*'
 $classFilter = 'js-directory-link'
 
+
+If($CleanSource) {
+  $srcPath\cmd,$srcPath\ps1,$srcPath\sh|Test-Item|Remove-Item
+}
+
+
 # Each of these get downloaded to bin path
 $binFiles = @(
  @{
@@ -75,10 +81,6 @@ Write-Host ($fileMaps | Format-List | Out-String)
 Filter Append-Random {
   $_.src += "?$(Get-Random)"
   $_
-}
-
-If($CleanSource) {
-  $srcPath\cmd,$srcPath\ps1,$srcPath\sh|Test-Item|Remove-Item
 }
 
 # Takes a pipe of src dest, creates the directories, and downloads the file
