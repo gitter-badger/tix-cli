@@ -1,4 +1,4 @@
-param($RootPath=$HOME, [switch]$Install)
+param($RootPath=$HOME, [switch]$Install, [switch]$CleanSource)
 ##################################################################
 # Downloads basic Windows dependencies for TixInc applications.  #
 ##################################################################
@@ -77,6 +77,9 @@ Filter Append-Random {
   $_
 }
 
+If($CleanSource) {
+  $src.Values|Remove-Item
+}
 
 # Takes a pipe of src dest, creates the directories, and downloads the file
 Filter Download-Files {
