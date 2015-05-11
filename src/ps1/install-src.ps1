@@ -13,6 +13,10 @@ Function New-HardLinkBin($target) {
   New-HardLinkIn $local.bin $target
 }
 
+Function New-SymLinkBin($target) {
+  New-SymLinkIn $local.bin $target
+}
+
 Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
 }
@@ -57,7 +61,7 @@ Filter Execute-InlineShScripts {
 }
 
 Filter Add-SymLinks {
-
+  New-SymLinkBin $_.link
 }
 
 Filter Add-HardLinks {
@@ -80,6 +84,12 @@ $installs.paths|Write-PipeList -PassThru|Add-Paths
 Write-Host "--Copying files--"
 $installs.copy|Write-PipeList -PassThru|Copy-Files
 
+Write-Host "--Adding symbolic links--"
+$installs.symLinks|Write-PipeList -PassThru|Add-SymLinks
+
+Write-Host "--Adding hard links--"
+$installs.hardLinks|Write-PipeList -PassThru|Add-HardLinks
+
 Write-Host "--Sourcing bat scripts--"
 $installs.bat|Write-PipeList -PassThru|Execute-BatScripts
 
@@ -92,11 +102,6 @@ $installs.sh|Write-PipeList -PassThru|Execute-ShScripts
 Write-Host "--Executing inline sh scripts--"
 $installs.inlineSh|Write-PipeList -PassThru|Execute-InlineShScripts
 
-Write-Host "--Adding symbolic links--"
-$installs.symLinks|Write-PipeList -PassThru|Add-SymLinks
-
-Write-Host "--Adding hard links--"
-$installs.hardLinks|Write-PipeList -PassThru|Add-HardLinks
 
 
 

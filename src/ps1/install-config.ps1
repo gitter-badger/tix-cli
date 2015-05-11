@@ -63,6 +63,15 @@ $installs.Add('copy', @(
     dest=Join-Path $local.bin source-paths.bat
   }
 ))
+$installs.Add('symLinks', @(
+
+
+))
+$installs.Add('hardLinks', @(
+  @{
+    link=Join-Path $base.local 7z\7za.exe
+  }
+))
 $installs.Add('bat', @(
               <#
   @{
@@ -91,18 +100,10 @@ $installs.Add('sh', @(
 $installs.Add('inlineSh', @(
   @{
     title='tix-cli && node full install'
-    command="sh -x $($src.sh)\install-node-tix-cli.sh"
+    command="$($src.sh)\install-node-tix-cli.sh && exit"
   }
 ))
-$installs.Add('symLinks', @(
 
-
-))
-$installs.Add('hardLinks', @(
-  @{
-    link=Join-Path $base.local 7z\7za.exe
-  }
-))
 
 
 
