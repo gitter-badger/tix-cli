@@ -17,7 +17,7 @@ $classFilter = 'js-directory-link'
 
 Function Remove-Path ($path) {
     If (Test-Path $path) {
-      Remove-Item $path
+      Remove-Item $path -Recurse
     }
 }
 
