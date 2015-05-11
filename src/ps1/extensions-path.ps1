@@ -21,7 +21,6 @@ $local=@{
   bin=Join-Path $base.local bin
 }
 
-New-Item
 
 Write-Host '--Creating src and local directories--'
 $src.Values|Ensure-Directory -PassThru
