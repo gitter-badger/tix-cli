@@ -1,0 +1,1 @@
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "rm ~\src\* -recurse -exclude bin;cp ~\tixinc\tix-cli-src\src ~\ -recurse -exclude src -PassThru;iex ~\src\ps1\install-src.ps1"

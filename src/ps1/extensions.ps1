@@ -135,9 +135,10 @@ Filter Download-Files {
     Download-File $_.fileUrl $_.filePath
 }
 
-Function Pin-TaskBar(fileDir, fileName) {
+Function Pin-TaskBar($fileDir, $fileName) {
   $sa = new-object -c shell.application
-  $pn = $sa.namespace(fileDir).parsename(fileName)
+  $ns = $sa.namespace($fileDir)
+  $pn = parsename($fileName)
   $pn.invokeverb('taskbarpin')
 }
 
