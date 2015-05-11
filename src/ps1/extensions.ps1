@@ -49,6 +49,9 @@ Function Execute($filePath, $arguments)
     }
 }
 
+Function Execute-Sh($command) {
+    Execute cmdera.bat $command
+}
 
 
 Function Execute-7z($arguments) {
@@ -92,9 +95,6 @@ Function Execute-Ps1($filePath) {
     Execute powershell.exe "-File=$filePath"
 }
 
-Function Execute-Sh($command) {
-    Execute cmdera.bat $command
-}
 
 Function Install-Msi ($filePath, $arguments) {
     Execute msiexec.exe "/i $filePath $arguments"

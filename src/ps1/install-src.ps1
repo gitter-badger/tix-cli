@@ -25,6 +25,21 @@ Filter Expand-TarXzArchives {
   Expand-TarXz $_.src $_.dest
 }
 
+Filter Add-Paths {
+  Add-Path $_.path
+}
+
+Filter Copy-Files {
+  If(Test-Path $_.dest) {
+    rm $_.dest
+  }
+  Copy-Item $_.src $_.dest
+}
+
+Filter Execute-BatScripts {
+  Execute $_.filePath
+}
+
 Filter Execute-Ps1Scripts {
   Execute-Ps1 $_.src
 }
@@ -45,16 +60,6 @@ Filter Add-HardLinks {
   New-HardLinkBin $_.link
 }
 
-Filter Copy-Files {
-  If(Test-Path $_.dest) {
-    rm $_.dest
-  }
-  Copy-Item $_.src $_.dest
-}
-
-Filter Add-Paths {
-  Add-Path $_.path
-}
 
 Write-Host "--Installing zip archives--"
 $installs.zip|Write-PipeList -PassThru|Expand-ZipArchives
@@ -64,6 +69,14 @@ $installs.sevenZ|Write-PipeList -PassThru|Expand-7zArchives
 
 Write-Host "--Installing tar.xz archives--"
 $installs.tarXz|Write-PipeList -PassThru|Expand-TarXzArchives
+
+Write-Host "--Adding to path--"
+$installs.paths|Write-PipeList -PassThru|Add-Paths
+
+Write-Host "--Copying files--"
+$installs.copy|Write-PipeList -PassThru|Copy-Files
+
+$installs.bat|Write-PipeList -PassThru|Execute-BatScripts
 
 Write-Host "--Executing ps1 scripts--"
 $installs.ps1|Write-PipeList -PassThru|Execute-Ps1Scripts
@@ -80,11 +93,7 @@ $installs.symLinks|Write-PipeList -PassThru|Add-SymLinks
 Write-Host "--Adding hard links--"
 $installs.hardLinks|Write-PipeList -PassThru|Add-HardLinks
 
-Write-Host "--Copying files--"
-$installs.copy|Write-PipeList -PassThru|Copy-Files
 
-Write-Host "--Adding to path--"
-$installs.paths|Write-PipeList -PassThru|Add-Paths
 
 
  <#

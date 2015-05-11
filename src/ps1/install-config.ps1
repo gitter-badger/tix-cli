@@ -46,6 +46,29 @@ $installs.Add('tarXz', @(
     addPath=Join-Path $base.local msys2\msys64
   }
 ))
+$installs.Add('copy', @(
+  @{
+    title='cmdera-arguments batch file'
+    src=Join-Path $src.bat cmdera.bat
+    dest=Join-Path $local.bin cmdera.bat
+  },
+  @{
+    title='cmder-batch file'
+    src=Join-Path $src.bat cmder.bat
+    dest=Join-Path $local.bin cmder.bat
+  },
+  @{
+    title='source paths batch file'
+    src=Join-Path $src.bat source-paths.bat
+    dest=Join-Path $local.bin source-paths.bat
+  }
+))
+$installs.Add('bat', @(
+  @{
+     title='source paths script'
+     filePath=Join-Path $local.bin source-paths.bat
+  }
+))
 $installs.Add('ps1', @(
   <#
   @{
@@ -79,23 +102,7 @@ $installs.Add('hardLinks', @(
   }
 ))
 
-$installs.Add('copy', @(
-  @{
-    title='cmdera-arguments batch file'
-    src=Join-Path $src.bat cmdera.bat
-    dest=Join-Path $local.bin cmdera.bat
-  },
-  @{
-    title='cmder-batch file'
-    src=Join-Path $src.bat cmder.bat
-    dest=Join-Path $local.bin cmder.bat
-  },
-  @{
-    title='source paths batch file'
-    src=Join-Path $src.bat source-paths.bat
-    dest=Join-Path $local.bin source-paths.bat
-  }
-))
+
 
 $installs.Add('paths', @(
   @{
