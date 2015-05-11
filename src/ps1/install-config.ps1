@@ -72,16 +72,15 @@ $installs.Add('ps1', @(
 ))
 # Defines shell script files that need to be executed
 $installs.Add('sh', @(
-  #@{
-  #  title=''
-  #}
+  <#
   @{
     title='node.js src install'
     command=Join-Path $src.sh node-npm-src-install.sh
   },
+  #>
   @{
-    title='tix-cli full install'
-    command=Join-Path $src.sh tix-cli-install.sh
+    title='tix-cli && node full install'
+    command=Join-Path $src.sh install-node-tix-cli.sh
   }
 ))
 
