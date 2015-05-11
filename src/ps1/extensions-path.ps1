@@ -34,6 +34,7 @@ $local.Values|Ensure-Directory -PassThru
 $variablesPath=Join-Path $local.config "variables.bat"
 if(Test-Path $variablesPath) {
     rm $variablesPath
+    "@echo off"|Out-File $variablesPath
 }
 
 Function Add-Variable($name, $value) {
