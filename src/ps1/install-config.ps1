@@ -34,9 +34,9 @@ $installs.Add('tarXz', @(
   @{
     title='msys2 Core Files (Arch Linux Emulation)'
     src=Join-Path $src.bin msys2-base.tar.xz
-    dest=$base.local
+    dest=Join-Path $base.local msys2
     #link=Join-Path $base.local msys64\msys2_shell.bat
-    addPath=Join-Path $base.local msys64
+    addPath=Join-Path $base.local msys2\msys64
   }
 ))
 $installs.Add('ps1', @(
