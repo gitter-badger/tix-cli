@@ -30,14 +30,25 @@ $local.Values|Ensure-Directory -PassThru
 
 
 
-$pathConfig=Join-Path $local.config "path.config"
-if(Test-Path $pathConfig) {
-    rm $pathConfig
+$variablesPath=Join-Path $local.config "variables.bat"
+if(Test-Path $variablesPath) {
+    rm $variablesPath
+}
+
+Function Add-Variable($name, $value) {
+  "set $name=$value"|Out-File $variablesPath -Append
+}
+
+Function Append-Variable($name, $value) {
+  Add-Variable $name "%$name%;$value"
 }
 
 Function Add-Path ($path) {
-    $env:Path = $path + ';' + $env:Path
-    $path|Out-File $pathConfig -Append
+    $env:Path = $variablesPath + ';' + $env:Path
+    Append-Variable "LOCAL_PATH" $path
 }
+
+#Append-Variable "LOCAL_ROOT" $RootPath
+
 
 Write-Host '--extensions-path.ps1 sourced--'
