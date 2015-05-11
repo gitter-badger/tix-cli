@@ -91,7 +91,7 @@ Other Cmd.exe Scripts
 
 **Download and install to a custom directory (C:\\nix):**
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File ~\tmp.ps1;~\tmp.ps1 -RootPath C:\nix -Install"
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "If(Test-Path ~\tmp.ps1){rm ~\tmp.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File ~\tmp.ps1;~\tmp.ps1 -RootPath C:\nix -Install -CleanSource;rm ~\tmp.ps1"
 ```
 
 ___
