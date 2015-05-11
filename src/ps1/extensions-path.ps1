@@ -34,11 +34,11 @@ $local.Values|Ensure-Directory -PassThru
 $variablesPath=Join-Path $local.config "variables.bat"
 if(Test-Path $variablesPath) {
     rm $variablesPath
-    "@echo off"|Out-File $variablesPath
+    "@echo off"|Out-File $variablesPath -encoding ASCII
 }
 
 Function Add-Variable($name, $value) {
-  "set $name=$value"|Out-File $variablesPath -Append
+  "set $name=$value"|Out-File $variablesPath -Append -encoding ASCII
 }
 
 Function Append-Variable($name, $value) {
