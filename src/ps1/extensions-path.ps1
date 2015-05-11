@@ -19,7 +19,6 @@ $src=@{
 # Paths within the local (installed) directory
 $local=@{
   bin=Join-Path $base.local bin
-  path=Join-Path $base.local bin\path.txt
 }
 
 Write-Host '--Creating src and local directories--'
@@ -33,7 +32,7 @@ Function Add-Path ($path) {
 
 Function Add-DirPath($dir) {
     Add-Path $dir
-    $local.path += ';' + $path
+    ';' + $path >> $local.bin\path.txt
 }
 
 Add-Path $local.bin
