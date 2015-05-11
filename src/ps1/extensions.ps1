@@ -91,6 +91,18 @@ Function Expand-TarXz($filePath, $destDir) {
     #Expand-Tar $tarPath $destDir
 }
 
+Function Execute-Bat($filePath) {
+  . "$filePath"
+}
+
+Function Source-Bat($filePath) {
+  CMD /c "$filePath && set" | .{process{
+    if ($_ -match '^([^=]+)=(.*)') {
+        Set-Variable $matches[1] $matches[2]
+    }
+  }}
+}
+
 Function Execute-Ps1($filePath) {
     Execute powershell.exe "-File=$filePath"
 }

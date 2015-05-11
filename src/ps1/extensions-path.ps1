@@ -33,7 +33,6 @@ $local.Values|Ensure-Directory -PassThru
 $variablesPath=Join-Path $local.config "variables.bat"
 if(Test-Path $variablesPath) {
     rm $variablesPath
-    Add-Variable "LOCAL_PATH" $local.bin
 }
 
 Function Add-Variable($name, $value) {
@@ -49,6 +48,7 @@ Function Add-Path ($path) {
     Append-Variable "LOCAL_PATH" $path
 }
 
+Add-Variable "LOCAL_PATH" $local.bin
 #Append-Variable "LOCAL_ROOT" $RootPath
 
 

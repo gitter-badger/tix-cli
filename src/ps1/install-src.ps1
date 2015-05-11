@@ -37,7 +37,11 @@ Filter Copy-Files {
 }
 
 Filter Execute-BatScripts {
-  Execute $_.filePath
+  Execute-Bat $_.filePath
+}
+
+Filter Source-BatScripts {
+  Source-Bat $_.filePath
 }
 
 Filter Execute-Ps1Scripts {
@@ -76,6 +80,7 @@ $installs.paths|Write-PipeList -PassThru|Add-Paths
 Write-Host "--Copying files--"
 $installs.copy|Write-PipeList -PassThru|Copy-Files
 
+Write-Host "--Sourcing bat scripts--"
 $installs.bat|Write-PipeList -PassThru|Execute-BatScripts
 
 Write-Host "--Executing ps1 scripts--"
