@@ -50,12 +50,12 @@ $binFiles = @(
     src='https://s3-us-west-2.amazonaws.com/tixinc/cmder/cmder_mini.7z'
     dest=Join-Path $binPath cmder_mini.7z
   },
-  #>
   @{
     title='MSYS2Base 20150202 Linux Virtualization Layer'
     src='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz'
     dest=Join-Path $binPath msys2-base.tar.xz
   }
+  #>
 )
 
 # Recursive powershell!!!

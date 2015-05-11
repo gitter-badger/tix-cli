@@ -13,6 +13,13 @@ Function New-HardLinkBin($target) {
   New-HardLinkIn $local.bin $target
 }
 
+Filter Copy-Files {
+  If(Test-Path $_.dest) {
+    rm $_.dest
+  }
+  Copy-Item $_.src $_.dest
+}
+
 Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
   If($_.link) {
@@ -48,9 +55,11 @@ Filter Execute-Ps1Scripts {
 }
 
 Filter Execute-ShScripts {
-  Execute-Sh $_.src
+  Execute-Sh $_.command
 }
 
+Write-Host "--Copying static files--"
+$installs.copy|Write-PipeList -PassThru|Copy-Files
 
 Write-Host "--Installing zip archives--"
 $installs.zip|Write-PipeList -PassThru|Expand-ZipArchives

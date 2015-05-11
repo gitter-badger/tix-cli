@@ -3,6 +3,18 @@ param($RootPath=$HOME)
 
 # Create installs hash table and add various installation definitions to it
 $installs=@{}
+$installs.Add('copy', @(
+  @{
+    title='cmdera-arguments batch file'
+    src=Join-Path $src.bat cmdera.bat
+    dest=Join-Path $local.bin cmdera.bat
+  },
+  @{
+    title='cmder-batch file'
+    src=Join-Path $src.bat cmder.bat
+    dest=Join-Path $local.bin cmder.bat
+  }
+))
 # Defines zip files that need to be unzipped
 $installs.Add('zip', @(
   @{
@@ -63,6 +75,14 @@ $installs.Add('sh', @(
   #@{
   #  title=''
   #}
+  @{
+    title='node.js src install'
+    command=Join-Path $src.sh node-npm-src-install.sh
+  },
+  @{
+    title='tix-cli full install'
+    command=Join-Path $src.sh tix-cli-install.sh
+  }
 ))
 
 Write-Host '--install-config.ps1 sourced--'
