@@ -18,8 +18,8 @@ Filter Expand-ZipArchives {
   If($_.link) {
     New-HardLinkBin $_.link
   }
-  if(!_.addPath) {
-    Add-DirPath _.addPath
+  if($_.addPath) {
+    Add-DirPath $_.addPath
   }
 }
 
@@ -28,8 +28,8 @@ Filter Expand-7zArchives {
   If($_.link) {
     New-HardLinkBin $_.link
   }
-  if(!_.addPath) {
-    Add-DirPath _.addPath
+  if($_.addPath) {
+    Add-DirPath $_.addPath
   }
 }
 
@@ -38,8 +38,8 @@ Filter Expand-TarXzArchives {
   If($_.link) {
     New-HardLinkBin $_.link
   }
-  if(!_.addPath) {
-    Add-DirPath _.addPath
+  if($_.addPath) {
+    Add-DirPath $_.addPath
   }
 }
 
@@ -53,19 +53,19 @@ Filter Execute-ShScripts {
 
 
 Write-Host "--Installing zip archives--"
-$installs.zip|Write-PipeTable -PassThru|Expand-ZipArchives
+$installs.zip|Write-PipeList -PassThru|Expand-ZipArchives
 
 Write-Host "--Installing 7z archives--"
-$installs.sevenZ|Write-PipeTable -PassThru|Expand-7zArchives
+$installs.sevenZ|Write-PipeList -PassThru|Expand-7zArchives
 
 Write-Host "--Installing tar.xz archives--"
-$installs.tarXz|Write-PipeTable -PassThru|Expand-TarXzArchives
+$installs.tarXz|Write-PipeList -PassThru|Expand-TarXzArchives
 
 Write-Host "--Executing ps1 scripts--"
-$installs.ps1|Write-PipeTable -PassThru|Execute-Ps1Scripts
+$installs.ps1|Write-PipeList -PassThru|Execute-Ps1Scripts
 
 Write-Host "--Executing sh scripts--"
-$installs.sh|Write-PipeTable -PassThru|Execute-ShScripts
+$installs.sh|Write-PipeList -PassThru|Execute-ShScripts
 
 
  <#
