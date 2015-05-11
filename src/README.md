@@ -57,7 +57,7 @@ Scripts
 
 [**To download and install the platform, open Windows command prompt (Start > "cmd.exe" > [enter]) and run:**](cmd/download-install-src.cmd)
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "If(Test-Item ~\tmp.ps1){Remove-Item ~\tmp.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File ~\tmp.ps1;~\tmp.ps1 -Install -CleanSource;Remove-Item ~\tmp.ps1"
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "If(Test-Path ~\tmp.ps1){rm ~\tmp.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File ~\tmp.ps1;~\tmp.ps1 -Install -CleanSource;rm ~\tmp.ps1"
 ```
 
 

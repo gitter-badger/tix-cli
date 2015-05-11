@@ -16,7 +16,12 @@ $classFilter = 'js-directory-link'
 
 
 If($CleanSource) {
-  $srcPath\cmd,$srcPath\ps1,$srcPath\sh|Test-Item|Remove-Item
+  if(Test-Item $srcPath\cmd)
+    rm ~srcPath\cmd
+  if(Test-Item $srcPath\ps1)
+    rm ~srcPath\ps1
+  if(Test-Item $srcPath\sh)
+    rm ~srcPath\sh
 }
 
 
