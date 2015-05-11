@@ -38,7 +38,6 @@ $installs.Add('sevenZ', @(
 ))
 # Defines tar.xz files that need to be decompressed
 $installs.Add('tarXz', @(
-  <#
   @{
     title='msys2 Core Files (Arch Linux Emulation)'
     src=Join-Path $src.bin msys2-base.tar.xz
@@ -46,7 +45,6 @@ $installs.Add('tarXz', @(
     #link=Join-Path $base.local msys64\msys2_shell.bat
     addPath=Join-Path $base.local msys2\msys64
   }
-  #>
 ))
 $installs.Add('ps1', @(
   <#
@@ -68,7 +66,7 @@ $installs.Add('sh', @(
 $installs.Add('inlineSh', @(
   @{
     title='tix-cli && node full install'
-    command="bash -x $src.sh\install-node-tix-cli.sh"
+    command="sh -x $($src.sh)\install-node-tix-cli.sh"
   }
 ))
 $installs.Add('symLinks', @(

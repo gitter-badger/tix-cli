@@ -1,5 +1,5 @@
 param($RootPath=$HOME)
-. $RootPath\src\ps1\extensions.ps1
+. $RootPath\src\ps1\extensions.ps1 -RootPath $RootPath
 
 
 # Base paths for src and local (installed) files
