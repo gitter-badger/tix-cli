@@ -116,14 +116,9 @@ Function New-SymLinkIn ($dir, $target) {
 }
 
 Function Remove-Path ($path) {
-    If (Test-Path -PathType Container $path) {
-        $command = "cmd /c rmdir"
+    If (Test-Path $path) {
+      Remove-Item $path
     }
-    Else {
-        $command = "cmd /c del"
-    }
-    Write-Host "Removing link at $path"
-    Invoke-Expression "$command $path"
 }
 
 # Downloads a file from url to directory
