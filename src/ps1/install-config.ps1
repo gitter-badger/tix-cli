@@ -105,9 +105,9 @@ $installs.Add('hardLinks', @(
 
 
 $installs.Add('paths', @(
-  @{
+  <#@{
     path=$local.bin
-  },
+  },#>
   @{
     path=Join-Path $base.local python\App
   }<#,
