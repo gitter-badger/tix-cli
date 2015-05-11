@@ -30,17 +30,16 @@ $local.Values|Ensure-Directory -PassThru
 
 
 
-$path=Join-Path $local.config "path.config"
-if(Test-Path $path) {
-    rm $path
+$pathConfig=Join-Path $local.config "path.config"
+if(Test-Path $pathConfig) {
+    rm $pathConfig
 }
 
 Function Add-Path ($path) {
     $env:Path = $path + ';' + $env:Path
-    $dir|Out-File $path -Append
+    $path|Out-File $pathConfig -Append
 }
 
-Write-Host $local.bin
 Add-Path $local.bin
 
 Write-Host '--extensions-path.ps1 sourced--'
