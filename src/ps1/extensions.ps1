@@ -56,7 +56,8 @@ Function Expand-7z($filePath, $destDir) {
 }
 
 Function Decompress-Xz ($filePath) {
-    $tarPath = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
+    #$tarName = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
+    $tarPath =  $filePath.Substring(0, $filePath.LastIndexOf('.'))
     # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
     $arguments = "x -aoa $filePath"
     Execute-7z $arguments > $tarPath
