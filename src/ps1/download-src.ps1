@@ -15,13 +15,15 @@ $fileFilter = '*.*'
 $classFilter = 'js-directory-link'
 
 
-Function Remove-Path ($path) {
+
+
+If($CleanSource) {
+  Function Remove-Path ($path) {
     If (Test-Path $path) {
       Remove-Item $path -Recurse
     }
-}
+  }
 
-If($CleanSource) {
   Remove-Path $srcPath\cmd
   Remove-Path $srcPath\ps1
   Remove-Path $srcPath\sh
