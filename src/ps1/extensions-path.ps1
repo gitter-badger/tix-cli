@@ -50,6 +50,7 @@ Function Add-Path ($path) {
     Append-Variable "LOCAL_PATH" $path
 }
 
+
 Add-Variable "LOCAL_PATH" $local.bin
 #Append-Variable "LOCAL_ROOT" $RootPath
 

@@ -48,11 +48,6 @@ $installs.Add('tarXz', @(
 ))
 $installs.Add('copy', @(
   @{
-    title='cmdera-arguments batch file'
-    src=Join-Path $src.bat cmdera.bat
-    dest=Join-Path $local.bin cmdera.bat
-  },
-  @{
     title='cmder-batch file'
     src=Join-Path $src.bat cmder.bat
     dest=Join-Path $local.bin cmder.bat
