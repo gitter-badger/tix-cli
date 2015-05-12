@@ -16,13 +16,13 @@ var config = {
     windows: process.env['HOME'], //'c:',
     linux: process.env['HOME']
   },
-  installPath: 'TixInc',
+  installPath: 'tixinc',
   path: {
-    cliDir: 'TixCli',
+    cliDir: 'tix-cli',
     npmDir: 'npm',
-    jsDir: 'TixInc.js',
-    netDir: 'TixInc.Net',
-    classicDir: 'TixInc.Classic',
+    jsDir: 'tixinc.js',
+    netDir: 'tixinc.Net',
+    classicDir: 'tixinc.classic',
     cliFile: 'tix-cli.js',
     tokenFile: 'token'
   },
@@ -694,32 +694,32 @@ function CliAdvanced(config, token) {
     },
     "clone-config": function () {
       that.execCommand('clone-repo', {
-        'github-path': 'TixInc/config'
+        'github-path': 'tixinc/config'
       });
     },
     "clone-automation": function () {
       that.execCommand('clone-repo', {
-        'github-path': 'TixInc/automation'
+        'github-path': 'tixinc/automation'
       });
     },
     "clone-ext": function () {
       that.execCommand('clone-repo', {
-        'github-path': 'TixInc/ext'
+        'github-path': 'tixinc/ext'
       });
     },
     "clone-js": function () {
       that.execCommand('clone-repo', {
-        'github-path': 'TixInc/TixInc.js'
+        'github-path': 'tixinc/tixinc.js'
       });
     },
     "clone-net": function () {
       that.execCommand('clone-repo', {
-        'github-path': 'TixInc/TixInc.Net'
+        'github-path': 'tixinc/tixinc.net'
       });
     },
     "clone-classic": function () {
       that.execCommand('clone-repo', {
-        'github-path': 'TixInc/TixInc.Classic'
+        'github-path': 'tixinc/tixinc.classic'
       });
     },
     "clone-node": function () {
@@ -730,14 +730,14 @@ function CliAdvanced(config, token) {
     },
     "clone-cli-src": function () {
       that.execCommand('clone-repo', {
-        'github-path': 'TixInc/TixCli',
-        'local-path': 'TixCliSrc'
+        'github-path': 'tixinc/tix-cli',
+        'local-path': 'tix-cli-src'
       });
     },
     "clone-npm": function () {
       executeAt(installRoot, function () {
         // clone submodules...
-        clone('TixInc/npm');
+        clone('tixinc/npm');
         executeAt('npm', function () {
           // Add token to git urls in file so we can clone them.
           sh.sed('-i', /https:\/\/github\.com/g, tokenUrl, '.gitmodules');
@@ -771,7 +771,7 @@ function CliAdvanced(config, token) {
       that.execCommand('acpush-repo', argv);
     },
     "acpush-cli-src": function (argv) {
-      argv.repo = 'TixCliSrc';
+      argv.repo = 'tix-cli-src';
       that.execCommand('acpush-repo', argv);
       executeAt(toAbsPath(argv.repo), function () {
         exec('npm version patch', 'Error patching version.', true);
@@ -801,9 +801,9 @@ function CliAdvanced(config, token) {
       });
     },
     "pull-cli-src": function (argv) {
-      argv.repo = 'TixCliSrc';
+      argv.repo = 'tix-cli-src';
       that.execCommand('pull-repo', {
-        'repo': 'TixCliSrc',
+        'repo': 'tix-cli-src',
         'branch': argv.branch
       });
     },
@@ -863,14 +863,14 @@ function CliAdvanced(config, token) {
       _.forEach(clonePaths, function (githubPath) {
         that.execCommand('clone-repo', {
           'github-path': githubPath,
-          'working-dir': toAbsPath('TixCli')
+          'working-dir': toAbsPath('tix-cli')
         });
       });
       console.log('Linking dependencies...');
       var linkPaths = argv['link-paths'];
       that.execCommand('npm-link-modules', {
         paths: linkPaths,
-        module: 'TixCli'
+        module: 'tix-cli'
       });
       enableExtendedMode();
     },
