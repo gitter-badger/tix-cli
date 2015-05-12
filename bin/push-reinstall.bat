@@ -1,7 +1,5 @@
 @echo off
-set INSTALL_ROOT=%USERPROFILE%
-call %INSTALL_ROOT%\local\config\variables.bat
-set PATH=%LOCAL_PATH%;%PATH%
+call %USERPROFILE%\local\config\variables.bat
 call push-all.bat
 call npm-publish.bat
 call cleanup.bat
