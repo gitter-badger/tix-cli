@@ -1,9 +1,16 @@
+#!/bin/sh
+
 if [ ! -e ~/tixinc/tix-cli/tix-cli.js ]
   then
     echo "Installing..."
     mkdir -p ~/tixinc/tix-cli
-    git archive --format=tar --remote=https://github.com/TixInc/tix-cli HEAD | tar xf -C ~/tixinc/tix-cli -
-
+    git clone --depth 1 https://github.com/TixInc/tix-cli
+    rm -rf ~/tixinc/tix-cli/.git
+    rm -rf ~/tixinc/tix-cli/.gitignore
+    rm -rf ~/tixinc/tix-cli/.settings
+    rm -rf ~/tixinc/tix-cli/img
+    rm -rf ~/tixinc/tix-cli/src
+    #git archive --format=tar --remote=https://github.com/TixInc/tix-cli HEAD | tar xf -C ~/tixinc/tix-cli -
     #curl https://raw.githubusercontent.com/TixInc/tix-cli/master/tix-cli.js > ~/tixinc/tix-cli/tix-cli.js && node ~/tixinc/tix-cli/tix-cli.js
 fi
 
