@@ -4,7 +4,7 @@ call %INSTALL_ROOT%\local\config\variables.bat
 set PATH=%LOCAL_PATH%;%PATH%
 call %INSTALL_ROOT%\tixinc\tix-cli-src\bin\push-all.bat
 
-cd $INSTALL_ROOT%\tixinc\tix-cli-src
+pushd ../
 echo %CD%
 REM npm version patch
 REM npm publish
