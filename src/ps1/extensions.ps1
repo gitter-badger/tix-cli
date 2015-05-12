@@ -53,7 +53,7 @@ Function Execute($filePath, $arguments)
 }
 
 Function Execute-Sh($command) {
-    Execute $cmderaPath $command
+    Execute $cmderPath $command
 }
 
 
