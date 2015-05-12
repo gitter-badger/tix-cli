@@ -10,7 +10,7 @@
     "bin/push-all.bat",
     "bin/push-reinstall.bat",
     "bin/tix-cli-install.sh",
-    "bin/tix.sh",
+    "bin/tix.sh"
   ],
   "repository": "TixInc/tix-cli",
   "keywords": [
