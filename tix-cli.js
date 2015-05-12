@@ -94,11 +94,9 @@ function getPathStats(path) {
 /** Find out if a directory exists at the given path. */
 function dirExists(path) {
   try {
-    console.log('checking if dir exists');
     return getPathStats(path).isDirectory();
   }
   catch (e) {
-    console.log('dir doesnt exist: ' + e);
     return false;
   }
 }
@@ -1167,24 +1165,29 @@ function CliShell(config, mainArgs) {
 
   function getToken(callbackFn) {
     try {
-      console.log('token path:' + tokenPath);
       var tokenFile = require(tokenPath);
-      console.dir(tokenFile);
-
       callbackFn(tokenFile.access_token);
     }
     catch (e) {
       console.log('Token path: ' + tokenPath);
       console.log('Could not find token: ' + e);
-      var read = require('read');
-      console.log('Your GitHub credentials are required to acquire a GitHub api token.  They will not be saved.');
-      read({prompt: 'Please enter your GitHub username: '}, function (err, username) {
-        read({prompt: 'Please enter your GitHub password: ', silent: true}, function (err, password) {
-          installToken(username, password, callbackFn);
-        });
+      captureCredentials('Your GitHub credentials are required to acquire a GitHub api token.  They will not be saved.', 'Please enter your GitHub username: ', 'Please enter your GitHub password: ', function (username, password) {
+        installToken(username, password, callbackFn);
       });
     }
   }
+
+  function captureCredentials(prompt, usernamePrompt, passwordPrompt, callbackFn) {
+    var read = require('read');
+    console.log(prompt);
+    read({prompt: usernamePrompt}, function (err, username) {
+      read({prompt: passwordPrompt, silent: true}, function (err, password) {
+        callbackFn(username, password);
+      });
+    });
+  }
+
+
 
   function installToken(username, password, callbackFn) {
     var exec = require('child_process').exec;
@@ -1219,11 +1222,16 @@ function CliShell(config, mainArgs) {
       var tokenJson = {
         "access_token": res.token
       };
-      fs.writeFileSync(tokenPath, JSON.stringify(tokenJson, null, 4));
-      callbackFn(res.token);
+      fs.writeFile(tokenPath, JSON.stringify(tokenJson, null, 4), 'ascii', function(err) {
+        if(err) {
+          throw err;
+        }
+        callbackFn(res.token);
+      });
     });
   }
 }
+
 
 /** Gets a readline (built-in) interface. */
 function createInterface() {

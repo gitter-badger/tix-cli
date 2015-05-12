@@ -1,0 +1,20 @@
+#!/bin/bash
+
+cliSrcPath=~/tixinc/tix-cli-src
+
+if [ ! -d $cliSrcPath ]; then
+  echo Directory $cliSrcPath does not exist, exiting...
+  exit 1
+fi
+
+pushd $cliSrcDir
+
+git add .
+git commit -am "Updated tix-cli-src..."
+npm version patch
+npm publish
+git push origin master
+
+popd
+
+echo NPM published and changes pushed successfully!
