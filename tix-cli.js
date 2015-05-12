@@ -271,7 +271,6 @@ function CliAdvanced(config, token) {
   var automationPath = join(cliDir, 'automation');
   var configPath = join(cliDir, 'config');
   var extPath = join(cliDir, 'ext');
-  var automationPath = join(cliDir, 'automation');
   var tokenUrl = 'https://' + token + '@github.com';
   console.log('cliDir: ' + cliDir);
   console.log('automationPath: ' + automationPath);

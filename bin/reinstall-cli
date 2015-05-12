@@ -1,0 +1,20 @@
+#!/bin/bash
+
+cliPath=~/tixinc/tix-cli
+
+if [ ! -e $cliPath ]; then
+    echo Uninstalling CLI from $cliFile...
+    rm -rf $cliPath
+
+    echo Installing CLI to $cliFile...
+    mkdir -p $cliPath
+    git clone --depth 1 https://github.com/TixInc/tix-cli ~/tixinc/tix-cli
+    rm -rf ~/tixinc/tix-cli/.git
+    rm -rf ~/tixinc/tix-cli/.gitignore
+    rm -rf ~/tixinc/tix-cli/.settings
+    rm -rf ~/tixinc/tix-cli/img
+    rm -rf ~/tixinc/tix-cli/src
+    echo CLI Reinstalled
+else
+    echo CLI is not installed...
+fi
