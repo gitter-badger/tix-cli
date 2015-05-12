@@ -1,3 +1,3 @@
 #!/bin/sh -ex
-echo "Executing tix-cli in ~/TixInc/TixCli/..."
-node ~/tixinc/tix-cli/tix-cli || source ./tix-cli-install.sh
+echo "Executing tix-cli in ~/tixinc/tix-cli/..."
+node ~/tixinc/tix-cli/tix-cli.js || sh tix-cli-install.sh
