@@ -7,9 +7,11 @@
     "tix-cli.js",
     "README.md",
     "LICENSE",
+    "bin/npm-publish.bat",
     "bin/push-all.bat",
     "bin/push-reinstall.bat",
     "bin/tix-cli-install.sh",
+    "bin/tix"
     "bin/tix.sh"
   ],
   "repository": "TixInc/tix-cli",

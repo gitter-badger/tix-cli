@@ -1,1 +1,0 @@
-rmdir /s /q %USERPROFILE%\local && rmdir /s /q %USERPROFILE%\src\bat
