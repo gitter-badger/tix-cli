@@ -1,9 +1,10 @@
+@echo off
 set INSTALL_ROOT=%USERPROFILE%
 call %INSTALL_ROOT%\local\config\variables.bat
 set PATH=%LOCAL_PATH%;%PATH%
 call %INSTALL_ROOT%\tixinc\tix-cli-src\bin\push-all.bat
 
-pushd $INSTALL_ROOT%\tixinc\tix-cli-src
+cd $INSTALL_ROOT%\tixinc\tix-cli-src
 echo %CD%
 REM npm version patch
 REM npm publish
