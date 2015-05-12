@@ -163,10 +163,19 @@ Filter Download-Files {
 }
 
 Function Pin-Taskbar($fileDir, $fileName) {
-  $sa = new-object -c shell.application
-  $ns = $sa.namespace($fileDir)
-  $pn = parsename($fileName)
-  $pn.invokeverb('taskbarpin')
+  #$sa = new-object -c shell.application
+  #$ns = $sa.namespace($fileDir)
+  #$pn = parsename($fileName)
+  #$pn.invokeverb('taskbarpin')
+
+  $batchName = 'cmder'
+  $batchPath=Join-Path $fileDir $fileName
+  $taskbarFolder = "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\Taskbar\"
+  $objShell = New-Object -ComObject WScript.Shell
+  $objShortCut = $objShell.CreateShortcut("$taskbarFolder\$batchName.lnk")
+  $objShortCut.TargetPath = 'cmd'
+  $objShortCut.Arguments="/c ""$batchPath"""
+  $objShortCut.Save()
 }
 
 Write-Host '--extensions.ps1 sourced--'
