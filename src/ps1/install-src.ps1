@@ -69,8 +69,8 @@ Filter Add-HardLinks {
 }
 
 
-Write-Host 'Writing .npmrc'
-"$HOME\.npmrc"
+#Write-Host 'Writing .npmrc'
+#"$HOME\.npmrc"
 
 Write-Host "--Installing zip archives--"
 $installs.zip|Write-PipeList -PassThru|Expand-ZipArchives
