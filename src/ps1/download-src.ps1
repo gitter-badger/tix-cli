@@ -18,19 +18,19 @@ $classFilter = 'js-directory-link'
 
 If($CleanSource) {
   If (Test-Path $srcPath\cmd) {
-    Remove-Item $srcPath\cmd -Recurse
+    Remove-Item $srcPath\cmd -Recurse -Force
   }
   If (Test-Path $srcPath\ps1) {
-    Remove-Item $srcPath\ps1 -Recurse
+    Remove-Item $srcPath\ps1 -Recurse -Force
   }
   If (Test-Path $srcPath\sh) {
-    Remove-Item $srcPath\sh -Recurse
+    Remove-Item $srcPath\sh -Recurse -Force
   }
 }
 
 If($CleanLocal) {
   If(Test-Path $localPath) {
-    Remove-Item $localPath -Recurse
+    Remove-Item $localPath -Recurse -Force
   }
 }
 
