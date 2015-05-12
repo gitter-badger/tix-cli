@@ -10,7 +10,7 @@
     "bin/npm-publish.bat",
     "bin/push-all.bat",
     "bin/push-reinstall.bat",
-    "bin/tix",
+    "bin/tix"
   ],
   "repository": "TixInc/tix-cli",
   "keywords": [
