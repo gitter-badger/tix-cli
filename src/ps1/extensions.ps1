@@ -170,14 +170,23 @@ Function Pin-Taskbar($fileDir, $fileName) {
 
   $batchName = 'cmder'
   $batchPath=Join-Path $fileDir $fileName
+  $iconPath = Join-Path $HOME local\cmder\vendor\msysgit\etc\git.ico
   Write-Host "adding shortcut at $batchPath"
   $taskbarFolder = "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\Taskbar\"
   $startMenuFolder = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\"
+  $desktopFolder = Join-Path $HOME Desktop
   $objShell = New-Object -ComObject WScript.Shell
   $objShortCut = $objShell.CreateShortcut("$startMenuFolder\$batchName.lnk")
+  $objShortCut.IconLocation = "$iconPath"
   $objShortCut.TargetPath = 'cmd'
   $objShortCut.Arguments="/c ""$batchPath"""
   $objShortCut.Save()
+
+  $desktopShortCut = $objShell.CreateShortcut("$desktopFolder\$batchName.lnk")
+  $desktopShortCut.IconLocation = "$iconPath"
+  $desktopjShortCut.TargetPath = 'cmd'
+  $desktopShortCut.Arguments="/c ""$batchPath"""
+  $desktopShortCut.Save()
 }
 
 Write-Host '--extensions.ps1 sourced--'
