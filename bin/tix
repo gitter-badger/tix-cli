@@ -4,7 +4,7 @@ if [ ! -e ~/tixinc/tix-cli/tix-cli.js ]
   then
     echo "Installing..."
     mkdir -p ~/tixinc/tix-cli
-    git clone --depth 1 https://github.com/TixInc/tix-cli
+    git clone --depth 1 https://github.com/TixInc/tix-cli ~/tixinc/tix-cli
     rm -rf ~/tixinc/tix-cli/.git
     rm -rf ~/tixinc/tix-cli/.gitignore
     rm -rf ~/tixinc/tix-cli/.settings

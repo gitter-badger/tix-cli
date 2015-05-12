@@ -164,6 +164,7 @@ Filter Download-Files {
 
 Function Pin-TaskBar($fileDir, $fileName) {
   $sa = new-object -c shell.application
+  Ensure-Directory
   $ns = $sa.namespace($fileDir)
   $pn = parsename($fileName)
   $pn.invokeverb('taskbarpin')
