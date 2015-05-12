@@ -66,6 +66,11 @@ $installs.Add('copy', @(
     title='ConEmu.xml - configuration file for cmder'
     src=Join-Path $src.xml ConEmu.xml
     dest=Join-Path $base.local 'cmder\config\ConEmu.xml'
+  },
+  @{
+    title='node.exe - copy to bin'
+    src=Join-Path $src.bin node.exe
+    dest=Join-Path $local.bin node.exe
   }
 ))
 $installs.Add('symLinks', @(
