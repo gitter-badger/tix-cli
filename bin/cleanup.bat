@@ -1,1 +1,1 @@
-rmdir /s /q %INSTALL_ROOT%\local && rmdir /s /q %INSTALL_ROOT%\src\bat
+rmdir /s /q %USERPROFILE%\local && rmdir /s /q %USERPROFILE%\src\bat
