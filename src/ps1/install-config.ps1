@@ -111,7 +111,7 @@ $installs.Add('sh', @(
 $installs.Add('inlineSh', @(
   @{
     title='tix-cli && node full install'
-    command="%USERPROFILE%\src\sh\install-node-tix-cli.sh && tix"
+    command="%USERPROFILE%\src\sh\install-node-tix-cli.sh && exit"
   }
 ))
 

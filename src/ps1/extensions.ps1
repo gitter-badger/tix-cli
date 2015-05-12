@@ -184,7 +184,7 @@ Function Pin-Taskbar($fileDir, $fileName) {
 
   $desktopShortCut = $objShell.CreateShortcut("$desktopFolder\$batchName.lnk")
   $desktopShortCut.IconLocation = "$iconPath"
-  $desktopjShortCut.TargetPath = 'cmd'
+  $desktopShortCut.TargetPath = 'cmd'
   $desktopShortCut.Arguments="/c ""$batchPath"""
   $desktopShortCut.Save()
 }
