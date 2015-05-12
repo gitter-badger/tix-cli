@@ -902,7 +902,7 @@ function CliAdvanced(config, token) {
   addFns(commandFns);
 
   function enableExtendedMode() {
-    var CliExtended = require('automation/cli');
+    var CliExtended = require('@tixinc/automation/cli');
     that.extCommands = (new CliExtended()).commands;
     that.isExtendedMode = true;
     that.printHeader();
@@ -1170,64 +1170,9 @@ function CliShell(config, mainArgs) {
     catch (e) {
       console.log('Token path: ' + tokenPath);
       console.log('Could not find token: ' + e);
-      captureCredentials('Your GitHub credentials are required to acquire a GitHub api token.  They will not be saved.', 'Please enter your GitHub username: ', 'Please enter your GitHub password: ', function (username, password) {
-        installToken(username, password, callbackFn);
-      });
+      console.log('exiting...');
+      process.exit(1);
     }
-  }
-
-  function captureCredentials(prompt, usernamePrompt, passwordPrompt, callbackFn) {
-    var read = require('read');
-    console.log(prompt);
-    read({prompt: usernamePrompt}, function (err, username) {
-      read({prompt: passwordPrompt, silent: true}, function (err, password) {
-        callbackFn(username, password);
-      });
-    });
-  }
-
-
-
-  function installToken(username, password, callbackFn) {
-    var exec = require('child_process').exec;
-    var clientId = 'eae2d821f84f1bb4ae6f';
-    var clientSecret = 'a097eb9f9e497f03e63af8e775aeabb489246f99';
-
-    var body = {
-      "client_id": clientId,
-      "client_secret": clientSecret,
-      "scopes": [
-        "repo"
-      ],
-      "note": "Repository access for TixInc CLI use."
-    };
-    var data = JSON.stringify(body).replace(/"/g, '\\"');
-    var cmd = 'curl --user ' + username + ':' + password + ' -X POST -H "Content-Type: application/json" -d "' + data + '" https://api.github.com/authorizations';
-    exec(cmd, function (err, stdout, stderr) {
-      function printAndExit(error) {
-        console.log(error);
-        console.log('Exiting...');
-        process.exit(1);
-      }
-
-      if (err) {
-        printAndExit(err);
-      }
-      else if (stdout && stdout.indexOf('Problems parsing JSON') !== -1) {
-        printAndExit(stdout);
-      }
-
-      var res = JSON.parse(stdout);
-      var tokenJson = {
-        "access_token": res.token
-      };
-      fs.writeFile(tokenPath, JSON.stringify(tokenJson, null, 4), 'ascii', function(err) {
-        if(err) {
-          throw err;
-        }
-        callbackFn(res.token);
-      });
-    });
   }
 }
 

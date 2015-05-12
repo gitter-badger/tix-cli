@@ -1,0 +1,15 @@
+#!/bin/bash
+
+###WARNING: THIS SCRIPT WILL UNINSTALL ALL TIX MODULES ASIDE FROM ~/tix-cli-src
+###PROCEED WITH CAUTION
+
+rm -rf ~/tixinc/npm
+rm -rf ~/tixinc/automation
+rm -rf ~/tixinc/config
+rm -rf ~/tixinc/ext
+rm -rf ~/tixinc/server
+rm -rf ~/tixinc/client
+rm -rf ~/tixinc/tixinc.js
+rm -rf ~/tixinc/tixinc.net
+rm -rf ~/tixinc/tixinc.classic
+rm -rf ~/tixinc/tix-cli
