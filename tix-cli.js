@@ -94,9 +94,11 @@ function getPathStats(path) {
 /** Find out if a directory exists at the given path. */
 function dirExists(path) {
   try {
+    console.log('checking if dir exists');
     return getPathStats(path).isDirectory();
   }
   catch (e) {
+    console.log('dir doesnt exist: ' + e);
     return false;
   }
 }
@@ -269,10 +271,16 @@ function CliAdvanced(config, token) {
   var installRoot = config.installRoot;
   var cliDir = toAbsPath(config.path.cliDir);
   var automationPath = join(cliDir, 'automation');
+  var configPath = join(cliDir, 'config');
+  var extPath = join(cliDir, 'ext');
+  var automationPath = join(cliDir, 'automation');
   var tokenUrl = 'https://' + token + '@github.com';
+  console.log('cliDir: ' + cliDir);
+  console.log('automationPath: ' + automationPath);
+  console.log('tokenUrl': + tokenUrl);
 
   this.isExtendedMode = false;
-  if (dirExists(automationPath)) {
+  if (dirExists(automationPath) && dirExists(configPath) && dirExists(extPath)) {
     enableExtendedMode();
   }
 
@@ -1032,6 +1040,7 @@ function CliBasicShell(config, args) {
 
   // Clean up previous installation.
   if (__dirname !== cliDir && config.flags.cleanIfNotCliWorkingDir) {
+    console.log('cleaning')
     cliBasic.uninstall();
   }
 

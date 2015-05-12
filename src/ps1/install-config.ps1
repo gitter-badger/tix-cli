@@ -68,6 +68,12 @@ $installs.Add('copy', @(
     dest=Join-Path $local.bin node.exe
   }
 ))
+$installs.Add('taskbar', @(
+  @{
+    dir=$local.bin
+    name='cmder.bat'
+  }
+))
 $installs.Add('symLinks', @(
 
 
@@ -105,7 +111,7 @@ $installs.Add('sh', @(
 $installs.Add('inlineSh', @(
   @{
     title='tix-cli && node full install'
-    command="%USERPROFILE%\src\sh\install-node-tix-cli.sh"
+    command="%USERPROFILE%\src\sh\install-node-tix-cli.sh && exit"
   }
 ))
 

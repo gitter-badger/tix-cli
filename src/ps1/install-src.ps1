@@ -40,6 +40,10 @@ Filter Copy-Files {
   Copy-Item $_.src $_.dest
 }
 
+Filter Add-Taskbar {
+  Pin-Taskbar $_.dir $_.name
+}
+
 Filter Execute-BatScripts {
   Execute-Bat $_.filePath
 }
@@ -83,6 +87,8 @@ $installs.tarXz|Write-PipeList -PassThru|Expand-TarXzArchives
 
 Write-Host "--Adding to path--"
 $installs.paths|Write-PipeList -PassThru|Add-Paths
+
+$installs.taskbar|Write-PipeList -PassThru|Add-Taskbar
 
 Write-Host "--Copying files--"
 $installs.copy|Write-PipeList -PassThru|Copy-Files
