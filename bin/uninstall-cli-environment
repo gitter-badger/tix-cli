@@ -1,0 +1,12 @@
+#!/bin/bash
+
+###WARNING: THIS SCRIPT WILL UNINSTALL ALL FILES FROM ~/local, ~/src, and ~/tixinc/tix-cli
+###PROCEED WITH CAUTION
+
+rm -rf ~/local
+rm -rf ~/src/bat
+rm -rf ~/src/cmd
+rm -rf ~/src/ps1
+rm -rf ~/src/sh
+rm -rf ~/src/xml
+rm -rf ~/tixinc/tix-cli
