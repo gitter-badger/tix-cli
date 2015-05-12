@@ -10,6 +10,6 @@ npm publish
 git push origin master
 popd
 
-REM rmdir /s /q %INSTALL_ROOT%\local
-REM rmdir /s /q %INSTALL_ROOT%\src\bat
-REM call %INSTALL_ROOT%\tixinc\tix-cli-src\src\cmd\download-install-src.cmd
+rmdir /s /q %INSTALL_ROOT%\local
+rmdir /s /q %INSTALL_ROOT%\src\bat
+call %INSTALL_ROOT%\tixinc\tix-cli-src\src\cmd\download-install-src.cmd
