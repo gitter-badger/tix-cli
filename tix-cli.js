@@ -277,7 +277,7 @@ function CliAdvanced(config, token) {
   var tokenUrl = 'https://' + token + '@github.com';
   console.log('cliDir: ' + cliDir);
   console.log('automationPath: ' + automationPath);
-  console.log('tokenUrl': + tokenUrl);
+  console.log('tokenUrl:' + tokenUrl);
 
   this.isExtendedMode = false;
   if (dirExists(automationPath) && dirExists(configPath) && dirExists(extPath)) {

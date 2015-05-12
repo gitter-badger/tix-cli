@@ -170,9 +170,11 @@ Function Pin-Taskbar($fileDir, $fileName) {
 
   $batchName = 'cmder'
   $batchPath=Join-Path $fileDir $fileName
+  Write-Host "adding shortcut at $batchPath"
   $taskbarFolder = "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\Taskbar\"
+  $startMenuFolder = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\"
   $objShell = New-Object -ComObject WScript.Shell
-  $objShortCut = $objShell.CreateShortcut("$taskbarFolder\$batchName.lnk")
+  $objShortCut = $objShell.CreateShortcut("$startMenuFolder\$batchName.lnk")
   $objShortCut.TargetPath = 'cmd'
   $objShortCut.Arguments="/c ""$batchPath"""
   $objShortCut.Save()
