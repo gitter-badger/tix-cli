@@ -4,9 +4,10 @@ set PATH=%LOCAL_PATH%;%PATH%
 call %INSTALL_ROOT%\tixinc\tix-cli-src\bin\push-all.bat
 
 pushd $INSTALL_ROOT%\tixinc\tix-cli-src
-npm version patch
-npm publish
-git push origin master
+echo pwd
+REM npm version patch
+REM npm publish
+REM git push origin master
 popd
 
 REM rmdir /s /q %INSTALL_ROOT%\local
