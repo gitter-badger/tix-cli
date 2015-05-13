@@ -22,5 +22,3 @@ git push origin master
 popd
 
 echo NPM published and changes pushed successfully!
-
-npm install -g tix-cli
