@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Runs NPM update for tix-cli module
+
+npm update -g tix-cli
