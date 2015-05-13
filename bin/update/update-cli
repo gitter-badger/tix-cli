@@ -1,5 +1,5 @@
 #!/bin/bash
 #
-# Runs NPM update for tix-cli module
+# Updates the package
 
-npm update -g tix-cli
+npm install -g tix-cli
