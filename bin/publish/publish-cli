@@ -6,4 +6,4 @@ set -e
 
 commit_message=${1-"Updates to tix-cli module..."}
 
-$(publish-module tix-cli-src $commit_message)
+publish-module tix-cli-src $commit_message
