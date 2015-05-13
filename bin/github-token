@@ -37,7 +37,8 @@ fi
 source $configFile
 
 if [ -n $github_token ]; then
-    $github_token
+    echo $github_token
+    exit 0
 else
     >&2 echo No github token was found in the config file.
     exit 1
