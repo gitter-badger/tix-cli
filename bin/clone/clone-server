@@ -2,8 +2,11 @@
 #
 # Clones the server module
 
-gitUrl="https://$(github-token)@github.com/TixInc/server"
+token=$(github-token)
+echo token val: $token
+
+#gitUrl="https://$(github-token)@github.com/TixInc/server"
 installPath=~/tixinc
 
-echo gitURL: $gitUrl
+#echo gitURL: $gitUrl
 #git clone $gitUrl $installPath

@@ -5,13 +5,13 @@
 configFile=~/.tixrc
 
 if [ ! -e configFile ]; then
-    echo Your GitHub credentials are required to interact with the GitHub api.
-    echo A token will be persisted to $configFile...
+    >&2 echo Your GitHub credentials are required to interact with the GitHub api.
+    >&2 echo A token will be persisted to $configFile...
 
     ### Read users GitHub credentials
-    echo -n Username:
+    >&2 echo -n Username:
     read username
-    echo -n Password:
+    >&2 echo -n Password:
     read -s password
 
     ### Call GitHub API to get a token.
@@ -22,7 +22,7 @@ if [ ! -e configFile ]; then
 
     ### If no token is in the response, exit
     if [[ $json != *'"token":'* ]]; then
-        echo Incorrect credentials given, exiting...
+        >&2 echo Incorrect credentials given, exiting...
         exit 1
     fi
 
@@ -39,6 +39,6 @@ source $configFile
 if [ -n $github_token ]; then
     $github_token
 else
-    echo No github token was found in the config file.
+    >&2 echo No github token was found in the config file.
     exit 1
 fi
