@@ -2,7 +2,9 @@
 #
 # Clones the server module
 
-readonly MODULE_ROOT=~/tixinc
-git_url="https://$(github-token)@github.com/TixInc/server"
+set -e
 
-git clone $git_url $MODULE_ROOT
+git_url="https://$(github-token)@github.com/TixInc/server"
+module_path=~/tixinc/server
+
+git clone $git_url $module_path
