@@ -6,4 +6,4 @@ set -e
 
 commit_message=${1-"Updates to config module..."}
 
-publish-module config $commit_message 2>&1
+publish-module config "$commit_message" 2>&1

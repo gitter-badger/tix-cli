@@ -6,4 +6,4 @@ set -e
 
 commit_message=${1-"Updates to npm module..."}
 
-publish-module npm $commit_message 2>&1
+publish-module npm "$commit_message" 2>&1

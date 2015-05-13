@@ -6,4 +6,4 @@ set -e
 
 commit_message=${1-"Updates to client module..."}
 
-publish-module client $commit_message 2>&1
+publish-module client "$commit_message" 2>&1
