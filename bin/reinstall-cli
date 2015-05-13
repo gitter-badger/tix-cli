@@ -2,12 +2,12 @@
 
 cliPath=~/tixinc/tix-cli
 
-if [ ! -e $cliPath ]; then
-    echo Uninstalling CLI from $cliFile...
-    rm -rf $cliPath
+if [ ! -e ${cliPath} ]; then
+    echo Uninstalling CLI from ${cliFile}...
+    rm -rf ${cliPath}
 
-    echo Installing CLI to $cliFile...
-    mkdir -p $cliPath
+    echo Installing CLI to ${cliFile}...
+    mkdir -p ${cliPath}
     git clone --depth 1 https://github.com/TixInc/tix-cli ~/tixinc/tix-cli
     rm -rf ~/tixinc/tix-cli/.git
     rm -rf ~/tixinc/tix-cli/.gitignore

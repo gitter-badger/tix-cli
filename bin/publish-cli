@@ -1,6 +1,10 @@
 #!/bin/bash
+#
+# Git commits and NPM publishes the ~/tixinc/tix-cli-src module
 
+message=${@-"Updates to tix-cli"}
 cliSrcPath=~/tixinc/tix-cli-src
+
 
 if [ ! -d $cliSrcPath ]; then
   echo Directory $cliSrcPath does not exist, exiting...
@@ -10,7 +14,7 @@ fi
 pushd $cliSrcPath
 
 git add .
-git commit -am "Updated tix-cli-src..."
+git commit -am "$message"
 npm version patch
 npm publish
 git push origin master
