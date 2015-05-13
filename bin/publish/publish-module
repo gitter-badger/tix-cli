@@ -34,11 +34,11 @@ fi
 
 pushd $module_path >&2
 
-git add .  2>&1 #| grep -qi "fatal" && >&2 echo "An error occurred while git adding." && exit 1
-git commit -am "$commit_message"  2>&1 #| grep -qi "fatal" && >&2 echo "An error occurred while git committing." && exit 1
-npm version patch  2>&1 #| grep -qi "fatal" && >&2 echo "An error occurred while npm versioning." && exit 1
-npm publish  2>&1 #| grep -qi "fatal" && >&2 echo "An error occurred while npm publishing." && exit 1
-git push origin master  2>&1 #| grep -qi "fatal" && >&2 echo "An error occurred while git pushing to master." && exit 1
+git add .  #| grep -qi "fatal" && >&2 echo "An error occurred while git adding." && exit 1
+git commit -am "$commit_message"  #| grep -qi "fatal" && >&2 echo "An error occurred while git committing." && exit 1
+npm version patch  #| grep -qi "fatal" && >&2 echo "An error occurred while npm versioning." && exit 1
+npm publish  #| grep -qi "fatal" && >&2 echo "An error occurred while npm publishing." && exit 1
+git push origin master  #| grep -qi "fatal" && >&2 echo "An error occurred while git pushing to master." && exit 1
 
 popd >&2
 
