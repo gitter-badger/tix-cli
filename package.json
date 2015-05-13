@@ -3,13 +3,7 @@
   "version": "1.0.68",
   "main": "tix-cli.js",
   "description": "Command line interface to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.",
-  "files": [
-    "tix-cli.js",
-    "README.md",
-    "LICENSE",
-    "bin/tix",
-    "bin/publish-cli"
-  ],
+
   "repository": "TixInc/tix-cli",
   "keywords": [
     "TixInc",
