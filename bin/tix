@@ -27,7 +27,7 @@ if ! grep -q :_authToken $NPMRC_PATH; then
     npm adduser
 fi
 
-$(github-token) > /dev/null
+$(github-token) &>/dev/null
 
 if [ ! -e $CLI_PATH ]; then
     echo Installing CLI to $CLI_ROOT...
@@ -41,4 +41,4 @@ if [ ! -e $CLI_PATH ]; then
 fi
 
 echo Executing CLI in $CLI_PATH...
-node $CLI_PATH
+node "$CLI_PATH"
