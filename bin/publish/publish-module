@@ -34,6 +34,7 @@ fi
 
 pushd $module_path >&2
 
+echo INNER COMMIT: "$commit_message"
 git add .  #| grep -qi "fatal" && >&2 echo "An error occurred while git adding." && exit 1
 git commit -am "$commit_message"  #| grep -qi "fatal" && >&2 echo "An error occurred while git committing." && exit 1
 npm version patch  #| grep -qi "fatal" && >&2 echo "An error occurred while npm versioning." && exit 1
