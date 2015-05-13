@@ -20,8 +20,8 @@ var config = {
   path: {
     cliDir: 'tix-cli',
     npmDir: 'npm',
-    jsDir: 'tixinc.js',
-    netDir: 'tixinc.Net',
+    jsDir: 'tixinc-js',
+    netDir: 'tixinc-net',
     classicDir: 'tixinc.classic',
     cliFile: 'tix-cli.js',
     tokenFile: 'token'
@@ -268,16 +268,14 @@ function CliAdvanced(config, token) {
 
   var installRoot = config.installRoot;
   var cliDir = toAbsPath(config.path.cliDir);
-  var automationPath = join(cliDir, 'automation');
-  var configPath = join(cliDir, 'config');
-  var extPath = join(cliDir, 'ext');
+  var tixincPath = join(cliDir, 'node_modules', '@tixinc');
   var tokenUrl = 'https://' + token + '@github.com';
   console.log('cliDir: ' + cliDir);
-  console.log('automationPath: ' + automationPath);
+  console.log('tixincPath: ' + tixincPath);
   console.log('tokenUrl:' + tokenUrl);
 
   this.isExtendedMode = false;
-  if (dirExists(automationPath) && dirExists(configPath) && dirExists(extPath)) {
+  if (dirExists(tixincPath)) {
     enableExtendedMode();
   }
 
@@ -342,8 +340,12 @@ function CliAdvanced(config, token) {
     log('Successfully linked: ' + path, 'npmLink');
   }
 
-  function npmInstall() {
-    exec('npm install', 'An error occurred during npm install.', true);
+  function npmInstall(module) {
+    if(module) {
+      exec('npm install ' + module, 'An error occurred during npm install.', true);
+    } else {
+      exec('npm install', 'An error occurred during npm install.', true);
+    }
     log('Successfully installed.', 'npmInstall');
   }
 
@@ -714,12 +716,12 @@ function CliAdvanced(config, token) {
     },
     "clone-js": function () {
       that.execCommand('clone-repo', {
-        'github-path': 'tixinc/tixinc.js'
+        'github-path': 'tixinc/tixinc-js'
       });
     },
     "clone-net": function () {
       that.execCommand('clone-repo', {
-        'github-path': 'tixinc/tixinc.net'
+        'github-path': 'tixinc/tixinc-net'
       });
     },
     "clone-classic": function () {
@@ -864,6 +866,7 @@ function CliAdvanced(config, token) {
       }
       console.log('Installing extended mode...');
       console.log('Cloning additional dependencies...');
+      /*
       var clonePaths = argv['clone-paths'];
       _.forEach(clonePaths, function (githubPath) {
         that.execCommand('clone-repo', {
@@ -871,12 +874,16 @@ function CliAdvanced(config, token) {
           'working-dir': toAbsPath('tix-cli')
         });
       });
+      */
+      /*
       console.log('Linking dependencies...');
       var linkPaths = argv['link-paths'];
       that.execCommand('npm-link-modules', {
         paths: linkPaths,
         module: 'tix-cli'
       });
+      */
+      npmInstall('@tixinc/automation');
       enableExtendedMode();
     },
     "print-process": function (argv) {
