@@ -264,8 +264,8 @@ function CliAdvanced(config, token) {
   var sh = require('shelljs');
   sh.config.silent = true;
   var _ = require('lodash');
-  require('colors');
 
+  require('colors');
   var installRoot = config.installRoot;
   var cliDir = toAbsPath(config.path.cliDir);
   var tixincPath = join(cliDir, 'node_modules', '@tixinc');
@@ -274,14 +274,32 @@ function CliAdvanced(config, token) {
   console.log('tixincPath: ' + tixincPath);
   console.log('tokenUrl:' + tokenUrl);
 
+
+
+  var ascii = "                                                                           \r\n                                                          `.,:,,`          \r\n                                                  `::::::::::::::::::,     \r\n                                            ::::`          .::::::::::::   \r\n                                         .:,                 :::::::::::   \r\n                                       :`                     ::::::::::   \r\n                                     .                        ,:::::::::   \r\n                                                              :::::::::.   \r\n                                                              :::::::::    \r\n                                      --------:              .::::::::`    \r\n                       `@@@@@@@@      -------;               :::::::::     \r\n                       @@@@@@@@:                                           \r\n                       @@@@@@@@                                            \r\n                   #@@@@@@@@@@@@@@   @@@@@@@@   @@@@@@@#    @@@@@@@'       \r\n                   @@@@@@@@@@@@@@+  '@@@@@@@@    @@@@@@@: ;@@@@@@@         \r\n           +++        @@@@@@@@      @@@@@@@@      @@@@@@@@@@@@@@#    ,##'  \r\n          ''''+      #@@@@@@@'      @@@@@@@@      .@@@@@@@@@@@@`    :++++# \r\n         +''''''    .@@@@@@@@      @@@@@@@@         #@@@@@@@:       ++++++`\r\n         `'''''     @@@@@@@@      @@@@@@@@.       @@@@@@@@@@@       +++++# \r\n          :''+`    `@@@@@@@@      @@@@@@@@      ,@@@@@@@@@@@@@       #++#  \r\n                   `@@@@@@@@      @@@@@@@@'    @@@@@@@@'@@@@@@@            \r\n                    @@@@@@@@@#''' '@@@@@@@@@'@@@@@@@@:  @@@@@@@;           \r\n                      ...........   ................     .......           \r\n                                                                           \r\n                                                      ,,,,,,,,,            \r\n                                                  ::::::::::',             \r\n                   :`                        .::::::::::+:`                \r\n                   :,                     `::::::::::,+:`                  \r\n                  `:;`                 .::::::::::::',`                    \r\n                   :::`            `:::::::::::::+;.                       \r\n                   :::::,`   .::::::::::::::::'',`                         \r\n                    :::::::::::::::::::::::'':`                            \r\n                      `:::::::::::;+;:.`                                   \r\n                          `..,...`                                         \r\n                                                                           ";
+  this.printHeader = function () {
+    if (that.isExtendedMode) {
+      console.log(ascii.replace(/\+/g, '+'.blue).replace(/:/g, ':'.yellow).replace(/'/g, '\''.green).replace(/-/g, '-'.red));
+      console.log('TixInc extended command line interface: Type "?" for a list of available commands or "??" for extended commands.');
+    }
+    else {
+      console.log(ascii);
+      console.log('TixInc command line interface: Type "?" for a list of available commands.');
+    }
+  };
+
+
   this.isExtendedMode = false;
   if (dirExists(tixincPath)) {
     enableExtendedMode();
   }
 
-
-  var ascii = "                                                                           \r\n                                                          `.,:,,`          \r\n                                                  `::::::::::::::::::,     \r\n                                            ::::`          .::::::::::::   \r\n                                         .:,                 :::::::::::   \r\n                                       :`                     ::::::::::   \r\n                                     .                        ,:::::::::   \r\n                                                              :::::::::.   \r\n                                                              :::::::::    \r\n                                      --------:              .::::::::`    \r\n                       `@@@@@@@@      -------;               :::::::::     \r\n                       @@@@@@@@:                                           \r\n                       @@@@@@@@                                            \r\n                   #@@@@@@@@@@@@@@   @@@@@@@@   @@@@@@@#    @@@@@@@'       \r\n                   @@@@@@@@@@@@@@+  '@@@@@@@@    @@@@@@@: ;@@@@@@@         \r\n           +++        @@@@@@@@      @@@@@@@@      @@@@@@@@@@@@@@#    ,##'  \r\n          ''''+      #@@@@@@@'      @@@@@@@@      .@@@@@@@@@@@@`    :++++# \r\n         +''''''    .@@@@@@@@      @@@@@@@@         #@@@@@@@:       ++++++`\r\n         `'''''     @@@@@@@@      @@@@@@@@.       @@@@@@@@@@@       +++++# \r\n          :''+`    `@@@@@@@@      @@@@@@@@      ,@@@@@@@@@@@@@       #++#  \r\n                   `@@@@@@@@      @@@@@@@@'    @@@@@@@@'@@@@@@@            \r\n                    @@@@@@@@@#''' '@@@@@@@@@'@@@@@@@@:  @@@@@@@;           \r\n                      ...........   ................     .......           \r\n                                                                           \r\n                                                      ,,,,,,,,,            \r\n                                                  ::::::::::',             \r\n                   :`                        .::::::::::+:`                \r\n                   :,                     `::::::::::,+:`                  \r\n                  `:;`                 .::::::::::::',`                    \r\n                   :::`            `:::::::::::::+;.                       \r\n                   :::::,`   .::::::::::::::::'',`                         \r\n                    :::::::::::::::::::::::'':`                            \r\n                      `:::::::::::;+;:.`                                   \r\n                          `..,...`                                         \r\n                                                                           ";
-
+  function enableExtendedMode() {
+    var CliExtended = require('@tixinc/automation/cli');
+    that.extCommands = (new CliExtended()).commands;
+    that.isExtendedMode = true;
+    that.printHeader();
+  }
 
   function log(message, source) {
     var msg = 'CliAdvanced';
@@ -629,13 +647,6 @@ function CliAdvanced(config, token) {
     }
   };
 
-  /** Amends each command (key) in object literal with a function. */
-  function addFns(commandFns) {
-    _.forEach(commandFns, function (fn, commandName) {
-      addFn(commandName, fn);
-    });
-  }
-
   /** Amends the command definition with a function. */
   function addFn(commandName, fn) {
     var cmd = that.commands[commandName];
@@ -647,10 +658,10 @@ function CliAdvanced(config, token) {
     }
   }
 
-  /** Amends each command (key) in object literal with a function returning a promise (for async). */
-  function addFnQs(commandFns) {
+  /** Amends each command (key) in object literal with a function. */
+  function addFns(commandFns) {
     _.forEach(commandFns, function (fn, commandName) {
-      addFnQ(commandName, fn);
+      addFn(commandName, fn);
     });
   }
 
@@ -662,6 +673,14 @@ function CliAdvanced(config, token) {
       return deferred.promise;
     });
   }
+
+  /** Amends each command (key) in object literal with a function returning a promise (for async). */
+  function addFnQs(commandFns) {
+    _.forEach(commandFns, function (fn, commandName) {
+      addFnQ(commandName, fn);
+    });
+  }
+
 
   /** The functions for each command definition. */
   var commandFns = {
@@ -908,12 +927,7 @@ function CliAdvanced(config, token) {
 
   addFns(commandFns);
 
-  function enableExtendedMode() {
-    var CliExtended = require('@tixinc/automation/cli');
-    that.extCommands = (new CliExtended()).commands;
-    that.isExtendedMode = true;
-    that.printHeader();
-  }
+
 
   function printCommands(commands) {
     var printCommand = _.template('<%= command %>:<%= alias %> <%= desc %>');
@@ -1012,16 +1026,7 @@ function CliAdvanced(config, token) {
     console.log('You must supply a valid command.  For a list of commands use "?".');
   };
 
-  this.printHeader = function () {
-    if (that.isExtendedMode) {
-      console.log(ascii.replace(/\+/g, '+'.blue).replace(/:/g, ':'.yellow).replace(/'/g, '\''.green).replace(/-/g, '-'.red));
-      console.log('TixInc extended command line interface: Type "?" for a list of available commands or "??" for extended commands.');
-    }
-    else {
-      console.log(ascii);
-      console.log('TixInc command line interface: Type "?" for a list of available commands.');
-    }
-  };
+
 
   this.getPrompt = function () {
     if (that.isExtendedMode) {
