@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 #PATHs
 readonly NPMRC_PATH=~/.npmrc
 readonly INSTALL_ROOT=$HOME
