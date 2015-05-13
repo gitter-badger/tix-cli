@@ -1,54 +1,46 @@
 #!/bin/bash
 
-npmrcFile=~/.npmrc
-cliFile=~/tixinc/tix-cli/tix-cli.js
-tokenFile=~/tixinc/token.json
+#PATHs
+readonly NPMRC_PATH=~/.npmrc
+readonly INSTALL_ROOT=$HOME
+readonly CONFIG_PATH="${INSTALL_ROOT}/.tixrc"
+readonly MODULE_ROOT="${INSTALL_ROOT}/tixinc"
 
-if ! grep -q :_authToken ${npmrcFile}; then
+readonly CLI_ROOT="${MODULE_ROOT}/tix-cli"
+readonly CLI_PATH="${MODULE_ROOT}/tix-cli/tix-cli.js"
+
+#URLs
+readonly GITHUB_URL_BASE=https://github.com
+readonly GITHUB_URL_TIX="${GITHUB_URL_BASE}/TixInc"
+readonly GITHUB_URL_CLI="${GITHUB_URL_TIX}/tix-cli"
+
+#npmrcFile=~/.npmrc
+#cliFile=~/tixinc/tix-cli/tix-cli.js
+#tokenFile=~/tixinc/token.json
+#tixrcFile=~/.tixrc
+
+if ! grep -q :_authToken $NPMRC_PATH; then
     echo Your npm credentials are required to interact with npm private repositories.
-    echo A token will be persisted to ${npmrcFile}...
+    echo A token will be persisted to $NPMRC_PATH...
     npm adduser
 fi
 
-if [ ! -e ${tokenFile} ]; then
-    echo Your GitHub credentials are required to interact with the GitHub api.
-    echo A token will be persisted to ${tokenFile}...
-
-    ### Read users GitHub credentials
-    echo -n Username:
-    read username
-    echo -n Password:
-    read -s password
-
-    ### Call GitHub API to get a token.
-    json=$(curl -s --user ${username}:${password} \
-      -X POST \
-      -d '{"client_id":"eae2d821f84f1bb4ae6f", "client_secret":"a097eb9f9e497f03e63af8e775aeabb489246f99", "scopes":["repo"], "note":"Repository access for tix-cli use."}' \
-      https://api.github.com/authorizations) 2>&1
-
-    ### If no token is in the response, exit
-    if [[ ${json} != *'"token":'* ]]; then
-        echo Incorrect credentials given, exiting...
-        exit 1
-    fi
-
-    ### Parse out the token from the json response and stick it in the token file
-    echo ${json} | sed 's/\,/\n/g' | tr -d '" {}' | grep ^token: | tr -d 'token:' | while read token
-        do
-            echo -e "{\"access_token\":\"$token\"}" > ${tokenFile}
-        done
+github_token=$(github-token)
+if [ -z "$github_token" ]; then
+    echo Could not find github token... exiting.
+    exit 1
 fi
 
-if [ ! -e ${cliFile} ]; then
-    echo Installing CLI to ${cliFile}...
+if [ ! -e $CLI_PATH ]; then
+    echo Installing CLI to $CLI_ROOT...
     mkdir -p ~/tixinc/tix-cli
-    git clone --depth 1 https://github.com/TixInc/tix-cli ~/tixinc/tix-cli
-    rm -rf ~/tixinc/tix-cli/.git
-    rm -rf ~/tixinc/tix-cli/.gitignore
-    rm -rf ~/tixinc/tix-cli/.settings
-    rm -rf ~/tixinc/tix-cli/img
-    rm -rf ~/tixinc/tix-cli/src
+    git clone --depth 1 $GITHUB_URL_CLI $CLI_ROOT
+    rm -rf "${CLI_ROOT}/.git"
+    rm -rf "${CLI_ROOT}/.gitignore"
+    rm -rf "${CLI_ROOT}/.settings"
+    rm -rf "${CLI_ROOT}/img"
+    rm -rf "${CLI_ROOT}/src"
 fi
 
-echo Executing CLI in ${cliFile}...
-node ~/tixinc/tix-cli/tix-cli.js
+echo Executing CLI in $CLI_PATH...
+node $CLI_PATH

@@ -2,8 +2,8 @@
 #
 # Git commits and NPM publishes the ~/tixinc/tix-cli-src module
 
-message=${@-"Updates to tix-cli"}
 cliSrcPath=~/tixinc/tix-cli-src
+message=${@-"Updates to tix-cli"}
 
 
 if [ ! -d $cliSrcPath ]; then
