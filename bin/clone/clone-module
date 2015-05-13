@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Clones the specified module
+
+git_url="https://$(github-token)@github.com/TixInc/$0"
+module_path="~/tixinc/$0"
+
+>&2 echo cloning $git_url to $module_path...
+
+git clone $git_url $module_path
+
+>&2 echo $0 cloned successfully.
