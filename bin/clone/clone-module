@@ -16,7 +16,7 @@ fi
 
 module_name=$1
 module_dir=${2-$module_name}
-module_path="~/tixinc/$module_dir"
+module_path="$MODULE_ROOT/$module_dir"
 module_url="$GITHUB_URL_TIX/$module_name"
 
 ### if module already cloned, throw an error
