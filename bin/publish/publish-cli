@@ -2,23 +2,8 @@
 #
 # Git commits and NPM publishes the ~/tixinc/tix-cli-src module
 
-cliSrcPath=~/tixinc/tix-cli-src
-message=${@-"Updates to tix-cli"}
+set -e
 
+commit_message=${1-"Updates to tix-cli module..."}
 
-if [ ! -d $cliSrcPath ]; then
-  echo Directory $cliSrcPath does not exist, exiting...
-  exit 1
-fi
-
-pushd $cliSrcPath
-
-git add .
-git commit -am "$message"
-npm version patch
-npm publish
-git push origin master
-
-popd
-
-echo NPM published and changes pushed successfully!
+$(publish-module tix-cli-src $commit_message)

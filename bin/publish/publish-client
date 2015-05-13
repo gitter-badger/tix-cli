@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Git commits and NPM publishes the ~/tixinc/client module
+
+set -e
+
+commit_message=${1-"Updates to client module..."}
+
+$(publish-module client $commit_message)

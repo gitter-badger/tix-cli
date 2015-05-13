@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# Git adds, commits, npm version, npm publishes, and git pushes the specified module directory.
+
+readonly INSTALL_ROOT=$HOME
+readonly MODULE_ROOT="${INSTALL_ROOT}/tixinc"
+
+### if no arguments, throw an error
+if [ $# -eq 0 ]; then
+  >&2 echo Must specify a module directory and commit message to publish...
+  exit 1
+fi
+
+if [ $# -eq 1 ]; then
+  >&2 echo Must specify a commit message...
+  exit 1
+fi
+
+module_dir=$1
+commit_message=$2
+module_path="$MODULE_ROOT/$module_dir"
+
+### if module already cloned, throw an error
+if [ ! -d $module_path ]; then
+  >&2 echo Module $module_dir does not exist at $module_path...
+  exit 1
+fi
+
+
+#git clone $module_url $module_path 2>&1 | grep -qi "fatal" && >&2 echo "An error occurred while cloning." && exit 1
+
+>&2 echo publishing $module_dir...
+
+pushd $module_path
+
+git add .
+git commit -am "$commit_message"
+npm version patch
+npm publish
+git push origin master
+
+popd
+
+>&2 echo NPM published $module_dir and changes pushed successfully!
