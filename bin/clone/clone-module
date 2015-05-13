@@ -14,11 +14,18 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
+echo arg0: $0
+echo arg1: $1
+
 module_name=$0
 module_dir=${1-$module_name}
 module_path="~/tixinc/$module_dir"
 module_url="$GITHUB_URL_TIX/$module_name"
 
+echo name: $module_name
+echo dir: $module_dir
+echo path: $module_path
+echo url: $module_url
 
 ### if module already cloned, throw an error
 if [ -d $module_path ]; then
