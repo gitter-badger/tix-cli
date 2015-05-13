@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Git commits and NPM publishes the ~/tixinc/automation module
+
+set -e
+
+commit_message=${1-"Updates to automation module..."}
+
+publish-module automation $commit_message 2>&1

@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Git commits and NPM publishes the ~/tixinc/config module
+
+set -e
+
+commit_message=${1-"Updates to config module..."}
+
+publish-module config $commit_message 2>&1

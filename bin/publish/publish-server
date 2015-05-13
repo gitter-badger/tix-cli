@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Git commits and NPM publishes the ~/tixinc/server module
+
+set -e
+
+commit_message=${1-"Updates to server module..."}
+
+publish-module server $commit_message 2>&1

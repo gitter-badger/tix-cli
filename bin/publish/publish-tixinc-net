@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Git commits and NPM publishes the ~/tixinc/tixinc-net module
+
+set -e
+
+commit_message=${1-"Updates to tixinc-net module..."}
+
+publish-module tixinc-net $commit_message 2>&1

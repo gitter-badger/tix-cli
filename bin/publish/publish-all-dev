@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# Git commits and NPM publishes all development modules
+
+set -e
+
+if [ $# -eq 0 ]; then
+  >&2 echo Must specify a commit message...
+  exit 1
+fi
+
+commit_message=$1
+
+publish-automation $commit_message 2>&1
+publish-cli $commit_message 2>&1
+publish-client $commit_message 2>&1
+publish-config $commit_message 2>&1
+publish-ext $commit_message 2>&1
+publish-server $commit_message 2>&1
+publish-tixinc-js $commit_message 2>&1
+publish-tixinc-net $commit_message 2>&1
