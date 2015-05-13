@@ -4,4 +4,4 @@
 
 set -e
 
-clone-module tix-cli tix-cli-src
+$(clone-module tix-cli tix-cli-src)

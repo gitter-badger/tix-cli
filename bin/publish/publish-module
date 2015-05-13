@@ -16,6 +16,7 @@ if [ $# -eq 1 ]; then
   exit 1
 fi
 
+
 module_dir=$1
 commit_message=$2
 module_path="$MODULE_ROOT/$module_dir"
@@ -29,7 +30,7 @@ fi
 
 #git clone $module_url $module_path 2>&1 | grep -qi "fatal" && >&2 echo "An error occurred while cloning." && exit 1
 
->&2 echo publishing $module_dir...
+>&2 echo publishing $module_dir at $module_path...
 
 pushd $module_path
 
