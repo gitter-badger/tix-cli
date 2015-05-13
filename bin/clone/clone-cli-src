@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Clones the tix-cli module to tix-cli-src path
+
+set -e
+
+clone-module tix-cli tix-cli-src

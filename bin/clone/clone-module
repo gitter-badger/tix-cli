@@ -1,17 +1,33 @@
 #!/bin/bash
 #
-# Clones the specified module
+# Clones the specified module to a directory in the modules installation root
 
-git_url="https://$(github-token)@github.com/TixInc/$0"
-module_path="~/tixinc/$0"
+readonly INSTALL_ROOT=$HOME
+readonly MODULE_ROOT="${INSTALL_ROOT}/tixinc"
 
-if [ -d $module_path ]; then
-  echo Module $0 already exists at $module_path...
+readonly GITHUB_URL_BASE=https://$(github-token)@github.com
+readonly GITHUB_URL_TIX="${GITHUB_URL_BASE}/TixInc"
+
+### if no arguments, throw an error
+if [ $# -eq 0 ]; then
+  >&2 echo Must specify a module to clone...
   exit 1
 fi
 
->&2 echo cloning $git_url to $module_path...
+module_name=$0
+module_dir=${1-$module_name}
+module_path="~/tixinc/$module_dir"
+module_url="$GITHUB_URL_TIX/$module_name"
 
-git clone $git_url $module_path
 
->&2 echo $0 cloned successfully.
+### if module already cloned, throw an error
+if [ -d $module_path ]; then
+  >&2 echo Module $module_name already exists at $module_path...
+  exit 1
+fi
+
+>&2 echo cloning $module_url to $module_path...
+
+git clone $module_url $module_path
+
+>&2 echo $module_name cloned successfully.

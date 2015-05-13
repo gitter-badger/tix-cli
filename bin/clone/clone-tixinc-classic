@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Clones the tixinc-classic module
+
+set -e
+
+clone-module tixinc-classic

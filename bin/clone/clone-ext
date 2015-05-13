@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Clones the ext module
+
+set -e
+
+clone-module ext

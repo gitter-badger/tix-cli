@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Clones the config module
+
+set -e
+
+clone-module config
