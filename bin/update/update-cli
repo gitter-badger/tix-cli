@@ -1,5 +1,0 @@
-#!/bin/bash
-#
-# Updates the package
-
-npm install -g tix-cli
