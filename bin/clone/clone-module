@@ -27,6 +27,6 @@ fi
 
 >&2 echo cloning $module_url to $module_path...
 
-git clone $module_url $module_path 2>&1 | grep -qi "fatal" && echo "An error occurred while cloning.";exit 1
+git clone $module_url $module_path 2>&1 | grep -qi "fatal" && >&2 echo "An error occurred while cloning." && exit 1
 
 >&2 echo $module_name cloned successfully.
