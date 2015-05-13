@@ -4,4 +4,4 @@
 
 set -e
 
-clone-module server
+$(clone-module server)
