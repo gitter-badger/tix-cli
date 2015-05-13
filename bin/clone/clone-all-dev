@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Clones all modules being used for current development
+
+clone-automation
+clone-cli-src
+clone-client
+clone-config
+clone-ext
+clone-server
+clone-tixinc-js
+clone-tixinc-net
