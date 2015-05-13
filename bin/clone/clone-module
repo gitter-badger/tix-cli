@@ -9,7 +9,7 @@ readonly GITHUB_URL_BASE=https://$(github-token)@github.com
 readonly GITHUB_URL_TIX="${GITHUB_URL_BASE}/TixInc"
 
 ### if no arguments, throw an error
-if [ $# -eq 1 ]; then
+if [ $# -eq 0 ]; then
   >&2 echo Must specify a module to clone...
   exit 1
 fi
