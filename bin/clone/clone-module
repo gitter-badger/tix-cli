@@ -9,23 +9,15 @@ readonly GITHUB_URL_BASE=https://$(github-token)@github.com
 readonly GITHUB_URL_TIX="${GITHUB_URL_BASE}/TixInc"
 
 ### if no arguments, throw an error
-if [ $# -eq 0 ]; then
+if [ $# -eq 1 ]; then
   >&2 echo Must specify a module to clone...
   exit 1
 fi
 
-echo arg0: $0
-echo arg1: $1
-
-module_name=$0
-module_dir=${1-$module_name}
+module_name=$1
+module_dir=${2-$module_name}
 module_path="~/tixinc/$module_dir"
 module_url="$GITHUB_URL_TIX/$module_name"
-
-echo name: $module_name
-echo dir: $module_dir
-echo path: $module_path
-echo url: $module_url
 
 ### if module already cloned, throw an error
 if [ -d $module_path ]; then
@@ -35,6 +27,6 @@ fi
 
 >&2 echo cloning $module_url to $module_path...
 
-git clone $module_url $module_path
+git clone $module_url $module_path | grep -qi "fatal" && >&2 echo "An error occurred while cloning." && exit 1
 
 >&2 echo $module_name cloned successfully.
