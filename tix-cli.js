@@ -46,6 +46,7 @@ var join = require('path').join;
 //** Map install root to absolute path based at the platform specific base path. */
 config.installRoot = join(getPlatformBase(), config.installPath);
 config.configPath = join(getPlatformBase(), '.tixrc');
+config.githubTokenExe = join(getPlatformBase(), 'local/bin/github-token');
 
 function getPlatform() {
   var platform = require('os').platform();
@@ -1176,7 +1177,7 @@ function CliShell(config, mainArgs) {
   function getToken(callbackFn) {
     try {
       var sh = require('shelljs');
-      var token = sh.exec('github-token').output;
+      var token = sh.exec(config.githubTokenExe).output;
       callbackFn(token);
     }
     catch (e) {
