@@ -16,14 +16,9 @@ readonly GITHUB_URL_BASE=https://github.com
 readonly GITHUB_URL_TIX="${GITHUB_URL_BASE}/TixInc"
 readonly GITHUB_URL_CLI="${GITHUB_URL_TIX}/tix-cli"
 
-#npmrcFile=~/.npmrc
-#cliFile=~/tixinc/tix-cli/tix-cli.js
-#tokenFile=~/tixinc/token.json
-#tixrcFile=~/.tixrc
-
-if ! grep -q :_authToken $NPMRC_PATH; then
+if ! grep -q :_authToken ${NPMRC_PATH}; then
     echo Your npm credentials are required to interact with npm private repositories.
-    echo A token will be persisted to $NPMRC_PATH...
+    echo A token will be persisted to ${NPMRC_PATH}...
     npm adduser
 fi
 
