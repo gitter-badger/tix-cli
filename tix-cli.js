@@ -39,6 +39,10 @@ var config = {
   }
 };
 
+var childProcessOpts={
+  shell: '/bin/bash'
+};
+
 var fs = require('fs');
 var join = require('path').join;
 
@@ -883,7 +887,7 @@ function CliShell(config, mainArgs) {
 
   var token = null;
   try {
-    token = require('child_process').execSync('github-token');
+    token = require('child_process').execSync('github-token', childProcessOpts);
   } catch(e) {
     console.log('An error occurred while getting the github token.');
     throw e;
