@@ -1240,7 +1240,7 @@ exports.CliAdvanced = CliAdvanced;
 if (require.main === module) {
   console.log('CLI MODE');
   // Called via a CLI so we should start the shell load process...
-  new CliBasicShell(config, process.argv.slice(2));
+  new CliBasicShell(config, process.argv.slice(3));
 }
 else {
   console.log('REQUIRE MODE');
