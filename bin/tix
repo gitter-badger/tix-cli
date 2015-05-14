@@ -17,15 +17,14 @@ readonly CLI_PATH="$MODULE_ROOT/tix-cli/tix-cli.js"
 while getopts "c:" opt; do
     case "$opt" in
     c)
-        >&2 echo "Cleaning previous installation..."
+        echo "Cleaning previous installation..."
         npm install -g rimraf
         rimraf $CONFIG_PATH
         rimraf $NPMRC_PATH
         rimraf $MODULE_ROOT
-        >&2 echo "Cleaning complete."
+        echo "Cleaning complete."
         ;;
     \?)
-        echo "Invalid option: -$OPTARG"
         exit 1
         ;;
     esac
