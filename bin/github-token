@@ -46,7 +46,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             >&2 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" https://github.com/settings/tokens
             read /dev/null
             ;;
-          *"Bad credentials"*) ### Wrong username/password provided
+          *Bad\ credentials*) ### Wrong username/password provided
             >&2 echo "The username / password combination you provided was incorrect.  Try again..."
             ;;
           *) ### Unknown Issue
