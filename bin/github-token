@@ -44,7 +44,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             oauth_credentials_ok=true
             >&2 echo "A token has already been granted for you but has been deleted from this machine.  Delete the \"$oauth_note\" token at spawned window and hit enter..."
             >&2 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" https://github.com/settings/tokens
-            read /dev/null
+            read
             ;;
           *Bad\ credentials*) ### Wrong username/password provided
             >&2 echo "The username / password combination you provided was incorrect.  Try again..."
