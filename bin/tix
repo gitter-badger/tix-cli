@@ -14,7 +14,7 @@ readonly MODULE_ROOT="$INSTALL_ROOT/tixinc"
 readonly CLI_ROOT="$MODULE_ROOT/tix-cli"
 readonly CLI_PATH="$MODULE_ROOT/tix-cli/tix-cli.js"
 
-while getopts "c" opt; do
+while getopts "cp" opt; do
     case "$opt" in
     c)
         echo "Cleaning previous installation..."
