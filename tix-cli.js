@@ -43,12 +43,13 @@ var config = {
   }
 };
 
-console.dir(process.env);
 var childProcessOpts={
-  stdio: 'inherit',
-  shell: '/bin/bash',
   encoding: 'utf8'
 };
+
+function execBash(cmd) {
+  return require('child_process').execSync('bash -c "' + cmd + '"', childProcessOpts)
+}
 
 
 //** Map install root to absolute path based at the platform specific base path. */
@@ -892,7 +893,7 @@ function CliShell(config, mainArgs) {
 
   var token = null;
   try {
-    token = require('child_process').execSync('github-token', childProcessOpts);
+    token = execBash('github-token');
   } catch(e) {
     console.log('An error occurred while getting the github token.');
     console.dir(token);

@@ -60,7 +60,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
     ### Parse out the token from the json response and stick it in the token file
     echo $oauth_response | sed 's/\,/\n/g' | tr -d '" {}' | grep ^token: | tr -d 'token:' | while read token
         do
-            echo $GITHUB_TOKEN_KEY=$token > $CONFIG_PATH
+            echo $GITHUB_TOKEN_KEY="$token" > $CONFIG_PATH
         done
 fi
 
