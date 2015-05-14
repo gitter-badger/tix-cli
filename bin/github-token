@@ -32,7 +32,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
       fi
 
       ### Call GitHub API to get a token.
-      oauth_response=$(curl -u $oauth_credentials -X POST -d "$oauth_data" https://api.github.com/authorizations) 2>&1
+      oauth_response=$(curl -s -u $oauth_credentials -X POST -d "$oauth_data" https://api.github.com/authorizations) 2>&1
 
       case "$oauth_response" in
           *"token"*) ### Token Found!
