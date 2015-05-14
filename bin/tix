@@ -21,7 +21,7 @@ while getopts "c" opt; do
         npm install -g rimraf
         rimraf $CONFIG_PATH
         rimraf $NPMRC_PATH
-        rimraf $MODULE_ROOT
+        rimraf $CLI_ROOT
         echo "Cleaning complete."
         ;;
     \?)
