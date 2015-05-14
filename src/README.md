@@ -7,7 +7,7 @@ This document serves to describe the installation process flow for the command l
 Purpose
 -------
 
-Windows has some terrible design choices at its roots:
+Windows has some poor design choices at its core:
 
 * Ugly File System
   * User AppData folder... what is this \Roaming, \Local, \LocalLow
@@ -57,7 +57,7 @@ Scripts
 
 [**To download and install the platform, open Windows command prompt (Start > "cmd.exe" > [enter]) and run:**](cmd/download-install-src.cmd)
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "If(Test-Path ~\tmp.ps1){rm ~\tmp.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File ~\tmp.ps1;~\tmp.ps1 -Install -CleanSource;rm ~\tmp.ps1"
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "If(Test-Path %TEMP%\t.ps1){rm %TEMP%\t.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File %TEMP%\t.ps1;%TEMP%\t.ps1 -Install -CleanSource -CleanLocal;rm %TEMP%\t.ps1"
 ```
 
 
@@ -89,7 +89,7 @@ Other Cmd.exe Scripts
 @powershell -NoProfile -ExecutionPolicy unrestricted -File ~\src\ps1\install-src.ps1
 ```
 
-**Download and install to a custom directory (C:\\nix):**
+**(WIP) Download and install to a custom directory (C:\\nix):**
 ```cmd
 @powershell -NoProfile -ExecutionPolicy unrestricted -Command "If(Test-Path ~\tmp.ps1){rm ~\tmp.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File ~\tmp.ps1;~\tmp.ps1 -RootPath C:\nix -Install -CleanSource;rm ~\tmp.ps1"
 ```
