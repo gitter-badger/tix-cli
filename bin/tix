@@ -14,7 +14,7 @@ readonly MODULE_ROOT="$INSTALL_ROOT/tixinc"
 readonly CLI_ROOT="$MODULE_ROOT/tix-cli"
 readonly CLI_PATH="$MODULE_ROOT/tix-cli/tix-cli.js"
 
-while getopts "cp" opt; do
+while getopts "c" opt; do
     case "$opt" in
     c)
         echo "Cleaning previous installation..."
@@ -23,12 +23,6 @@ while getopts "cp" opt; do
         rimraf $NPMRC_PATH
         rimraf $MODULE_ROOT
         echo "Cleaning complete."
-        ;;
-    p)
-        echo "Publishing cli and reinstalling..."
-        publish-cli && npm install -g tix-cli
-        echo "CLI finished publishing and has been reinstalled."
-        exit 0
         ;;
     \?)
         exit 1
