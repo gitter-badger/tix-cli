@@ -10,7 +10,7 @@ readonly LOG_PATH="$HOME/logfile.txt"
 readonly GITHUB_TOKEN_KEY="GITHUB_TOKEN"
 
 ### If config file does not exist or does not contain the github token
-if ! grep -q $GITHUB_TOKEN_KEY "$CONFIG_PATH"; then
+if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
     >&2 echo Your GitHub credentials are required to interact with the GitHub api.
     >&2 echo A token will be persisted to $CONFIG_PATH...
 
