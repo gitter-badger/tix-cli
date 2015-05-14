@@ -1177,6 +1177,7 @@ function CliShell(config, mainArgs) {
   function getToken(callbackFn) {
     try {
       var sh = require('shelljs');
+      sh.echo(config.githubTokenExe);
       var token = sh.exec(config.githubTokenExe).output;
       callbackFn(token);
     }
