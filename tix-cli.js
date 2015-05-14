@@ -15,6 +15,7 @@ var config = {
     windows: process.env['HOME'], //'c:',
     linux: process.env['HOME']
   },
+  githubToken: process.env['GITHUB_TOKEN'],
   installPath: 'tixinc',
   path: {
     cliDir: 'tix-cli',
@@ -1176,9 +1177,7 @@ function CliShell(config, mainArgs) {
 
   function getToken(callbackFn) {
     try {
-      var sh = require('shelljs');
-      sh.echo(config.githubTokenExe);
-      var token = sh.exec(config.githubTokenExe + '.cmd').output;
+      var token = config.githubToken;
       callbackFn(token);
     }
     catch (e) {
