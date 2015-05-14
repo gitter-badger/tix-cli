@@ -36,4 +36,4 @@ if [ ! -e $CLI_PATH ]; then
 fi
 
 echo Executing CLI in $CLI_PATH...
-node "$CLI_PATH" GITHUB_TOKEN
+node "$CLI_PATH" ${GITHUB_TOKEN}
