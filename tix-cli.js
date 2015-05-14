@@ -8,6 +8,10 @@
  *
  * System Dependencies: Git, Node.js
  */
+
+var fs = require('fs');
+var join = require('path').join;
+
 //** Modify these args to control how the cli works. */
 var config = {
   platform: getPlatform(),
@@ -40,11 +44,10 @@ var config = {
 };
 
 var childProcessOpts={
+  cwd: join(config.basePath, 'local', 'bin'),
   shell: '/bin/bash'
 };
 
-var fs = require('fs');
-var join = require('path').join;
 
 //** Map install root to absolute path based at the platform specific base path. */
 config.installRoot = join(getPlatformBase(), config.installPath);
@@ -890,6 +893,7 @@ function CliShell(config, mainArgs) {
     token = require('child_process').execSync('github-token', childProcessOpts);
   } catch(e) {
     console.log('An error occurred while getting the github token.');
+    console.dir(token);
     throw e;
   }
   init(token);
