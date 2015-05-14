@@ -15,7 +15,6 @@ var config = {
     windows: process.env['HOME'], //'c:',
     linux: process.env['HOME']
   },
-  githubToken: process.argv[2],
   installPath: 'tixinc',
   path: {
     cliDir: 'tix-cli',
@@ -101,157 +100,7 @@ function dirExists(path) {
   }
 }
 
-/**
- * CliBasic class.
- * This cli has no dependencies on any npm packages and is used to setup the bare dependencies in a cli folder to allow
- * other automation.
- * @class
- */
-function CliBasic(config) {
-  var that = this;
-  var installRoot = config.installRoot;
-  var cliDir = toAbsPath(config.path.cliDir);
-  var cliPath = join(cliDir, config.path.cliFile);
-  var packagePath = join(cliDir, 'package.json');
 
-  function log(message, source) {
-    var msg = 'CliBasic';
-    if (source) {
-      msg += '.' + source;
-    }
-    msg += ': ' + message;
-    console.log(msg);
-  }
-
-  var getExecOpts = function () {
-    return {encoding: 'utf8', stdio: 'inherit'}
-  };
-
-  var execSync = function (command, opts) {
-    try {
-      return require('child_process').execSync(command, opts || getExecOpts());
-    }
-    catch (e) {
-      log(e, 'execSync');
-    }
-  };
-
-  this.moduleExists = function (moduleName) {
-    return dirExists(cliDir + '/node_modules/' + moduleName);
-  };
-
-  this.rmDir = function (path) {
-    if (!dirExists(path)) {
-      log(path + ' directory does not exist.  Skipping clean.', 'rmDir');
-      return;
-    }
-    execSync('rm -rf ' + path);
-  };
-
-  this.rmSym = function (path) {
-    log('Attempting to remove symlink at ' + path, 'rmSym');
-    execSync('rm n ' + path);
-  };
-
-  this.mkAndChDir = function (path) {
-    this.mkDir(path);
-    this.chDir(path);
-  };
-
-  this.mkDir = function (path) {
-    if (dirExists(path)) {
-      log(path + ' directory already exists.  Skipping make.', 'mkDir');
-      return;
-    }
-    execSync('mkdir ' + path);
-  };
-
-  this.chDir = function (path) {
-    log('Changed directory to: ' + path, 'chDir');
-    process.chdir(path);
-  };
-
-
-  function iterateNpmDependencies(fn) {
-    var returns = [];
-    for (var i = 0; i < config.npmDependencies.length; i++) {
-      returns.push(fn(config.npmDependencies[i]));
-    }
-    return returns;
-  }
-
-
-  /** Copies this script into the CLI directory where it can be run from. */
-  this.installCli = function () {
-    try {
-      fs.writeFileSync(cliPath, fs.readFileSync(__filename));
-    }
-    catch (e) {
-      log(e, 'installCli');
-    }
-  };
-
-  /** Installs package.json and npm dependencies to cli directory. */
-  this.installNpm = function () {
-    that.packageInit();
-    iterateNpmDependencies(that.installNpmModule);
-  };
-
-  //** Sets up a package.json in cli directory so it can make use of require(). */
-  this.packageInit = function () {
-    var package_json = {
-      "name": "tix-cli",
-      "version": "1.0.0",
-      "main": "tix-cli.js",
-      "description": "This is a small temporary package setup on the fly to allow use of npm dependencies and require in TixInc CLI.",
-      "private": "true"
-    };
-    fs.writeFileSync(packagePath, JSON.stringify(package_json, null, 4));
-  };
-
-  this.installNpmModule = function (moduleName) {
-    execSync('npm install --save ' + moduleName);
-  };
-
-  /** Deletes the cli directory. */
-  this.uninstall = function () {
-    if (__dirname === cliDir) {
-      console.log('Cannot uninstall, CLI is being executed from the CLI directory.')
-    }
-    else {
-      console.log('Uninstalling previous installation of tix-cli at ' + cliDir);
-      // Remove symbolic links
-      //that.rmSym(join(cliDir + 'node_modules', 'ext'));
-      //that.rmSym(join(cliDir + 'node_modules', 'automation'));
-      //that.rmSym(join(cliDir + 'node_modules', 'config'));
-      that.rmDir(cliDir);
-    }
-  };
-
-  /** This method detects whether the cli basic dependencies have already been configured or not. */
-  this.isInstalled = function () {
-    var results = iterateNpmDependencies(that.moduleExists);
-    for (var i = 0; i < results.length; i++) {
-      if (!results[i]) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  /** This method orchestrates setting up basic dependencies, which allows use of CliAdvanced. */
-  this.install = function () {
-    // Setup folder structure
-    that.mkDir(installRoot);
-    that.mkAndChDir(cliDir);
-
-    // Install dependencies
-    that.installCli();
-    that.installNpm();
-
-    log('Dependencies installed.', 'install');
-  }
-}
 
 /**
  * Functionality from this cli is dependent on dependencies installed in cli basic.  This cli should be run from the
@@ -884,24 +733,6 @@ function CliAdvanced(config, token) {
         return;
       }
       console.log('Installing extended mode...');
-      console.log('Cloning additional dependencies...');
-      /*
-      var clonePaths = argv['clone-paths'];
-      _.forEach(clonePaths, function (githubPath) {
-        that.execCommand('clone-repo', {
-          'github-path': githubPath,
-          'working-dir': toAbsPath('tix-cli')
-        });
-      });
-      */
-      /*
-      console.log('Linking dependencies...');
-      var linkPaths = argv['link-paths'];
-      that.execCommand('npm-link-modules', {
-        paths: linkPaths,
-        module: 'tix-cli'
-      });
-      */
       npmInstall('@tixinc/automation');
       enableExtendedMode();
     },
@@ -926,8 +757,6 @@ function CliAdvanced(config, token) {
   };
 
   addFns(commandFns);
-
-
 
   function printCommands(commands) {
     var printCommand = _.template('<%= command %>:<%= alias %> <%= desc %>');
@@ -1036,53 +865,6 @@ function CliAdvanced(config, token) {
   };
 }
 
-/**
- * CliBasicShell for CliShell dependency deployment.
- * @param config
- * @param args
- * @class
- */
-function CliBasicShell(config, args) {
-
-  var cliBasic = new CliBasic(config);
-  var cliDir = toAbsPath(config.path.cliDir);
-
-  // Clean up previous installation.
-  if (__dirname !== cliDir && config.flags.cleanIfNotCliWorkingDir) {
-    console.log('cleaning');
-    cliBasic.uninstall();
-  }
-
-  if (cliBasic.isInstalled()) {
-    return startShell(config, args);
-  }
-
-
-  /** Installs basic dependencies and starts the CLI. */
-  function installAndStartShell() {
-    console.log('Installing to ' + cliDir + '...');
-    cliBasic.install();
-    startShell(config, args);
-  }
-
-  console.log('Basic dependencies must be installed to use tix-cli.  These will be installed to ' + cliDir);
-  if (!config.flags.promptToInstallDependencies) {
-    console.log('Skipping user confirmation per flag.');
-    return installAndStartShell();
-  }
-
-  var rl = createInterface();
-  rl.question('Would you like to install dependencies (Y/n)?: ', function (answer) {
-    if (answer.match(/^y(es)?$/i)) {
-      installAndStartShell();
-    }
-    else {
-      console.log('Fine, be that way! :P');
-      process.exit(0);
-    }
-  });
-}
-
 
 /**
  * CliShell for interactive deployment of TixInc apps at command line.
@@ -1099,7 +881,14 @@ function CliShell(config, mainArgs) {
   var isInteractive = mainArgs.length === 0 || mainArgv.i || mainArgv.interactive;
   var cliDir = toAbsPath(config.path.cliDir);
 
-  getToken(init);
+  var token = null;
+  try {
+    token = require('child_process').execSync('github-token');
+  } catch(e) {
+    console.log('An error occurred while getting the github token.');
+    throw e;
+  }
+  init(token);
 
   function init(token) {
     console.log('CliShell.init');
@@ -1171,19 +960,6 @@ function CliShell(config, mainArgs) {
       }
     }
   }
-
-
-  function getToken(callbackFn) {
-    try {
-      var token = config.githubToken;
-      callbackFn(token);
-    }
-    catch (e) {
-      console.log('An error occurred: ' + e);
-      console.log('exiting...');
-      process.exit(1);
-    }
-  }
 }
 
 
@@ -1212,23 +988,12 @@ function startShell(config, args) {
   }
 }
 
-/**
- * Exports basic shell so it can be run from a CLI.
- * @type {CliBasicShell}
- */
-exports.CliBasicShell = CliBasicShell;
 
 /**
  * Exports shell so it can be run from a CLI.
  * @type {CliShell}
  */
 exports.CliShell = CliShell;
-
-/**
- * Exports CliBasic for functional use in node.js automation apps.
- * @type {CliBasic}
- */
-exports.CliBasic = CliBasic;
 
 /**
  * Exports CliAdvanced for functional use in node.js automation apps.
@@ -1240,7 +1005,7 @@ exports.CliAdvanced = CliAdvanced;
 if (require.main === module) {
   console.log('CLI MODE');
   // Called via a CLI so we should start the shell load process...
-  new CliBasicShell(config, process.argv.slice(3));
+  startShell(config, process.argv.slice(2));
 }
 else {
   console.log('REQUIRE MODE');

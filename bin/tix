@@ -3,20 +3,40 @@
 # This script prepares the tix-cli dependencies and starts it.
 
 set -e
+OPTIND=1
 
 #PATHs
 readonly INSTALL_ROOT=$HOME
+readonly NPMRC_PATH=$HOME/.npmrc
 readonly CONFIG_PATH="$INSTALL_ROOT/.tixrc"
+
 readonly MODULE_ROOT="$INSTALL_ROOT/tixinc"
 readonly CLI_ROOT="$MODULE_ROOT/tix-cli"
 readonly CLI_PATH="$MODULE_ROOT/tix-cli/tix-cli.js"
 
-$(npm-authenticate) 2>&1
+while getopts "c:" opt; do
+    case "$opt" in
+    c)
+        >&2 echo "Cleaning previous installation..."
+        npm install -g rimraf
+        rimraf $CONFIG_PATH
+        rimraf $NPMRC_PATH
+        rimraf $MODULE_ROOT
+        >&2 echo "Cleaning complete."
+        ;;
+    \?)
+        >&2 echo "Invalid option: -$OPTARG"
+        exit 1
+        ;;
+    esac
+done
+
+npm-authenticate
 GITHUB_TOKEN=$(github-token)
 
 if [ ! -e $CLI_PATH ]; then
-  $(install-cli)
+  install-cli
 fi
 
-echo Executing CLI at $CLI_PATH...
-node "$CLI_PATH" "$GITHUB_TOKEN"
+echo "Executing CLI at $CLI_PATH..."
+node "$CLI_PATH"
