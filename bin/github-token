@@ -2,8 +2,7 @@
 #
 # Gets a git token from .tixrc or creates one
 
-readonly CONFIG_PATH=~/.tixrc
-readonly TOKEN_JSON_PATH=~/tixinc/token.json
+readonly CONFIG_PATH=$HOME/.tixrc
 
 if [ ! -e $CONFIG_PATH ]; then
     >&2 echo Your GitHub credentials are required to interact with the GitHub api.
@@ -30,7 +29,6 @@ if [ ! -e $CONFIG_PATH ]; then
     ### Parse out the token from the json response and stick it in the token file
     echo $json | sed 's/\,/\n/g' | tr -d '" {}' | grep ^token: | tr -d 'token:' | while read token
         do
-            echo -e "{\"access_token\":\"$token\"}" > $TOKEN_JSON_PATH
             echo github_token=$token > $CONFIG_PATH
         done
 fi

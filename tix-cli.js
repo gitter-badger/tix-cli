@@ -8,7 +8,6 @@
  *
  * System Dependencies: Git, Node.js
  */
-
 //** Modify these args to control how the cli works. */
 var config = {
   platform: getPlatform(),
@@ -23,8 +22,7 @@ var config = {
     jsDir: 'tixinc-js',
     netDir: 'tixinc-net',
     classicDir: 'tixinc.classic',
-    cliFile: 'tix-cli.js',
-    tokenFile: 'token'
+    cliFile: 'tix-cli.js'
   },
   npmDependencies: [
     'minimist',
@@ -41,11 +39,13 @@ var config = {
   }
 };
 
+
 var fs = require('fs');
 var join = require('path').join;
 
 //** Map install root to absolute path based at the platform specific base path. */
 config.installRoot = join(getPlatformBase(), config.installPath);
+config.configPath = join(getPlatformBase(), '.tixrc');
 
 function getPlatform() {
   var platform = require('os').platform();
@@ -1049,7 +1049,7 @@ function CliBasicShell(config, args) {
 
   // Clean up previous installation.
   if (__dirname !== cliDir && config.flags.cleanIfNotCliWorkingDir) {
-    console.log('cleaning')
+    console.log('cleaning');
     cliBasic.uninstall();
   }
 
@@ -1098,7 +1098,6 @@ function CliShell(config, mainArgs) {
   var argCommands = _.omit(mainArgv, '_');
   var isInteractive = mainArgs.length === 0 || mainArgv.i || mainArgv.interactive;
   var cliDir = toAbsPath(config.path.cliDir);
-  var tokenPath = toAbsPath(config.path.tokenFile);
 
   getToken(init);
 
@@ -1176,12 +1175,12 @@ function CliShell(config, mainArgs) {
 
   function getToken(callbackFn) {
     try {
-      var tokenFile = require(tokenPath);
-      callbackFn(tokenFile.access_token);
+      var sh = require('shelljs');
+      var token = sh.exec('github-token').output;
+      callbackFn(token);
     }
     catch (e) {
-      console.log('Token path: ' + tokenPath);
-      console.log('Could not find token: ' + e);
+      console.log('An error occurred: ' + e);
       console.log('exiting...');
       process.exit(1);
     }
