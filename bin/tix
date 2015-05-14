@@ -11,7 +11,7 @@ readonly MODULE_ROOT="$INSTALL_ROOT/tixinc"
 readonly CLI_ROOT="$MODULE_ROOT/tix-cli"
 readonly CLI_PATH="$MODULE_ROOT/tix-cli/tix-cli.js"
 
-$(npm-authenticate)
+$(npm-authenticate) 2>&1
 GITHUB_TOKEN=$(github-token)
 
 if [ ! -e $CLI_PATH ]; then
