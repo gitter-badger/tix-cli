@@ -7,12 +7,12 @@ OPTIND=1
 
 #PATHs
 readonly INSTALL_ROOT=$HOME
-readonly NPMRC_PATH=$HOME/.npmrc
-readonly CONFIG_PATH="$INSTALL_ROOT/.tixrc"
+readonly NPMRC_PATH="${HOME}/.npmrc"
+readonly CONFIG_PATH="${INSTALL_ROOT}/.tixrc"
 
-readonly MODULE_ROOT="$INSTALL_ROOT/tixinc"
-readonly CLI_ROOT="$MODULE_ROOT/tix-cli"
-readonly CLI_PATH="$MODULE_ROOT/tix-cli/tix-cli.js"
+readonly MODULE_ROOT="${INSTALL_ROOT}/tixinc"
+readonly CLI_ROOT="${MODULE_ROOT}/tix-cli"
+readonly CLI_PATH="${MODULE_ROOT}/tix-cli/tix-cli.js"
 
 while getopts "c" opt; do
     case "$opt" in
@@ -38,4 +38,4 @@ if [ ! -e $CLI_PATH ]; then
 fi
 
 echo "Executing CLI at $CLI_PATH..."
-node "$CLI_PATH"
+node "${CLI_PATH}"
