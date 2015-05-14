@@ -43,9 +43,11 @@ var config = {
   }
 };
 
+console.dir(process.env);
 var childProcessOpts={
-  cwd: join(config.basePath, 'local', 'bin'),
-  shell: '/bin/bash'
+  stdio: 'inherit',
+  shell: '/bin/bash',
+  encoding: 'utf8'
 };
 
 
