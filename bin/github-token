@@ -1,44 +1,76 @@
 #!/bin/bash
 #
 # Gets a git token from .tixrc or creates one
+# All stdout from this script should be redirected to stderr since the expectation is that this script will only produce a token on stdout
+
+set -e
 
 readonly CONFIG_PATH=$HOME/.tixrc
+readonly LOG_PATH =$HOME/logfile.txt
+readonly GITHUB_TOKEN_KEY=GITHUB_TOKEN
 
-if [ ! -e $CONFIG_PATH ]; then
+### If config file does not exist or does not contain the github token
+if ! grep -q $GITHUB_TOKEN_KEY "$CONFIG_PATH"; then
     >&2 echo Your GitHub credentials are required to interact with the GitHub api.
     >&2 echo A token will be persisted to $CONFIG_PATH...
 
-    ### Read users GitHub credentials
-    >&2 echo -n Username:
-    read username
-    >&2 echo -n Password:
-    read -s password
+    oauth_note="OAuth token for interacting with GitHub API from tix-cli."
+    oauth_data="{\"scopes\":[\"repo\"], \"note\":\"$oauth_note\"}"
+    oauth_credentials=""
+    oauth_credentials_ok=false
+    oauth_token_received=false
+    oauth_response=""
 
-    ### Call GitHub API to get a token.
-    json=$(curl -s --user ${username}:${password} \
-      -X POST \
-      -d '{"client_id":"eae2d821f84f1bb4ae6f", "client_secret":"a097eb9f9e497f03e63af8e775aeabb489246f99", "scopes":["repo"], "note":"Repository access for tix-cli use."}' \
-      https://api.github.com/authorizations) 2>&1
+    while [ "$oauth_token_received" = false ]; do
+      if [ "$oauth_credentials_ok" = false ]; then
+        ### Read users GitHub credentials
+        >&2 echo -n "GitHub Username: "
+        read username
+        >&2 echo -n "GitHub Password: "
+        read -s password
+        oauth_credentials="$username:$password"
+      fi
 
-    ### If no token is in the response, exit
-    if [[ $json != *'"token":'* ]]; then
-        >&2 echo Incorrect credentials given, exiting...
-        exit 1
-    fi
+      ### Call GitHub API to get a token.
+      oauth_response=$(curl -u $oauth_credentials -X POST -d "$oauth_data" https://api.github.com/authorizations) 2>&1
+
+      case "$response" in
+          *"token"*) ### Token Found!
+            oauth_credentials_ok=true
+            oauth_token_received=true
+            >&2 echo "Token received, persisting..."
+            ;;
+          *already_exists*) ### Token already exists but was not found on this machine...
+            oauth_credentials_ok=true
+            >&2 echo "A token has already been granted for you but has been deleted from this machine.  Delete the \"$oauth_note\" token at spawned window and hit enter..."
+            >&2 "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" https://github.com/settings/tokens
+            read /dev/null
+            ;;
+          *"Bad credentials"*) ### Wrong username/password provided
+            >&2 echo "The username / password combination you provided was incorrect.  Try again..."
+            ;;
+          *) ### Unknown Issue
+            >&2 echo "An unknown error occurred.  Log file saved to $LOG_PATH..."
+            echo "Unknown issue authenticating with GitHub API - response: $oauth_response" >> $LOG_PATH
+            exit 1
+            ;;
+      esac
+    done
 
     ### Parse out the token from the json response and stick it in the token file
-    echo $json | sed 's/\,/\n/g' | tr -d '" {}' | grep ^token: | tr -d 'token:' | while read token
+    echo $oauth_response | sed 's/\,/\n/g' | tr -d '" {}' | grep ^token: | tr -d 'token:' | while read token
         do
-            echo github_token=$token > $CONFIG_PATH
+            echo $GITHUB_TOKEN_KEY=$token > $CONFIG_PATH
         done
 fi
 
+### Source the variable from the config file
 source $CONFIG_PATH
 
-if [ -n $github_token ]; then
-    echo $github_token
+if [ -n $GITHUB_TOKEN ]; then
+    echo $GITHUB_TOKEN
     exit 0
 else
-    >&2 echo No github token was found in the config file.
+    >&2 echo "$GITHUB_TOKEN_KEY not found in the config file! Exiting..."
     exit 1
 fi

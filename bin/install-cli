@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# This script installs the tix-cli
+
+#PATHs
+readonly INSTALL_ROOT=$HOME
+readonly MODULE_ROOT="$INSTALL_ROOT/tixinc"
+readonly CLI_ROOT="$MODULE_ROOT/tix-cli"
+
+#URLs
+readonly GITHUB_URL_BASE=https://github.com
+readonly GITHUB_URL_TIX="$GITHUB_URL_BASE/TixInc"
+readonly GITHUB_URL_CLI="$GITHUB_URL_TIX/tix-cli"
+
+echo "Installing CLI to $CLI_ROOT..."
+mkdir -p $CLI_ROOT
+git clone --depth 1 "$GITHUB_URL_CLI" "$CLI_ROOT"
+rm -rf "$CLI_ROOT/.git"
+rm -rf "$CLI_ROOT/.gitignore"
+rm -rf "$CLI_ROOT/.settings"
+rm -rf "$CLI_ROOT/img"
+rm -rf "$CLI_ROOT/src"

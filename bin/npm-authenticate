@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# This script will check to see if the user has authenticated with NPM, if not it will authenticate.
+
+readonly NPMRC_PATH=$HOME/.npmrc
+
+if ! grep -q :_authToken $NPMRC_PATH; then
+    echo "Your npm credentials are required to interact with npm private repositories."
+    echo "A token will be persisted to $NPMRC_PATH..."
+    npm adduser
+fi

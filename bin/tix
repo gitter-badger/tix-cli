@@ -1,39 +1,22 @@
 #!/bin/bash
+#
+# This script prepares the tix-cli dependencies and starts it.
 
 set -e
 
 #PATHs
-readonly NPMRC_PATH=~/.npmrc
 readonly INSTALL_ROOT=$HOME
-readonly CONFIG_PATH="${INSTALL_ROOT}/.tixrc"
-readonly MODULE_ROOT="${INSTALL_ROOT}/tixinc"
+readonly CONFIG_PATH="$INSTALL_ROOT/.tixrc"
+readonly MODULE_ROOT="$INSTALL_ROOT/tixinc"
+readonly CLI_ROOT="$MODULE_ROOT/tix-cli"
+readonly CLI_PATH="$MODULE_ROOT/tix-cli/tix-cli.js"
 
-readonly CLI_ROOT="${MODULE_ROOT}/tix-cli"
-readonly CLI_PATH="${MODULE_ROOT}/tix-cli/tix-cli.js"
-
-#URLs
-readonly GITHUB_URL_BASE=https://github.com
-readonly GITHUB_URL_TIX="${GITHUB_URL_BASE}/TixInc"
-readonly GITHUB_URL_CLI="${GITHUB_URL_TIX}/tix-cli"
-
-if ! grep -q :_authToken ${NPMRC_PATH}; then
-    echo Your npm credentials are required to interact with npm private repositories.
-    echo A token will be persisted to ${NPMRC_PATH}...
-    npm adduser
-fi
-
-export GITHUB_TOKEN=$(github-token)
+$(npm-authenticate)
+GITHUB_TOKEN=$(github-token)
 
 if [ ! -e $CLI_PATH ]; then
-    echo Installing CLI to $CLI_ROOT...
-    mkdir -p ~/tixinc/tix-cli
-    git clone --depth 1 $GITHUB_URL_CLI $CLI_ROOT
-    rm -rf "${CLI_ROOT}/.git"
-    rm -rf "${CLI_ROOT}/.gitignore"
-    rm -rf "${CLI_ROOT}/.settings"
-    rm -rf "${CLI_ROOT}/img"
-    rm -rf "${CLI_ROOT}/src"
+  $(install-cli)
 fi
 
-echo Executing CLI in $CLI_PATH...
-node "$CLI_PATH" ${GITHUB_TOKEN}
+echo Executing CLI at $CLI_PATH...
+node "$CLI_PATH" "$GITHUB_TOKEN"
