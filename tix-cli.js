@@ -15,7 +15,7 @@ var config = {
     windows: process.env['HOME'], //'c:',
     linux: process.env['HOME']
   },
-  githubToken: process.env['GITHUB_TOKEN'],
+  githubToken: process.argv[2],
   installPath: 'tixinc',
   path: {
     cliDir: 'tix-cli',
@@ -40,14 +40,12 @@ var config = {
   }
 };
 
-
 var fs = require('fs');
 var join = require('path').join;
 
 //** Map install root to absolute path based at the platform specific base path. */
 config.installRoot = join(getPlatformBase(), config.installPath);
 config.configPath = join(getPlatformBase(), '.tixrc');
-config.githubTokenExe = join(getPlatformBase(), 'local/bin/github-token');
 
 function getPlatform() {
   var platform = require('os').platform();
