@@ -5,9 +5,9 @@
 
 set -e
 
-readonly CONFIG_PATH=$HOME/.tixrc
-readonly LOG_PATH =$HOME/logfile.txt
-readonly GITHUB_TOKEN_KEY=GITHUB_TOKEN
+readonly CONFIG_PATH="$HOME/.tixrc"
+readonly LOG_PATH ="$HOME/logfile.txt"
+readonly GITHUB_TOKEN_KEY="GITHUB_TOKEN"
 
 ### If config file does not exist or does not contain the github token
 if ! grep -q $GITHUB_TOKEN_KEY "$CONFIG_PATH"; then
