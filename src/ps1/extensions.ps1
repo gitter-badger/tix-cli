@@ -1,8 +1,7 @@
 param($RootPath=$HOME)
 $localPath=Join-Path $RootPath local
 $7zaPath=Join-Path $localPath '7z\7za.exe'
-$cmderPath=Join-Path $localPath 'bin\cmder.bat'
-$cmderaPath=Join-Path $localPath 'bin\cmdera.bat'
+$cmderPath=Join-Path $localPath 'bin\cmder.cmd'
 
 
 Filter Write-PipeTable {
@@ -94,17 +93,6 @@ Function Expand-TarXz($filePath, $destDir) {
     #Expand-Tar $tarPath $destDir
 }
 
-Function Execute-Bat($filePath) {
-  . "$filePath"
-}
-
-Function Source-Bat($filePath) {
-  CMD /c "$filePath && set" | .{process{
-    if ($_ -match '^([^=]+)=(.*)') {
-        Set-Variable $matches[1] $matches[2]
-    }
-  }}
-}
 
 Function Execute-Ps1($filePath) {
     Execute powershell.exe "-File=$filePath"
@@ -168,24 +156,24 @@ Function Pin-Taskbar($fileDir, $fileName) {
   #$pn = parsename($fileName)
   #$pn.invokeverb('taskbarpin')
 
-  $batchName = 'cmder'
-  $batchPath=Join-Path $fileDir $fileName
+  $cmdName = 'cmder'
+  $cmdPath=Join-Path $fileDir $fileName
   $iconPath = Join-Path $HOME local\cmder\vendor\msysgit\etc\git.ico
-  Write-Host "adding shortcut at $batchPath"
+  Write-Host "adding shortcut at $cmdPath"
   $taskbarFolder = "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\Taskbar\"
   $startMenuFolder = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\"
   $desktopFolder = Join-Path $HOME Desktop
   $objShell = New-Object -ComObject WScript.Shell
-  $objShortCut = $objShell.CreateShortcut("$startMenuFolder\$batchName.lnk")
+  $objShortCut = $objShell.CreateShortcut("$startMenuFolder\$cmdName.lnk")
   $objShortCut.IconLocation = "$iconPath"
   $objShortCut.TargetPath = 'cmd'
-  $objShortCut.Arguments="/c ""$batchPath"""
+  $objShortCut.Arguments="/c ""$cmdPath"""
   $objShortCut.Save()
 
-  $desktopShortCut = $objShell.CreateShortcut("$desktopFolder\$batchName.lnk")
+  $desktopShortCut = $objShell.CreateShortcut("$desktopFolder\$cmdName.lnk")
   $desktopShortCut.IconLocation = "$iconPath"
   $desktopShortCut.TargetPath = 'cmd'
-  $desktopShortCut.Arguments="/c ""$batchPath"""
+  $desktopShortCut.Arguments="/c ""$cmdPath"""
   $desktopShortCut.Save()
 }
 

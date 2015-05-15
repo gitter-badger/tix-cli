@@ -11,7 +11,6 @@ $base=@{
 # Paths within the src directory
 $src=@{
   bin=Join-Path $base.src bin
-  bat=Join-Path $base.src bat
   cmd=Join-Path $base.src cmd
   ps1=Join-Path $base.src ps1
   sh=Join-Path $base.src sh
@@ -31,7 +30,7 @@ $local.Values|Ensure-Directory -PassThru
 
 
 
-$variablesPath=Join-Path $local.config "variables.bat"
+$variablesPath=Join-Path $local.config "variables.cmd"
 if(Test-Path $variablesPath) {
     rm $variablesPath
     "@echo off"|Out-File $variablesPath -encoding ASCII

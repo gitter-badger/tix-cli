@@ -4,7 +4,6 @@
 ###PROCEED WITH CAUTION
 
 rm -rf ~/local
-rm -rf ~/src/bat
 rm -rf ~/src/cmd
 rm -rf ~/src/ps1
 rm -rf ~/src/sh

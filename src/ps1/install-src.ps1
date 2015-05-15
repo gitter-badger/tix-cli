@@ -44,14 +44,6 @@ Filter Add-Taskbar {
   Pin-Taskbar $_.dir $_.name
 }
 
-Filter Execute-BatScripts {
-  Execute-Bat $_.filePath
-}
-
-Filter Source-BatScripts {
-  Source-Bat $_.filePath
-}
-
 Filter Execute-Ps1Scripts {
   Execute-Ps1 $_.src
 }
@@ -99,9 +91,6 @@ $installs.symLinks|Write-PipeList -PassThru|Add-SymLinks
 Write-Host "--Adding hard links--"
 $installs.hardLinks|Write-PipeList -PassThru|Add-HardLinks
 
-Write-Host "--Sourcing bat scripts--"
-$installs.bat|Write-PipeList -PassThru|Execute-BatScripts
-
 Write-Host "--Executing ps1 scripts--"
 $installs.ps1|Write-PipeList -PassThru|Execute-Ps1Scripts
 
@@ -109,29 +98,4 @@ Write-Host "--Executing sh scripts--"
 $installs.sh|Write-PipeList -PassThru|Execute-ShScripts
 
 Write-Host "--Executing inline sh scripts--"
-$installs.inlineSh|Write-PipeList -PassThru|Execute-InlineShScripts
-
-
-
-
-
- <#
-  @{
-    title='MSYS2Base 20150202 Linux Virtualization Layer';
-    url='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz';
-    execute="$msys2Path";
-    arguments="exit"
-  },
-  @{
-    title='MSYS2 Synchronize and Update packages';
-    url='$repo/bin/msys2-sync-update.sh?' + Get-Random;
-    execute="$msys2Path";
-    arguments="$source\msys2-sync-update.sh exit"
-  },
-  @{
-    title='Tix Post Install Script';
-    url='$repo/bin/tix-full-post-install.sh?' + Get-Random;
-    execute="$msys2Path";
-    arguments="$source\tix-full-post-install.sh exit"
-  }
-  #>
+$installs.sh|Write-PipeList -PassThru|Execute-InlineShScripts

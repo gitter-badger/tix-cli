@@ -26,15 +26,6 @@ $installs.Add('sevenZ', @(
     dest=Join-Path $base.local cmder
     #link=Join-Path $base.local cmder\Cmder.exe
   }
-  <#
-  @{
-    title='cmder - Portable console emulator for windows'
-    src=Join-Path $src.bin cmder_mini.7z
-    dest=Join-Path $base.local cmder
-    #link=Join-Path $base.local cmder\Cmder.exe
-    addPath=Join-Path $base.local cmder
-  }
-  #>
 ))
 # Defines tar.xz files that need to be decompressed
 $installs.Add('tarXz', @(
@@ -42,20 +33,15 @@ $installs.Add('tarXz', @(
     title='msys2 Core Files (Arch Linux Emulation)'
     src=Join-Path $src.bin msys2-base.tar.xz
     dest=Join-Path $base.local msys2
-    #link=Join-Path $base.local msys64\msys2_shell.bat
+    #link=Join-Path $base.local msys64\msys2_shell.cmd
     #addPath=Join-Path $base.local msys2\msys64
   }
 ))
 $installs.Add('copy', @(
   @{
-    title='cmder-batch file'
-    src=Join-Path $src.bat cmder.bat
-    dest=Join-Path $local.bin cmder.bat
-  },
-  @{
-    title='source paths batch file'
-    src=Join-Path $src.bat source-paths.bat
-    dest=Join-Path $local.bin source-paths.bat
+    title='cmder init file'
+    src=Join-Path $src.cmd cmder.cmd
+    dest=Join-Path $local.bin cmder.cmd
   },
   @{
     title='ConEmu.xml - configuration file for cmder'
@@ -71,44 +57,18 @@ $installs.Add('copy', @(
 $installs.Add('taskbar', @(
   @{
     dir=$local.bin
-    name='cmder.bat'
+    name='cmder.cmd'
   }
 ))
 $installs.Add('symLinks', @(
-
-
 ))
 $installs.Add('hardLinks', @(
   @{
     link=Join-Path $base.local 7z\7za.exe
   }
 ))
-$installs.Add('bat', @(
-              <#
-  @{
-     title='source paths script'
-     filePath=Join-Path $local.bin source-paths.bat
-  }
-  #>
-))
-$installs.Add('ps1', @(
-  <#
-  @{
-     title='msys2 init script'
-     src=Join-Path $src.ps1 msys2-init.ps1
-  }
-  #>
-))
 # Defines shell script files that need to be executed
 $installs.Add('sh', @(
-  <#
-  @{
-    title='node.js src install'
-    filePath=Join-Path $src.sh node-npm-src-install.sh
-  },
-  #>
-))
-$installs.Add('inlineSh', @(
   @{
     title='tix-cli && node full install'
     command="%USERPROFILE%\src\sh\post-install.sh && exit"
@@ -116,16 +76,9 @@ $installs.Add('inlineSh', @(
 ))
 
 $installs.Add('paths', @(
-  <#@{
-    path=$local.bin
-  },#>
   @{
     path=Join-Path $base.local python\App
-  }<#,
-  @{
-    path=Join-Path $base.local cmder
   }
-  #>
 ))
 
 Write-Host '--install-config.ps1 sourced--'

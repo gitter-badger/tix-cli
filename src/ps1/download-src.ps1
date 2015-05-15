@@ -17,9 +17,6 @@ $fileFilter = '*.*'
 $classFilter = 'js-directory-link'
 
 If($CleanSource) {
-  If (Test-Path $srcPath\bat) {
-    Remove-Item $srcPath\bat -Recurse -Force
-  }
   If (Test-Path $srcPath\cmd) {
     Remove-Item $srcPath\cmd -Recurse -Force
   }
