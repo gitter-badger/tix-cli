@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # Gets a git token from .tixrc or creates one
 # All stdout from this script should be redirected to stderr since the expectation is that this script will only produce a token on stdout
@@ -70,7 +70,8 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             elseif [ "$PLATFORM" = "osx" ]
               chrome_path=osascript -e 'POSIX path of (path to application "Chrome")'
             fi
-            "$chrome_path" "$token_url"
+            echo $chrome_path "$token_url"
+            $chrome_path "$token_url"
 
             read
             ;;
