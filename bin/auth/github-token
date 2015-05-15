@@ -85,11 +85,13 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             ;;
       esac
     done
+    echo $oauth_response
 
     ### Parse out the token from the json response and stick it in the token file
     echo $oauth_response | sed 's/\,/\n/g' | tr -d '" {}' | grep ^token: | sed s/token:// | while read token
         do
-         if [ ${#token} -eq 40 ];then
+         if [ ${#token} -eq 40 ]; then
+            echo $token
             echo "$GITHUB_TOKEN_KEY=$token" > $CONFIG_PATH
          fi
         done
