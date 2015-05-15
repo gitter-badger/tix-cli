@@ -35,8 +35,8 @@ while getopts "co" opt; do
       fi
       ;;
     \?)
-        exit 1
-        ;
+      exit 1
+      ;;
     esac
 done
 
