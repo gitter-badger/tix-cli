@@ -7,7 +7,7 @@ OPTIND=1
 
 . tix-init
 
-while getopts "co" opt; do
+while getopts "ocx" opt; do
     case "$opt" in
     o) ### Install optional files
         if hash brew 2>/dev/null; then
@@ -33,6 +33,11 @@ while getopts "co" opt; do
         echo "rimraf doesn't exist.  Run again with -o flag to install optional dependencies."
         exit 1
       fi
+      ;;
+    x)
+      pushd $CLI_ROOT
+        npm install @tixinc/automation --save
+      popd
       ;;
     \?)
       exit 1
