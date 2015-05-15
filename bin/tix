@@ -7,9 +7,9 @@ OPTIND=1
 
 . tix-init
 
-while getopts "c" opt; do
+while getopts "co" opt; do
     case "$opt" in
-    c)
+    c) ### Clean install directories
         echo "Cleaning previous installation..."
         npm install -g rimraf
         rimraf $CONFIG_PATH
@@ -17,6 +17,13 @@ while getopts "c" opt; do
         rimraf $CLI_ROOT
         echo "Cleaning complete."
         ;;
+    o) ### Install optional files
+      if hash brew 2>/dev/null; then
+        brew install the_silver_searcher
+      elif hash pacman 2>/dev/null; then
+        pacman -S the_silver_searcher
+      fi
+      ;;
     \?)
         exit 1
         ;;
