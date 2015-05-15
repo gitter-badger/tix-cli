@@ -70,9 +70,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             elif [ "$PLATFORM" = "osx" ]; then
               chrome_path="$(osascript -e 'POSIX path of (path to application "Chrome")')Contents/MacOS/Google Chrome"
             fi
-            echo "$chrome_path" "$token_url"
-            "$chrome_path" "$token_url"
-
+            >&2 "$chrome_path" "$token_url"
             read
             ;;
           *Bad\ credentials*) ### Wrong username/password provided
