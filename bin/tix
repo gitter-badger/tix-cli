@@ -9,24 +9,34 @@ OPTIND=1
 
 while getopts "co" opt; do
     case "$opt" in
-    c) ### Clean install directories
+    o) ### Install optional files
+        if hash brew 2>/dev/null; then
+          brew install the_silver_searcher
+        elif hash pacman 2>/dev/null; then
+          pacman -S the_silver_searcher
+        fi
+
+        if hash sudo 2>/dev/null; then
+          sudo npm install -g rimraf
+        else
+          npm install -g rimraf
+        fi
+      ;;
+     c) ### Clean install directories
+      if hash rimraf 2>/dev/null; then
         echo "Cleaning previous installation..."
-        npm install -g rimraf
         rimraf $CONFIG_PATH
         rimraf $NPMRC_PATH
         rimraf $CLI_ROOT
         echo "Cleaning complete."
-        ;;
-    o) ### Install optional files
-      if hash brew 2>/dev/null; then
-        brew install the_silver_searcher
-      elif hash pacman 2>/dev/null; then
-        pacman -S the_silver_searcher
+      else
+        echo "rimraf doesn't exist.  Run again with -o flag to install optional dependencies."
+        exit 1
       fi
       ;;
     \?)
         exit 1
-        ;;
+        ;
     esac
 done
 
