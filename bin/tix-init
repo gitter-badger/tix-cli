@@ -1,0 +1,106 @@
+#!/bin/bash
+#
+# This script runs at the start of the tix-cli initiation and exports all variables used by the package.
+
+### --PLATFORM--
+### Figure out what platform this OS this is and standardize it
+
+PLATFORM="unknown"  ### The name of the platform
+PNAME="unknown"     ### The general name of the platform (unix / windows)
+
+unix_name=$(uname)
+shopt -s nocasematch
+case "$unix_name" in
+  *unix*)
+    PLATFORM="unix"
+    ;;
+  *linux*)
+    PLATFORM="linux"
+    ;;
+  *freebsd*)
+    PLATFORM="freebsd"
+    ;;
+  *darwin*)
+    PLATFORM="osx"
+    ;;
+  *windows*)
+    PLATFORM="windows"
+    ;;
+esac
+
+case "$PLATFORM" in
+  linux|unix|freebsd|osx)
+  PNAME="unix"
+  ;;
+  windows)
+  PNAME="windows"
+  ;;
+  *)
+  >&2 echo "Unable to classify the system OS -> uname: $unix_name, PLATFORM: $PLATFORM"
+  exit 1
+esac
+
+
+
+### --PATHS--
+### All paths are absolute.
+### ROOT suffix => directory, PATH suffix => file
+
+INSTALL_ROOT="${HOME}"                  # ./
+NPMRC_PATH="${HOME}/.npmrc"             # ~/.npmrc
+CONFIG_PATH="${INSTALL_ROOT}/.tixrc"    # ./.tixrc
+LOCAL_ROOT="${INSTALL_ROOT}/local"      # ./local
+LOCAL_BIN_ROOT="${LOCAL_ROOT}/bin"      # ./local/bin
+LOG_PATH="${LOCAL_ROOT}/tix.log"        # ./local/tix.log
+SRC_ROOT="${INSTALL_ROOT}/src"          # ./src
+SRC_BIN_ROOT="${SRC_ROOT}/bin"          # ./src/bin
+MODULE_ROOT="${INSTALL_ROOT}/tixinc"    # ./tixinc
+CLI_ROOT="${MODULE_ROOT}/tix-cli"       # ./tixinc/tix-cli
+CLI_PATH="${CLI_ROOT}/tix-cli.js"       # ./tixinc/tix-cli/tix-cli.js
+
+
+### --FUNCTIONS--
+### All functions that can be called by other scripts.
+
+### Access this function with SCRIPT_PATH to get the path that the current script is in.
+#SCRIPT_PATH() { "$( cd "$(dirname "$0")" ; pwd -P )" }
+
+
+### --STATIC EXPORTS--
+### Export all variables that should be public to all scripts.
+
+export PLATFORM
+export PNAME
+
+export INSTALL_ROOT
+export NPMRC_PATH
+export CONFIG_PATH
+export LOCAL_ROOT
+export LOCAL_BIN_ROOT
+export LOG_PATH
+export SRC_ROOT
+export SRC_BIN_ROOT
+export MODULE_ROOT
+export CLI_ROOT
+export CLI_PATH
+
+#export -f SCRIPT_PATH
+
+
+if ! grep -q "${LOCAL_BIN_ROOT}" <<< "$PATH" ; then
+  export PATH="$LOCAL_BIN_ROOT:$PATH"
+fi
+
+### --SCRIPTS--
+### Execute scripts here to get other variables.
+### Authenticate with Github / npm, setup services and receive token
+
+GITHUB_TOKEN=$(github-token)
+NPM_TOKEN=$(npm-token)
+
+
+### --DYNAMIC EXPORTS--
+### These exports are calculated and rely on static exports from this file.case
+
+export GITHUB_TOKEN
+export NPM_TOKEN

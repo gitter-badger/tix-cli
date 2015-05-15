@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Translates windows line endings to unix line endings.
+
+perl -pi -e 's/\r\n|\n|\r/\n/;' $*

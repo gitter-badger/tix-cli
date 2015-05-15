@@ -3,31 +3,31 @@
 # Gets a git token from .tixrc or creates one
 # All stdout from this script should be redirected to stderr since the expectation is that this script will only produce a token on stdout
 
-set -e
-
-readonly CONFIG_PATH="$HOME/.tixrc"
-readonly LOG_PATH="$HOME/logfile.txt"
 readonly GITHUB_TOKEN_KEY="GITHUB_TOKEN"
 
+### --GIT CONFIG--
+### Setup global git configuration if not set.
 
+git_config=$(git config --global -l)
 
-gitConfig=$(git config --global -l)
-if ! grep -q user.name <<< "$gitConfig" ; then
+if ! grep -q user.name <<< "$git_config" ; then
   >&2 echo "No user found in git global configuration."
   >&2 echo -n "Your name: "
   read git_user
   git config --global user.name "$git_user"
 fi
-if ! grep -q user.email <<< "$gitConfig" ; then
+if ! grep -q user.email <<< "$git_config" ; then
   >&2 echo "No user email found in git global configuration."
   >&2 echo -n "Your email: "
   read git_email
   git config --global user.email $git_email
 fi
-if ! grep -q credential.helper <<< "$gitConfig" ; then
+if ! grep -q credential.helper <<< "$git_config" ; then
   >&2 echo "Configuring credential helper..."
   git config --global credential.helper wincred
 fi
+
+
 
 ### If config file does not exist or does not contain the github token
 if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
@@ -40,7 +40,6 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
     oauth_credentials_ok=false
     oauth_token_received=false
     oauth_response=""
-
 
     while [ "$oauth_token_received" = false ]; do
       if [ "$oauth_credentials_ok" = false ]; then

@@ -5,14 +5,7 @@
 set -e
 OPTIND=1
 
-#PATHs
-readonly INSTALL_ROOT=$HOME
-readonly NPMRC_PATH="${HOME}/.npmrc"
-readonly CONFIG_PATH="${INSTALL_ROOT}/.tixrc"
-
-readonly MODULE_ROOT="${INSTALL_ROOT}/tixinc"
-readonly CLI_ROOT="${MODULE_ROOT}/tix-cli"
-readonly CLI_PATH="${MODULE_ROOT}/tix-cli/tix-cli.js"
+. tix-init
 
 while getopts "c" opt; do
     case "$opt" in
@@ -30,8 +23,6 @@ while getopts "c" opt; do
     esac
 done
 
-npm-authenticate
-GITHUB_TOKEN=$(github-token)
 
 if [ ! -e $CLI_PATH ]; then
   install-cli
