@@ -9,7 +9,6 @@ param($RootPath=$HOME)
 
 . $RootPath\src\ps1\install-config.ps1 -RootPath $RootPath
 
-
 Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
 }
@@ -65,6 +64,9 @@ $installs.tarXz|Write-PipeList -PassThru|Expand-TarXzArchives
 
 Write-Host "--Adding to path--"
 $installs.paths|Write-PipeList -PassThru|Add-Paths
+
+Write-Host "--Prepending the path--"
+Prepend-Path "LOCAL_PATH"
 
 Write-Host "--Writing shortcuts--"
 $installs.shortcut|Write-PipeList -PassThru|Add-Shortcut

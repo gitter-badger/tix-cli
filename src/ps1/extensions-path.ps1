@@ -45,14 +45,17 @@ Function Append-Variable($name, $value) {
   Add-Variable $name "%$name%;$value"
 }
 
+Function Prepend-Path($variableName) {
+  Add-Variable "PATH" "%$variableName%;%PATH%"
+}
+
 Function Add-Path ($path) {
     $env:Path = $path + ';' + $env:Path
     Append-Variable "LOCAL_PATH" $path
 }
 
-
+### Init with LOCAL_PATH variable
 Add-Variable "LOCAL_PATH" $local.bin
-#Append-Variable "LOCAL_ROOT" $RootPath
-
+set PATH=%LOCAL_PATH%;%PATH%
 
 Write-Host '--extensions-path.ps1 sourced--'
