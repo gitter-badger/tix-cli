@@ -30,6 +30,7 @@ SHIFT
 GOTO ShiftParams
 
 :RunWithParams
+ECHO Running with switches: %cmd_switch%
 
 IF %is_command%==true GOTO RunWithCommand
 
