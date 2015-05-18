@@ -23,7 +23,7 @@ case "$unix_name" in
   *darwin*)
     PLATFORM="osx"
     ;;
-  *windows*)
+  *windows*|*ming*)
     PLATFORM="windows"
     ;;
 esac
