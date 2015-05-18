@@ -34,9 +34,38 @@
         <h1>
 <a id="tix-cli" class="anchor" href="#tix-cli" aria-hidden="true"><span class="octicon octicon-link"></span></a>tix-cli</h1>
 
-<p>tix-cli is a <a href="http://en.wikipedia.org/wiki/Command-line_interface">command line interface</a> to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.</p>
+<p>TixCli is a <a href="http://en.wikipedia.org/wiki/Command-line_interface">command line interface</a> to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.</p>
+
+<h2>
+<a id="no-shell" class="anchor" href="#no-shell" aria-hidden="true"><span class="octicon octicon-link"></span></a>No Shell?</h2>
+
+<h5>
+<a id="full-install-windows-command-prompt" class="anchor" href="#full-install-windows-command-prompt" aria-hidden="true"><span class="octicon octicon-link"></span></a>Full Install (Windows command prompt)</h5>
+
+<div class="highlight highlight-cmd"><pre>@powershell -NoProfile -ExecutionPolicy unrestricted -Command <span class="pl-s"><span class="pl-pds">"</span>If(Test-Path %TEMP%\t.ps1){rm %TEMP%\t.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File %TEMP%\t.ps1;%TEMP%\t.ps1 -Install -CleanSource -CleanLocal;rm %TEMP%\t.ps1<span class="pl-pds">"</span></span></pre></div>
+
+<h2>
+<a id="shell" class="anchor" href="#shell" aria-hidden="true"><span class="octicon octicon-link"></span></a>Shell?</h2>
+
+<h5>
+<a id="basic-install" class="anchor" href="#basic-install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Install</h5>
 
 <div class="highlight highlight-sh"><pre>npm install -g tix-cli</pre></div>
+
+<h5>
+<a id="install-and-start-interactive-tix-shell" class="anchor" href="#install-and-start-interactive-tix-shell" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install and start interactive tix shell</h5>
+
+<div class="highlight highlight-sh"><pre>npm install -g tix-cli <span class="pl-k">&amp;&amp;</span> tix</pre></div>
+
+<h5>
+<a id="install-and-start-tix-shell-extended-private-repository-and-deployment-access" class="anchor" href="#install-and-start-tix-shell-extended-private-repository-and-deployment-access" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install and start tix shell extended (private repository and deployment access)</h5>
+
+<div class="highlight highlight-sh"><pre>npm install -g tix-cli <span class="pl-k">&amp;&amp;</span> tix -ix</pre></div>
+
+<h5>
+<a id="install-and-start-tix-shell-in-leet-mode" class="anchor" href="#install-and-start-tix-shell-in-leet-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install and start tix shell in leet mode...</h5>
+
+<div class="highlight highlight-sh"><pre>npm install -g tix-cli <span class="pl-k">&amp;&amp;</span> tix --1337</pre></div>
 
 <h3>
 <a id="table-of-contents" class="anchor" href="#table-of-contents" aria-hidden="true"><span class="octicon octicon-link"></span></a>Table of Contents</h3>
@@ -71,7 +100,7 @@
 
 <p>Copy/paste the oneliner below into Administrator command prompt to get Git / Node.js and TixCli installed:</p>
 
-<div class="highlight highlight-cmd"><pre>@powershell -NoProfile -ExecutionPolicy unrestricted -Command <span class="pl-s"><span class="pl-pds">"</span>iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-full-install.ps1'))<span class="pl-pds">"</span></span></pre></div>
+<div class="highlight highlight-cmd"><pre>@powershell -NoProfile -ExecutionPolicy unrestricted -Command <span class="pl-s"><span class="pl-pds">"</span>((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/TixCli/master/bin/tix-full-install.ps1'))<span class="pl-pds">"</span></span><span class="pl-k">|</span>$_</pre></div>
 
 <h4>
 <a id="linux--osx-" class="anchor" href="#linux--osx-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Linux / OSX <a id="linux-osx-setup"></a>
@@ -130,7 +159,7 @@
 
 <p>The TixCli by default gets installed to <code>~/TixInc/TixCli</code>.  Other TixInc applications will get installed by TixCli to the TixInc directory for the respective platform.</p>
 
-<p>After the initial install, the CLI may be run again at any time by executing <code>tix</code> in a shell. </p>
+<p>After the initial install, the CLI may be run again at any time by executing <code>tix</code> in a shell.</p>
 
 <p>Below are some of the supported commands by TixCli: -&gt;</p>
 
