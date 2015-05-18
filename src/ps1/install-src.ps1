@@ -17,10 +17,6 @@ Filter Expand-7zArchives {
   Expand-7z $_.src $_.dest
 }
 
-Filter Expand-TarXzArchives {
-  Expand-TarXz $_.src $_.dest
-}
-
 Filter Add-Paths {
   Add-Path $_.path
 }
@@ -44,10 +40,6 @@ Filter Add-HardLinks {
   New-HardLinkBin $_.link
 }
 
-Filter Execute-Ps1Scripts {
-  Execute-Ps1 $_.src
-}
-
 Filter Execute-ShScripts {
   Execute-Sh $_.filePath
 }
@@ -59,13 +51,8 @@ $installs.zip|Write-PipeList -PassThru|Expand-ZipArchives
 Write-Host "--Installing 7z archives--"
 $installs.sevenZ|Write-PipeList -PassThru|Expand-7zArchives
 
-Write-Host "--Installing tar.xz archives--"
-$installs.tarXz|Write-PipeList -PassThru|Expand-TarXzArchives
-
-Write-Host "--Adding to path--"
+Write-Host "--Adding to path (variables.cmd)--"
 $installs.paths|Write-PipeList -PassThru|Add-Paths
-
-Write-Host "--Prepending the path--"
 Prepend-Path "LOCAL_PATH"
 
 Write-Host "--Writing shortcuts--"
@@ -76,9 +63,6 @@ $installs.copy|Write-PipeList -PassThru|Copy-Files
 
 Write-Host "--Adding hard links--"
 $installs.hardLinks|Write-PipeList -PassThru|Add-HardLinks
-
-Write-Host "--Executing ps1 scripts--"
-$installs.ps1|Write-PipeList -PassThru|Execute-Ps1Scripts
 
 Write-Host "--Executing sh scripts--"
 $installs.sh|Write-PipeList -PassThru|Execute-ShScripts

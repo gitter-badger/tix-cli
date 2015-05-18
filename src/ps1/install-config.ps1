@@ -5,10 +5,10 @@ param($RootPath=$HOME)
 
 . $RootPath\src\ps1\extensions-path.ps1 -RootPath $RootPath
 
-# Create installs hash table and add various installation definitions to it
+### Create installs hash table and add various installation definitions to it
 $installs=@{}
 
-# Defines zip files that need to be unzipped
+### Defines zip files that need to be unzipped
 $installs.Add('zip', @(
   @{
     title='7-Zip Command Line'
@@ -17,7 +17,7 @@ $installs.Add('zip', @(
   }
 ))
 
-# Defines 7z files that need to be unzipped
+### Defines 7z files that need to be unzipped
 $installs.Add('sevenZ', @(
   @{
     title='Python Portable 2.7.6.1 Core'
@@ -33,17 +33,7 @@ $installs.Add('sevenZ', @(
   }
 ))
 
-# Defines tar.xz files that need to be decompressed
-$installs.Add('tarXz', @(
-  @{
-    title='msys2 Core Files (Arch Linux Emulation)'
-    src=Join-Path $src.bin msys2-base.tar.xz
-    dest=Join-Path $base.local msys2
-    #link=Join-Path $base.local msys64\msys2_shell.cmd
-    #addPath=Join-Path $base.local msys2\msys64
-  }
-))
-
+### Copy Files ti bin and other directories.
 $installs.Add('copy', @(
   @{
     title='cmder init file'
@@ -62,6 +52,14 @@ $installs.Add('copy', @(
   }
 ))
 
+### These folders will be added to the PATH environment variable.
+$installs.Add('paths', @(
+  @{
+    path=Join-Path $base.local python\App
+  }
+))
+
+### Adds shortcuts to desktop / start menu
 $installs.Add('shortcut', @(
   @{
     dir=$local.bin
@@ -79,15 +77,8 @@ $installs.Add('hardLinks', @(
 ### Defines shell script files that need to be executed
 $installs.Add('sh', @(
   @{
-    title='tix-cli && node full install'
+    title='NPM and tix-cli install'
     command="%USERPROFILE%\src\sh\install.sh"
-  }
-))
-
-### These folders will be added to the PATH environment variable.
-$installs.Add('paths', @(
-  @{
-    path=Join-Path $base.local python\App
   }
 ))
 

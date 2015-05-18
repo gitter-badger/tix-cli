@@ -1,181 +1,51 @@
-param($RootPath=$HOME)
-$localPath=Join-Path $RootPath local
-$7zaPath=Join-Path $localPath '7z\7za.exe'
-$cmderPath=Join-Path $localPath 'bin\cmder.cmd'
+@ECHO OFF
+SET LOCAL_ROOT=%USERPROFILE%\local
+SET CMDER_ROOT=%LOCAL_ROOT%\cmder
+CALL %LOCAL_ROOT%\config\variables.cmd
+
+SET cmd_switch=/s /c
+IF [%1]==[] GOTO RunNoParams
+
+SET is_command=false
+SET "arg_line="
+:ShiftParams
+IF "%1"=="" GOTO RunWithParams
+
+IF /I "%1"=="/k" (
+	ECHO Setting /k switch...
+	SET cmd_switch=/s /k
+	SHIFT
+	GOTO ShiftParams
+)
+
+IF /I "%1"=="/x" (
+	ECHO Setting /x switch-run as command
+	SET is_command=true
+	SHIFT
+	GOTO ShiftParams
+)
+
+SET arg_line=%arg_line% %1
+SHIFT
+GOTO ShiftParams
+
+:RunWithParams
+
+IF %is_command%==true GOTO RunWithCommand
+
+START %CMDER_ROOT%\vendor\conemu-maximus5\ConEmu.exe -cur_console:n /icon "%CMDER_ROOT%\vendor\msysgit\etc\git.ico" /title Cmder /loadcfgfile "%CMDER_ROOT%\config\ConEmu.xml" /cmd cmd %cmd_switch% ""%CMDER_ROOT%\vendor\msysgit\bin\sh.exe" --login -i -- "%arg_line%""
+
+GOTO EndScript
+
+:RunWithCommand
+
+START %CMDER_ROOT%\vendor\conemu-maximus5\ConEmu.exe -cur_console:n /icon "%CMDER_ROOT%\vendor\msysgit\etc\git.ico" /title Cmder /loadcfgfile "%CMDER_ROOT%\config\ConEmu.xml" /cmd cmd %cmd_switch% ""%CMDER_ROOT%\vendor\msysgit\bin\sh.exe" --login -i -c  "%arg_line%""
+
+GOTO EndScript
 
 
-Filter Write-PipeTable {
-    Param( [switch]$PassThru )
-    Write-Host ($_ | Format-Table | Out-String)
-    If($PassThru) {
-      Write-Output $_
-    }
-}
+:RunNoParams
 
-Filter Write-PipeList {
-    Param( [switch]$PassThru )
-    Write-Host ($_ | Format-List | Out-String)
-    if($PassThru) {
-      Write-Output $_
-    }
-}
+START %CMDER_ROOT%\vendor\conemu-maximus5\ConEmu.exe -cur_console:n /icon "%CMDER_ROOT%\vendor\msysgit\etc\git.ico" /title Cmder /loadcfgfile "%CMDER_ROOT%\config\ConEmu.xml" /cmd cmd /s /c ""%CMDER_ROOT%\vendor\msysgit\bin\sh.exe" --login -i"
 
-Filter Ensure-Directory {
-  Param( [switch]$PassThru )
-  If(!(Test-Path -Path $_ -PathType Container)) {
-    New-Item -Path $_ -type Directory | Out-Null
-    If($PassThru) {
-      Write-Output $_
-    }
-  }
-}
-
-Function Expand-Zip ($zipPath, $destDir) {
-  $shell = New-Object -com shell.application
-  $zip = $shell.Namespace($zipPath)
-
-  $destDir|Ensure-Directory
-
-  ForEach($item in $zip.items()) {
-    $shell.Namespace($destDir).CopyHere($item, 0x10)
-  }
-}
-
-Function Execute($filePath, $arguments)
-{
-    If($arguments) {
-        Start-Process $filePath -ArgumentList $arguments -Wait -PassThru
-    }
-    Else {
-        Start-Process $filePath -Wait -PassThru
-    }
-}
-
-Function Execute-Sh($command) {
-    Execute $cmderPath $command
-}
-
-
-Function Execute-7z($arguments) {
-    Write-Host "$7zaPath $arguments"
-    Execute $7zaPath $arguments
-}
-
-Function Expand-7z($filePath, $destDir) {
-  $destDir|Ensure-Directory
-  Execute-7z "x -aoa -o$destDir $filePath"
-}
-
-<#
-Function Decompress-Xz ($filePath) {
-    #$tarName = [System.IO.Path]::GetFileNameWithoutExtension($filePath)
-    $tarPath =  $filePath.Substring(0, $filePath.LastIndexOf('.'))
-    # Decompress: x (Extract w/ full paths) -aoa (Overwrite files:no prompt)
-    $arguments = "x -aoa -so $filePath"
-    Execute-7z $arguments > $tarPath
-    Write-Output $tarPath
-    # Return path of tar on stdout
-}
-
-Function Expand-Tar ($filePath, $destDir) {
-    $arguments = "x -aoa -si -so -ttar $filePath" | $destDir
-    # Unzip: x (Extract w/ full paths) -aoa (Overwrite files:no prompt) -ttar (tar file) -o (dest)
-    Execute-7z $arguments
-}
-#>
-
-## Decompresses, unzips, and installs the contents of a .tar.xz package.
-Function Expand-TarXz($filePath, $destDir) {
-  $destDir|Ensure-Directory
-  Execute-7z "x $filePath -so | $7zaPath x -aoa -si -ttar -o$destDir"
-  #7z x "somename.tar.gz" -so | 7z x -aoa -si -ttar -o"somename"
-    #$tarPath=Decompress-Xz $filePath
-    #Expand-Tar $tarPath $destDir
-}
-
-
-Function Execute-Ps1($filePath) {
-    Execute powershell.exe "-File=$filePath"
-}
-
-
-Function Install-Msi ($filePath, $arguments) {
-    Execute msiexec.exe "/i $filePath $arguments"
-}
-
-Function New-HardLink ($link, $target) {
-    Write-Host "Hard linking $target to $link"
-    Invoke-Expression "cmd /c mklink /H $link $target"
-}
-
-Function New-HardLinkIn ($dir, $target) {
-  $fileName = [System.IO.Path]::GetFileName($target)
-  $dir|Ensure-Directory
-  $link = Join-Path $dir $fileName
-  New-HardLink $link $target
-}
-
-Function New-SymLink ($link, $target) {
-    $baseCmd='cmd /c mklink'
-    If (Test-Path -PathType Container $target) {
-        $baseCmd+=' /d'
-    }
-    Write-Host "Symbolic linking $target to $link"
-    Invoke-Expression "$baseCmd $link $target"
-}
-
-Function New-SymLinkIn ($dir, $target) {
-  $fileName = [System.IO.Path]::GetFileName($target)
-  $dir|Ensure-Directory
-  $link = Join-Path $dir $fileName
-  New-SymLink $link $target
-}
-
-Function Remove-Path ($path) {
-    If (Test-Path $path) {
-      Remove-Item $path
-    }
-}
-
-# Downloads a file from url to directory
-Function Download-File($url, $filePath) {
-    If (!(Test-Path -Path $filePath -PathType Leaf)) {
-        Write-Host "Downloading $url to $filePath"
-        $webClient = New-Object System.Net.WebClient
-        $webClient.DownloadFile("$url", "$filePath")
-    }
-}
-
-Filter Download-Files {
-    Download-File $_.fileUrl $_.filePath
-}
-
-### This function currently is only useful for building a shortcut to cmder.exe, eventually will be more generic.
-Function Create-Shortcut($fileDir, $fileName) {
-  #$sa = new-object -c shell.application
-  #$ns = $sa.namespace($fileDir)
-  #$pn = parsename($fileName)
-  #$pn.invokeverb('taskbarpin')
-
-  $cmdName = 'cmder'
-  $cmdPath=Join-Path $fileDir $fileName
-  $iconPath = Join-Path $HOME local\cmder\vendor\msysgit\etc\git.ico
-  Write-Host "adding shortcut at $cmdPath"
-  $taskbarFolder = "$env:APPDATA\Microsoft\Internet Explorer\Quick Launch\User Pinned\Taskbar\"
-  $startMenuFolder = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\"
-  $desktopFolder = Join-Path $HOME Desktop
-  $objShell = New-Object -ComObject WScript.Shell
-  $objShortCut = $objShell.CreateShortcut("$startMenuFolder\$cmdName.lnk")
-  $objShortCut.IconLocation = "$iconPath"
-  $objShortCut.TargetPath = 'cmd'
-  $objShortCut.Arguments="/c ""$cmdPath"""
-  $objShortCut.Save()
-
-  $desktopShortCut = $objShell.CreateShortcut("$desktopFolder\$cmdName.lnk")
-  $desktopShortCut.IconLocation = "$iconPath"
-  $desktopShortCut.TargetPath = 'cmd'
-  $desktopShortCut.Arguments="/c ""$cmdPath"""
-  $desktopShortCut.Save()
-}
-
-Write-Host '--extensions.ps1 sourced--'
+:EndScript

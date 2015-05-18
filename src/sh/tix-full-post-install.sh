@@ -1,3 +1,7 @@
+#!/bin/bash
+#
+# This file is used to install from source but requires msys2...
+
 echo "Updating remaining msys2 packages..."
 pacman --noconfirm -Su
 echo "Remaining packages updated."
