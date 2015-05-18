@@ -1,4 +1,4 @@
-@ECHO OFF
+@ECHO ON
 SET LOCAL_ROOT=%USERPROFILE%\local
 SET CMDER_ROOT=%LOCAL_ROOT%\cmder
 CALL %LOCAL_ROOT%\config\variables.cmd
@@ -34,24 +34,19 @@ ECHO Running with switches: %cmd_switch%
 
 IF %is_command%==true GOTO RunWithCommand
 
-START %CMDER_ROOT%\vendor\conemu-maximus5\ConEmu.exe -cur_console:n /icon "%CMDER_ROOT%\vendor\msysgit\etc\git.ico" /title Cmder
-/loadcfgfile "%CMDER_ROOT%\config\ConEmu.xml" /cmd cmd %cmd_switch% ""%CMDER_ROOT%\vendor\msysgit\bin\sh.exe" --login -i --
-"%arg_line%""
+START %CMDER_ROOT%\vendor\conemu-maximus5\ConEmu.exe /icon "%CMDER_ROOT%\vendor\msysgit\etc\git.ico" /title Cmder /loadcfgfile "%CMDER_ROOT%\config\ConEmu.xml" /cmd cmd %cmd_switch% ""%CMDER_ROOT%\vendor\msysgit\bin\sh.exe" --login -i -- "%arg_line%""
 
 GOTO EndScript
 
 :RunWithCommand
 
-START %CMDER_ROOT%\vendor\conemu-maximus5\ConEmu.exe -cur_console:n /icon "%CMDER_ROOT%\vendor\msysgit\etc\git.ico" /title Cmder
-/loadcfgfile "%CMDER_ROOT%\config\ConEmu.xml" /cmd cmd %cmd_switch% ""%CMDER_ROOT%\vendor\msysgit\bin\sh.exe" --login -i -c
-"%arg_line%""
+START %CMDER_ROOT%\vendor\conemu-maximus5\ConEmu.exe /icon "%CMDER_ROOT%\vendor\msysgit\etc\git.ico" /title Cmder /loadcfgfile "%CMDER_ROOT%\config\ConEmu.xml" /cmd cmd %cmd_switch% ""%CMDER_ROOT%\vendor\msysgit\bin\sh.exe" --login -i -c "%arg_line%""
 
 GOTO EndScript
 
 
 :RunNoParams
 
-START %CMDER_ROOT%\vendor\conemu-maximus5\ConEmu.exe -cur_console:n /icon "%CMDER_ROOT%\vendor\msysgit\etc\git.ico" /title Cmder
-/loadcfgfile "%CMDER_ROOT%\config\ConEmu.xml" /cmd cmd /s /c ""%CMDER_ROOT%\vendor\msysgit\bin\sh.exe" --login -i"
+START %CMDER_ROOT%\vendor\conemu-maximus5\ConEmu.exe /icon "%CMDER_ROOT%\vendor\msysgit\etc\git.ico" /title Cmder /loadcfgfile "%CMDER_ROOT%\config\ConEmu.xml" /cmd cmd /s /c ""%CMDER_ROOT%\vendor\msysgit\bin\sh.exe" --login -i"
 
 :EndScript
