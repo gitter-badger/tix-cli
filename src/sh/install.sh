@@ -2,11 +2,15 @@
 #
 # This file takes over after the powershell install and finishes the job using unix
 
-INSTALL_ROOT=$HOME
+INSTALL_ROOT="${HOME}"
+NPMRC_PATH="${HOME}/.npmrc"
+LOCAL_BIN_ROOT="${INSTALL_ROOT}/local/bin"
 
-echo prefix = ${INSTALL_ROOT:2}/local/bin > $INSTALL_ROOT/.npmrc
+echo "--Creating new ~/.npmrc--"
+echo prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
+
+echo "--Instalilng NPM--"
 curl -L https://www.npmjs.org/install.sh | sh
 
-mkdir -p $INSTALL_ROOT/local/bin
-curl http://beyondgrep.com/ack-2.14-single-file > $INSTALL_ROOT/local/bin/ack
-npm install -g tix-cli && tix -ix
+echo "--Installing tix-cli with optional applications and extended mode--"
+npm install -g tix-cli && tix -ox

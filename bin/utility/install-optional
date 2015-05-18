@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# This script installs optional applications
+
+### NPM Packages
+### rimraf: Short for "rm -rf", advanced file / directory removal
+if hash sudo 2>/dev/null; then
+  sudo npm install -g rimraf
+else
+  npm install -g rimraf
+fi
+
+### General packages
+if hash curl 2>/dev/null; then
+  if ! hash ack 2>/dev/null; then
+    ### ack: Fast file searching
+    echo "Installing ack..."
+    curl http://beyondgrep.com/ack-2.14-single-file > "${LOCAL_BIN_ROOT}/ack"
+    echo "ack installed successfully."
+  fi
+fi
+
+### Brew / pacman packages
+### ag (the_silver_searcher): extremely fast file searching
+if hash brew 2>/dev/null; then
+  brew install the_silver_searcher
+elif hash pacman 2>/dev/null; then
+  pacman -S the_silver_searcher
+fi

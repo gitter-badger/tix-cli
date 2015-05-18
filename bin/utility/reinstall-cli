@@ -1,10 +1,5 @@
 #!/bin/bash
 
-#PATHs
-readonly INSTALL_ROOT=$HOME
-readonly MODULE_ROOT="$INSTALL_ROOT/tixinc"
-readonly CLI_ROOT="$MODULE_ROOT/tix-cli"
-
 if [ -e $CLI_ROOT ]; then
     echo "Uninstalling CLI from $CLI_ROOT..."
     rm -rf $CLI_ROOT

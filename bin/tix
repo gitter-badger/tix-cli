@@ -10,17 +10,7 @@ OPTIND=1
 while getopts "ocx" opt; do
     case "$opt" in
     o) ### Install optional files
-        if hash brew 2>/dev/null; then
-          brew install the_silver_searcher
-        elif hash pacman 2>/dev/null; then
-          pacman -S the_silver_searcher
-        fi
-
-        if hash sudo 2>/dev/null; then
-          sudo npm install -g rimraf
-        else
-          npm install -g rimraf
-        fi
+      install-optional
       ;;
      c) ### Clean install directories
       if hash rimraf 2>/dev/null; then

@@ -1,4 +1,5 @@
 param($RootPath=$HOME)
+### This file controls all custom paths for the src and local folders of the install.
 . $RootPath\src\ps1\extensions.ps1 -RootPath $RootPath
 
 

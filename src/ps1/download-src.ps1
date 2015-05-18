@@ -55,12 +55,6 @@ $binFiles = @(
     src='https://s3-us-west-2.amazonaws.com/tixinc/cmder/cmder.7z'
     dest=Join-Path $binPath cmder.7z
   },
-  <#
-  @{
-    title='cmder - Portable console emulator for windows'
-    src='https://s3-us-west-2.amazonaws.com/tixinc/cmder/cmder_mini.7z'
-    dest=Join-Path $binPath cmder_mini.7z
-  },#>
   @{
     title='latest nodejs executable'
     src='http://nodejs.org/dist/latest/node.exe'
@@ -73,7 +67,7 @@ $binFiles = @(
   }
 )
 
-# Recursive powershell!!!
+### This function scrapes github for a set of files.  Currently files must have an extension because that is how it differentiates files from directories.
 Function Scrape-Files-Recursive ($relativeUri, $relativeUriOut, $relativePath) {
   $links = Invoke-WebRequest -Uri "$baseUri$relativeUri" -TimeoutSec 20|Select -Exp Links|Where{$_.class -Eq "js-directory-link"}
 

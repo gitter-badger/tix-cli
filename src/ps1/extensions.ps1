@@ -150,7 +150,8 @@ Filter Download-Files {
     Download-File $_.fileUrl $_.filePath
 }
 
-Function Pin-Taskbar($fileDir, $fileName) {
+### This function currently is only useful for building a shortcut to cmder.exe, eventually will be more generic.
+Function Create-Shortcut($fileDir, $fileName) {
   #$sa = new-object -c shell.application
   #$ns = $sa.namespace($fileDir)
   #$pn = parsename($fileName)

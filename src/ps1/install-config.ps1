@@ -1,4 +1,8 @@
 param($RootPath=$HOME)
+###########################################################
+# This file controls what will be installed where.        #
+###########################################################
+
 . $RootPath\src\ps1\extensions-path.ps1 -RootPath $RootPath
 
 # Create installs hash table and add various installation definitions to it
@@ -12,6 +16,7 @@ $installs.Add('zip', @(
     dest=Join-Path $base.local 7z
   }
 ))
+
 # Defines 7z files that need to be unzipped
 $installs.Add('sevenZ', @(
   @{
@@ -27,6 +32,7 @@ $installs.Add('sevenZ', @(
     #link=Join-Path $base.local cmder\Cmder.exe
   }
 ))
+
 # Defines tar.xz files that need to be decompressed
 $installs.Add('tarXz', @(
   @{
@@ -37,6 +43,7 @@ $installs.Add('tarXz', @(
     #addPath=Join-Path $base.local msys2\msys64
   }
 ))
+
 $installs.Add('copy', @(
   @{
     title='cmder init file'
@@ -54,27 +61,30 @@ $installs.Add('copy', @(
     dest=Join-Path $local.bin node.exe
   }
 ))
-$installs.Add('taskbar', @(
+
+$installs.Add('shortcut', @(
   @{
     dir=$local.bin
     name='cmder.cmd'
   }
 ))
-$installs.Add('symLinks', @(
-))
+
+### Hard links will be created in the local\bin folder for each of these paths which is sourced to the PATH environment variable.
 $installs.Add('hardLinks', @(
   @{
     link=Join-Path $base.local 7z\7za.exe
   }
 ))
-# Defines shell script files that need to be executed
+
+### Defines shell script files that need to be executed
 $installs.Add('sh', @(
   @{
     title='tix-cli && node full install'
-    command="%USERPROFILE%\src\sh\post-install.sh && exit"
+    command="%USERPROFILE%\src\sh\install.sh"
   }
 ))
 
+### These folders will be added to the PATH environment variable.
 $installs.Add('paths', @(
   @{
     path=Join-Path $base.local python\App
