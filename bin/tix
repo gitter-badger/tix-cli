@@ -28,6 +28,7 @@ while getopts "ocx" opt; do
       fi
       ;;
     x)
+      mkdir -p $CLI_ROOT
       pushd $CLI_ROOT
         npm install @tixinc/automation --save
       popd
