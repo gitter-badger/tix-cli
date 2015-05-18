@@ -2,7 +2,7 @@
 #
 # This script installs the tix-cli
 
-. ../tix-init
+source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
 
 #URLs
 readonly GITHUB_URL_BASE="https://github.com"

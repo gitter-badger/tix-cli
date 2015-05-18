@@ -2,7 +2,7 @@
 #
 # This script installs optional applications
 
-. ../tix-init
+source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
 
 ### NPM Packages
 ### rimraf: Short for "rm -rf", advanced file / directory removal
