@@ -12,5 +12,8 @@ echo prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
 echo "--Installing NPM--"
 curl -L https://www.npmjs.org/install.sh | sh
 
-echo "--Installing tix-cli with optional applications and extended mode--"
-npm install -g tix-cli && tix -ox
+echo "--Installing tix-cli globally--"
+npm install -g tix-cli
+
+echo "--Running tix-cli with optional applications and extended mode--"
+tix -ox
