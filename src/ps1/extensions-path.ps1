@@ -56,6 +56,5 @@ Function Add-Path ($path) {
 
 ### Init with LOCAL_PATH variable
 Add-Variable "LOCAL_PATH" $local.bin
-set PATH=%LOCAL_PATH%;%PATH%
 
 Write-Host '--extensions-path.ps1 sourced--'
