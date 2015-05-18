@@ -5,7 +5,7 @@
 set -e
 OPTIND=1
 
-. tix-init
+. ./tix-init
 
 GITHUB_TOKEN=$(github-token)
 NPM_TOKEN=$(npm-token)

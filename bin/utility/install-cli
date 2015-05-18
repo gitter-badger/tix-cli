@@ -2,6 +2,8 @@
 #
 # This script installs the tix-cli
 
+. ../tix-init
+
 #URLs
 readonly GITHUB_URL_BASE="https://github.com"
 readonly GITHUB_URL_TIX="$GITHUB_URL_BASE/TixInc"

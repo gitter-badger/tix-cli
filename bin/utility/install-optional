@@ -2,6 +2,8 @@
 #
 # This script installs optional applications
 
+. ../tix-init
+
 ### NPM Packages
 ### rimraf: Short for "rm -rf", advanced file / directory removal
 if hash sudo 2>/dev/null; then

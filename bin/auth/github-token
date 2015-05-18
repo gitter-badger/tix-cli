@@ -3,7 +3,7 @@
 # Gets a git token from .tixrc or creates one
 # All stdout from this script should be redirected to stderr since the expectation is that this script will only produce a token on stdout
 
-. tix-init
+. ../tix-init
 
 readonly GITHUB_TOKEN_KEY="GITHUB_TOKEN"
 

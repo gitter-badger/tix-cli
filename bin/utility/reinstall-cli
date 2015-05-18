@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. ../tix-init
+
 if [ -e $CLI_ROOT ]; then
     echo "Uninstalling CLI from $CLI_ROOT..."
     rm -rf $CLI_ROOT
