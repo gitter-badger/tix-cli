@@ -7,6 +7,9 @@ OPTIND=1
 
 . tix-init
 
+GITHUB_TOKEN=$(github-token)
+NPM_TOKEN=$(npm-token)
+
 while getopts "ocx" opt; do
     case "$opt" in
     o) ### Install optional files

@@ -90,17 +90,3 @@ export CLI_PATH
 if ! grep -q "${LOCAL_BIN_ROOT}" <<< "$PATH" ; then
   export PATH="$LOCAL_BIN_ROOT:$PATH"
 fi
-
-### --SCRIPTS--
-### Execute scripts here to get other variables.
-### Authenticate with Github / npm, setup services and receive token
-
-GITHUB_TOKEN=$(github-token)
-NPM_TOKEN=$(npm-token)
-
-
-### --DYNAMIC EXPORTS--
-### These exports are calculated and rely on static exports from this file.case
-
-export GITHUB_TOKEN
-export NPM_TOKEN
