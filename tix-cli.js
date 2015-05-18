@@ -117,13 +117,13 @@ function dirExists(path) {
  * cli directory.
  * @class
  */
-function CliAdvanced(config, token) {
+function Cli(config, token) {
   var that = this;
+  require('colors');
+  var _ = require('lodash');
   var sh = require('shelljs');
   sh.config.silent = true;
-  var _ = require('lodash');
 
-  require('colors');
   var installRoot = config.installRoot;
   var cliDir = toAbsPath(config.path.cliDir);
   var tixincPath = join(cliDir, 'node_modules', '@tixinc');
@@ -133,12 +133,15 @@ function CliAdvanced(config, token) {
 
   var ascii = "                                                                           \r\n                                                          `.,:,,`          \r\n                                                  `::::::::::::::::::,     \r\n                                            ::::`          .::::::::::::   \r\n                                         .:,                 :::::::::::   \r\n                                       :`                     ::::::::::   \r\n                                     .                        ,:::::::::   \r\n                                                              :::::::::.   \r\n                                                              :::::::::    \r\n                                      --------:              .::::::::`    \r\n                       `@@@@@@@@      -------;               :::::::::     \r\n                       @@@@@@@@:                                           \r\n                       @@@@@@@@                                            \r\n                   #@@@@@@@@@@@@@@   @@@@@@@@   @@@@@@@#    @@@@@@@'       \r\n                   @@@@@@@@@@@@@@+  '@@@@@@@@    @@@@@@@: ;@@@@@@@         \r\n           +++        @@@@@@@@      @@@@@@@@      @@@@@@@@@@@@@@#    ,##'  \r\n          ''''+      #@@@@@@@'      @@@@@@@@      .@@@@@@@@@@@@`    :++++# \r\n         +''''''    .@@@@@@@@      @@@@@@@@         #@@@@@@@:       ++++++`\r\n         `'''''     @@@@@@@@      @@@@@@@@.       @@@@@@@@@@@       +++++# \r\n          :''+`    `@@@@@@@@      @@@@@@@@      ,@@@@@@@@@@@@@       #++#  \r\n                   `@@@@@@@@      @@@@@@@@'    @@@@@@@@'@@@@@@@            \r\n                    @@@@@@@@@#''' '@@@@@@@@@'@@@@@@@@:  @@@@@@@;           \r\n                      ...........   ................     .......           \r\n                                                                           \r\n                                                      ,,,,,,,,,            \r\n                                                  ::::::::::',             \r\n                   :`                        .::::::::::+:`                \r\n                   :,                     `::::::::::,+:`                  \r\n                  `:;`                 .::::::::::::',`                    \r\n                   :::`            `:::::::::::::+;.                       \r\n                   :::::,`   .::::::::::::::::'',`                         \r\n                    :::::::::::::::::::::::'':`                            \r\n                      `:::::::::::;+;:.`                                   \r\n                          `..,...`                                         \r\n                                                                           ";
   this.printHeader = function () {
+    var version = require('./package').version;
     if (that.isExtendedMode) {
       console.log(ascii.replace(/\+/g, '+'.blue).replace(/:/g, ':'.yellow).replace(/'/g, '\''.green).replace(/-/g, '-'.red));
+      console.log('version: ' + version);
       console.log('TixInc extended command line interface: Type "?" for a list of available commands or "??" for extended commands.');
     }
     else {
       console.log(ascii);
+      console.log('version: ' + version);
       console.log('TixInc command line interface: Type "?" for a list of available commands.');
     }
   };
@@ -156,7 +159,7 @@ function CliAdvanced(config, token) {
   }
 
   function log(message, source) {
-    var msg = 'CliAdvanced';
+    var msg = 'Cli';
     if (source) {
       msg += '.' + source;
     }
@@ -464,7 +467,7 @@ function CliAdvanced(config, token) {
     },
     "extended-mode": {
       "alias": "x",
-      "desc": "Installs additional TixInc dependencies to cli directory and allows running advanced commands.",
+      "desc": "Installs additional TixInc dependencies to cli directory and allows running extended commands.",
       "category": "utility",
       "args": {
         "clone-paths": {
@@ -507,7 +510,7 @@ function CliAdvanced(config, token) {
     if (cmd) {
       cmd.fn = fn;
     } else {
-      var msg = _.template('ERROR: No command definition exists for <%= obj %>, ensure that it exists in [CliAdvanced.commands]');
+      var msg = _.template('ERROR: No command definition exists for <%= obj %>, ensure that it exists in [Cli.commands]');
       console.log(msg);
     }
   }
@@ -897,7 +900,7 @@ function CliShell(config, mainArgs) {
   init(token);
 
   function init(token) {
-    var cli = new CliAdvanced(config, token);
+    var cli = new Cli(config, token);
     cli.printHeader();
 
     _.forEach(argCommands, function (argv, commandName) {
@@ -976,7 +979,7 @@ function createInterface() {
   });
 }
 
-/** Ensures advanced CLI shell gets started in the cli directory so that npm dependencies will be loadable. */
+/** Ensures CLI shell gets started in the cli directory so that npm dependencies will be loadable. */
 function startShell(config, args) {
   var cliDir = toAbsPath(config.path.cliDir);
   var cliPath = join(cliDir, config.path.cliFile);
@@ -1000,10 +1003,10 @@ function startShell(config, args) {
 exports.CliShell = CliShell;
 
 /**
- * Exports CliAdvanced for functional use in node.js automation apps.
- * @type {CliAdvanced}
+ * Exports Cli for functional use in node.js automation apps.
+ * @type {Cli}
  */
-exports.CliAdvanced = CliAdvanced;
+exports.Cli = Cli;
 
 
 if (require.main === module) {
