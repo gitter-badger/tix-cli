@@ -4,13 +4,7 @@
 
 source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
 
-### NPM Packages
-### rimraf: Short for "rm -rf", advanced file / directory removal
-if hash sudo 2>/dev/null; then
-  sudo npm install -g rimraf
-else
-  npm install -g rimraf
-fi
+
 
 ### General packages
 if hash curl 2>/dev/null; then

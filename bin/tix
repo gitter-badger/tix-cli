@@ -7,28 +7,36 @@ OPTIND=1
 
 source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
 
+### Get tokens / auth
 GITHUB_TOKEN=$(github-token)
 npm-token
 
+### Mandatory install
+if [ ! -e $CLI_PATH ]; then
+  ### NPM Packages
+  ### rimraf: Short for "rm -rf", advanced file / directory removal
+  if hash sudo 2>/dev/null; then
+    sudo npm install -g rimraf
+  else
+    npm install -g rimraf
+  fi
+  install-cli
+fi
+
+### Command line flags
 while getopts "ocx" opt; do
     case "$opt" in
     o) ### Install optional files
       install-optional
       ;;
-     c) ### Clean install directories
-      if hash rimraf 2>/dev/null; then
-        echo "Cleaning previous installation..."
-        rimraf $CONFIG_PATH
-        rimraf $NPMRC_PATH
-        rimraf $CLI_ROOT
-        echo "Cleaning complete."
-      else
-        echo "rimraf doesn't exist.  Run again with -o flag to install optional dependencies."
-        exit 1
-      fi
+    c) ### Clean install directories
+      echo "Cleaning previous installation..."
+      rimraf $CONFIG_PATH
+      rimraf $NPMRC_PATH
+      rimraf $CLI_ROOT
+      echo "Cleaning complete."
       ;;
     x)
-      mkdir -p $CLI_ROOT
       pushd $CLI_ROOT
         npm install @tixinc/automation --save
       popd
@@ -40,9 +48,7 @@ while getopts "ocx" opt; do
 done
 
 
-if [ ! -e $CLI_PATH ]; then
-  install-cli
-fi
+
 
 echo "Executing CLI at $CLI_PATH..."
 node "${CLI_PATH}"

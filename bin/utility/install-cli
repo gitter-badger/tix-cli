@@ -13,6 +13,10 @@ echo "Installing CLI to $CLI_ROOT..."
 
 mkdir -p $MODULE_ROOT
 pushd $MODULE_ROOT
+  if [ -e $CLI_ROOT ];then
+    rimraf $CLI_ROOT
+  fi
+
   git clone --depth 1 $GITHUB_URL_CLI
   pushd $CLI_ROOT
     rm -rf .git
