@@ -41,7 +41,7 @@ Filter Add-HardLinks {
 }
 
 Filter Execute-ShScripts {
-  Execute-Sh $_.filePath
+  Execute-Sh $_.command
 }
 
 
