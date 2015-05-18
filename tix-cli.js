@@ -118,7 +118,6 @@ function dirExists(path) {
  * @class
  */
 function CliAdvanced(config, token) {
-  console.log('token: ' + token);
   var that = this;
   var sh = require('shelljs');
   sh.config.silent = true;
@@ -129,9 +128,6 @@ function CliAdvanced(config, token) {
   var cliDir = toAbsPath(config.path.cliDir);
   var tixincPath = join(cliDir, 'node_modules', '@tixinc');
   var tokenUrl = 'https://' + token + '@github.com';
-  console.log('cliDir: ' + cliDir);
-  console.log('tixincPath: ' + tixincPath);
-  console.log('tokenUrl:' + tokenUrl);
 
 
 
@@ -157,7 +153,6 @@ function CliAdvanced(config, token) {
     var CliExtended = require('@tixinc/automation/cli');
     that.extCommands = (new CliExtended()).commands;
     that.isExtendedMode = true;
-    that.printHeader();
   }
 
   function log(message, source) {
@@ -902,9 +897,7 @@ function CliShell(config, mainArgs) {
   init(token);
 
   function init(token) {
-    console.log('CliShell.init');
     var cli = new CliAdvanced(config, token);
-    console.log('CliAdvanced');
     cli.printHeader();
 
     _.forEach(argCommands, function (argv, commandName) {
