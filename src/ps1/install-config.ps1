@@ -78,7 +78,7 @@ $installs.Add('hardLinks', @(
 $installs.Add('sh', @(
   @{
     title='NPM and tix-cli install'
-    command="/s /c %USERPROFILE%\src\sh\install.sh"
+    command="$RootPath\src\sh\install.sh"
   }
 ))
 
