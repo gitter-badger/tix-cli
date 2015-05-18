@@ -6,7 +6,7 @@ source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
 
 ### Check if ~/.npmrc exists and if it contains an auth token
 if [ ! -e "$NPMRC_PATH" ] || ! grep -q _authToken $NPMRC_PATH; then
-    echo "Your npm credentials are required to interact with npm private repositories."
-    echo "A token will be persisted to $NPMRC_PATH..."
-    npm adduser 2>&1
+    2>&1 echo "Your npm credentials are required to interact with npm private repositories."
+    2>&1 echo "A token will be persisted to $NPMRC_PATH..."
+    2>&1 npm adduser
 fi

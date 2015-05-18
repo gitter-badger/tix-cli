@@ -8,7 +8,7 @@ OPTIND=1
 source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
 
 GITHUB_TOKEN=$(github-token)
-NPM_TOKEN=$(npm-token)
+npm-token
 
 while getopts "ocx" opt; do
     case "$opt" in
