@@ -106,6 +106,12 @@ fi
 echo "--Installing tix-cli globally--" | tee $INSTALL_LOG_PATH
 npm install -g tix-cli 2>&1 >> $INSTALL_LOG_PATH
 
+echo "--GitHub auth--"
+github-token
+
+echo "--private NPM auth--"
+npm-token
+
 echo "--Full dev clone--"
 clone-all-dev
 
