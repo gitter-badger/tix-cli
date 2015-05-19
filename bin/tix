@@ -11,17 +11,7 @@ source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
 GITHUB_TOKEN=$(github-token)
 npm-token
 
-### Mandatory install
 if [ ! -e $CLI_PATH ]; then
-  ### NPM Packages
-  ### rimraf: Short for "rm -rf", advanced file / directory removal
-  if hash sudo 2>/dev/null; then
-    sudo npm install -g rimraf
-    sudo npm install -g node-gyp@latest
-  else
-    npm install -g rimraf
-    npm install -g node-gyp@latest
-  fi
   install-cli
 fi
 
@@ -48,8 +38,6 @@ while getopts "ocx" opt; do
       ;;
     esac
 done
-
-
 
 
 echo "Executing CLI at $CLI_PATH..."

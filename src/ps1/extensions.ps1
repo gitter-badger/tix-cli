@@ -3,6 +3,7 @@ param($INSTALL_ROOT=$HOME)
 # Reusable functions for powershell.            #
 #################################################
 
+$INSTALL_LOG_PATH=Join-Path $INSTALL_ROOT tix-install.log
 $LOCAL_ROOT=Join-Path $INSTALL_ROOT local
 $7ZA_PATH=Join-Path $LOCAL_ROOT '7z\7za.exe'
 $LOCAL_BIN_ROOT=Join-Path $LOCAL_ROOT bin
@@ -49,10 +50,10 @@ Function Expand-Zip ($zipPath, $destDir) {
 Function Execute($filePath, $arguments)
 {
     If($arguments) {
-        Start-Process $filePath -ArgumentList $arguments -Wait -PassThru
+        Start-Process $filePath -ArgumentList $arguments -Wait -PassThru -RedirectStandardOutput $INSTALL_LOG_PATH -RedirectStandardError $INSTALL_LOG_PATH -WindowStyle Hidden
     }
     Else {
-        Start-Process $filePath -Wait -PassThru
+        Start-Process $filePath -Wait -PassThru -RedirectStandardOutput $INSTALL_LOG_PATH -RedirectStandardError $INSTALL_LOG_PATH -WindowStyle Hidden
     }
 }
 

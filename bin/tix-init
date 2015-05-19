@@ -41,22 +41,22 @@ case "$PLATFORM" in
 esac
 
 
-
 ### --PATHS--
 ### All paths are absolute.
 ### ROOT suffix => directory, PATH suffix => file
 
-INSTALL_ROOT="${HOME}"                  # ./
-NPMRC_PATH="${HOME}/.npmrc"             # ~/.npmrc
-CONFIG_PATH="${INSTALL_ROOT}/.tixrc"    # ./.tixrc
-LOCAL_ROOT="${INSTALL_ROOT}/local"      # ./local
-LOCAL_BIN_ROOT="${LOCAL_ROOT}/bin"      # ./local/bin
-LOG_PATH="${LOCAL_ROOT}/tix.log"        # ./local/tix.log
-SRC_ROOT="${INSTALL_ROOT}/src"          # ./src
-SRC_BIN_ROOT="${SRC_ROOT}/bin"          # ./src/bin
-MODULE_ROOT="${INSTALL_ROOT}/tixinc"    # ./tixinc
-CLI_ROOT="${MODULE_ROOT}/tix-cli"       # ./tixinc/tix-cli
-CLI_PATH="${CLI_ROOT}/tix-cli.js"       # ./tixinc/tix-cli/tix-cli.js
+INSTALL_ROOT="${HOME}"                        # ./
+NPMRC_PATH="${HOME}/.npmrc"                   # ~/.npmrc
+CONFIG_PATH="${INSTALL_ROOT}/.tixrc"          # ./.tixrc
+LOCAL_ROOT="${INSTALL_ROOT}/local"            # ./local
+LOCAL_BIN_ROOT="${LOCAL_ROOT}/bin"            # ./local/bin
+LOG_PATH="${LOCAL_ROOT}/tix.log"              # ./local/tix.log
+SRC_ROOT="${INSTALL_ROOT}/src"                # ./src
+SRC_BIN_ROOT="${SRC_ROOT}/bin"                # ./src/bin
+MODULE_ROOT="${INSTALL_ROOT}/tixinc"          # ./tixinc
+CLI_ROOT="${MODULE_ROOT}/tix-cli"             # ./tixinc/tix-cli
+CLI_PATH="${CLI_ROOT}/tix-cli.js"             # ./tixinc/tix-cli/tix-cli.js
+TIXINC_JS_ROOT="${MODULE_ROOT}/tixinc-js"     # ./tixinc/tixinc-js/
 
 
 ### --FUNCTIONS--

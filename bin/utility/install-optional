@@ -4,8 +4,6 @@
 
 source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
 
-
-
 ### General packages
 if hash curl 2>/dev/null; then
   if ! hash ack 2>/dev/null; then
@@ -22,4 +20,7 @@ if hash brew 2>/dev/null; then
   brew install the_silver_searcher
 elif hash pacman 2>/dev/null; then
   pacman -S the_silver_searcher
+elif hash choco 2>/dev/null; then
+  choco install ag
 fi
+

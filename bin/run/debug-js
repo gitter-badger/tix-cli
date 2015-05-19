@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# This script runs the tixinc-js project in debug mode
+
+source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
+
+pushd $TIXINC_JS_ROOT
+nodemon bin/www

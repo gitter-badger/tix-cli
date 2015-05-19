@@ -1,13 +1,10 @@
 param($RootPath=$HOME)
 ##################################################################
-# Downloads basic Windows dependencies for TixInc applications.  #
-#                                                                #
-# Specify source to control the directory that will be used      #
-# to download installation files and $packages to control whats  #
-# downloaded.                                                    #
+# Installs basic Windows dependencies for TixInc applications.   #
 ##################################################################
 
 . $RootPath\src\ps1\install-config.ps1 -RootPath $RootPath
+CHOCOLATEY_PATH=Join-Path $base.local chocolatey
 
 Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
@@ -44,6 +41,10 @@ Filter Execute-ShScripts {
   Execute-Sh $_.command
 }
 
+$CHOCOLATEY_PATH|Ensure-Directory
+[Environment]::SetEnvironmentVariable("ChocolateyInstall", "$CHOCOLATEY_PATH", "User")
+Write-Host "--Installing Chocolatey (https://chocolatey.org) Package Manager for Windows--"
+(iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1')))>$null 2>&1
 
 Write-Host "--Installing zip archives--"
 $installs.zip|Write-PipeList -PassThru|Expand-ZipArchives

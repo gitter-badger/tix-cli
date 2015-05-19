@@ -30,7 +30,6 @@ $src.Values|Ensure-Directory -PassThru
 $local.Values|Ensure-Directory -PassThru
 
 
-
 $variablesPath=Join-Path $local.config "variables.cmd"
 if(Test-Path $variablesPath) {
     rm $variablesPath
