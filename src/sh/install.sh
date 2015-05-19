@@ -43,10 +43,11 @@ fi
 if ! hash npm 2>/dev/null; then
   echo "--Installing NPM--" | tee $INSTALL_LOG_PATH
   curl -L https://www.npmjs.org/install.sh | sh
+  
+  echo "--Setting VS tools version to ${MSVS_VERSION}" | tee $INSTALL_LOG_PATH
+  npm config set msvs_version ${MSVS_VERSION} --global 2>&1 | tee $INSTALL_LOG_PATH
 fi
 
-echo "--Setting VS tools version to ${MSVS_VERSION}" | tee $INSTALL_LOG_PATH
-npm config set msvs_version ${MSVS_VERSION} --global 2>&1 | tee $INSTALL_LOG_PATH
 
 echo "--Installing Global Node Tools--" | tee $INSTALL_LOG_PATH
 if ! hash rimraf 2>/dev/null; then
@@ -105,11 +106,11 @@ fi
 echo "--Installing tix-cli globally--" | tee $INSTALL_LOG_PATH
 npm install -g tix-cli 2>&1 >> $INSTALL_LOG_PATH
 
-echo "--Running tix-cli with optional applications and extended mode--" | tee $INSTAL_LOG_PATH
-tix -ox
-
 echo "--Full dev clone--"
 clone-all-dev
 
 echo "--Run JS project in debug mode--"
 debug-js
+
+echo "--Running tix-cli with optional applications and extended mode--" | tee $INSTAL_LOG_PATH
+tix -ox
