@@ -4,7 +4,7 @@ param($RootPath=$HOME)
 ##################################################################
 
 . $RootPath\src\ps1\install-config.ps1 -RootPath $RootPath
-CHOCOLATEY_PATH=Join-Path $base.local chocolatey
+$CHOCOLATEY_PATH=Join-Path $base.local chocolatey
 
 Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
