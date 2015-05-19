@@ -10,7 +10,7 @@ echo "--Creating new ~/.npmrc--"
 echo prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
 
 echo "--Installing 32-bit node.exe--"
-#curl -L http://nodejs.org/dist/v0.12.3/node.exe > "${LOCAL_BIN_ROOT}/node.exe"
+curl -L http://nodejs.org/dist/v0.12.3/node.exe > "${LOCAL_BIN_ROOT}/node.exe"
 
 echo "--Installing NPM--"
 curl -L https://www.npmjs.org/install.sh | sh
