@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# This script runs the tixinc-js project in debug mode
+
+source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
+
+pushd ${NET_SELFHOST_ROOT}
+cmd.exe /c "MSBUILD /p:OutDir=${NET_ARTIFACTS_ROOT} /p:GenerateProjectSpecificOutputFolder=false"
+popd

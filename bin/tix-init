@@ -45,18 +45,23 @@ esac
 ### All paths are absolute.
 ### ROOT suffix => directory, PATH suffix => file
 
-INSTALL_ROOT="${HOME}"                        # ./
-NPMRC_PATH="${HOME}/.npmrc"                   # ~/.npmrc
-CONFIG_PATH="${INSTALL_ROOT}/.tixrc"          # ./.tixrc
-LOCAL_ROOT="${INSTALL_ROOT}/local"            # ./local
-LOCAL_BIN_ROOT="${LOCAL_ROOT}/bin"            # ./local/bin
-LOG_PATH="${LOCAL_ROOT}/tix.log"              # ./local/tix.log
-SRC_ROOT="${INSTALL_ROOT}/src"                # ./src
-SRC_BIN_ROOT="${SRC_ROOT}/bin"                # ./src/bin
-MODULE_ROOT="${INSTALL_ROOT}/tixinc"          # ./tixinc
-CLI_ROOT="${MODULE_ROOT}/tix-cli"             # ./tixinc/tix-cli
-CLI_PATH="${CLI_ROOT}/tix-cli.js"             # ./tixinc/tix-cli/tix-cli.js
-TIXINC_JS_ROOT="${MODULE_ROOT}/tixinc-js"     # ./tixinc/tixinc-js/
+INSTALL_ROOT="${HOME}"                                            # ./
+NPMRC_PATH="${HOME}/.npmrc"                                       # ~/.npmrc
+CONFIG_PATH="${INSTALL_ROOT}/.tixrc"                              # ./.tixrc
+LOCAL_ROOT="${INSTALL_ROOT}/local"                                # ./local
+LOCAL_BIN_ROOT="${LOCAL_ROOT}/bin"                                # ./local/bin
+LOG_PATH="${LOCAL_ROOT}/tix.log"                                  # ./local/tix.log
+SRC_ROOT="${INSTALL_ROOT}/src"                                    # ./src
+SRC_BIN_ROOT="${SRC_ROOT}/bin"                                    # ./src/bin
+MODULE_ROOT="${INSTALL_ROOT}/tixinc"                              # ./tixinc
+CLI_ROOT="${MODULE_ROOT}/tix-cli"                                 # ./tixinc/tix-cli
+CLI_PATH="${CLI_ROOT}/tix-cli.js"                                 # ./tixinc/tix-cli/tix-cli.js
+JS_ROOT="${MODULE_ROOT}/tixinc-js"                                # ./tixinc/tixinc-js
+NET_ROOT="${MODULE_ROOT}/tixinc-net"                              # ./tixinc/tixinc-net
+NET_SELFHOST_ROOT="${NET_ROOT}/Tix.Web.SelfHost"                  # ./tixinc/tixinc-net/Tix.Web.SelfHost
+NET_PROJECT_PATH="${NET_SELFHOST_ROOT}/Tix.Web.SelfHost.csproj"   # ./tixinc/tixinc-net/Tix.Web.SelfHost/Tix.Web.SelfHost.csproj
+ARTIFACTS_ROOT="${MODULE_ROOT}/artifacts"                         # ./tixinc/artifacts
+NET_ARTIFACTS_ROOT="${ARTIFACTS_ROOT}/tixinc-net"                 # ./tixinc/artifacts/tixinc-net/
 
 
 ### --FUNCTIONS--
