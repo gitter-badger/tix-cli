@@ -7,24 +7,30 @@ INSTALL_ROOT="${HOME}"
 INSTALL_LOG_PATH="${INSTALL_ROOT}/tix-install.log"
 LOCAL_BIN_ROOT="${INSTALL_ROOT}/local/bin"
 SRC_BIN_ROOT="${INSTALL_ROOT}/src/bin"
-CSDK_PATH="${SRC_BIN_ROOT}/wdexpress_full.exe"
+CSDK_ROOT="${SRC_BIN_ROOT}/VS2013_4_CE_ENU"
+NUGET_PATH="${LOCAL_BIN_ROOT}/nuget.exe"
 NODE_PATH="${LOCAL_BIN_ROOT}/node.exe"
-MSVS_VERSION=2012
+MSVS_VERSION=2013
 
 if [ ! -e $NPMRC_PATH ]; then
   echo "--Creating new ~/.npmrc--" | tee $INSTALL_LOG_PATH
   echo prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
 fi
 
-if [ ! -e $CSDK_PATH ]; then
+if [ -d $CSDK_ROOT ]; then
   echo "--Installing Visual Studio 2013 Community--" | tee $INSTALL_LOG_PATH
   echo "--You must install the Visual Studio C++ Tools for Windows Desktop for this to work--" | tee $INSTALL_LOG_PATH
-  curl -L "http://go.microsoft.com/?linkid=9816758" > $CSDK_PATH
-  pushd "${SRC_BIN_ROOT}"
-  cmd.exe /c wdexpress_full.exe 2>&1 | tee $INSTALL_LOG_PATH
+  ### Web installer
+  ###curl -L "http://go.microsoft.com/?linkid=9816758" > $CSDK_PATH
+  pushd "${CSDK_ROOT}"
+  cmd.exe /c vs_community.exe 2>&1 | tee $INSTALL_LOG_PATH
   popd
   echo -n "Visual studio tools have finished installing.  Register your version of Visual Studio and hit enter..." | tee $INSTALL_LOG_PATH
   read
+fi
+
+if [ ! -e $NUGET_PATH ]; then
+  curl -L "https://nuget.org/nuget.exe" > $NUGET_PATH
 fi
 
 if ! hash node 2>/dev/null; then
@@ -99,3 +105,9 @@ npm install -g tix-cli 2>&1 >> $INSTALL_LOG_PATH
 
 echo "--Running tix-cli with optional applications and extended mode--" | tee $INSTAL_LOG_PATH
 tix -ox
+
+echo "--Full dev clone--"
+clone-all-dev
+
+echo "--Run JS project in debug mode--"
+debug-js

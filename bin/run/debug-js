@@ -4,6 +4,7 @@
 
 source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
 
-pushd $TIXINC_JS_ROOT
+pushd $JS_ROOT
+npm install
 browser-sync start --proxy localhost:1336 & nodemon bin/www
 popd

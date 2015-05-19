@@ -4,6 +4,13 @@
 
 source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
 
-pushd ${NET_SELFHOST_ROOT}
-cmd.exe /c "MSBUILD /p:OutDir=${NET_ARTIFACTS_ROOT} /p:GenerateProjectSpecificOutputFolder=false"
+pushd ${NET_ROOT}
+cmd.exe /c "nuget.exe restore Tix.SelfHost.sln"
+#cmd.exe /c "MSBUILD Tix.SelfHost.sln /p:Configuration=Debug /p:Platform=\"Any CPU\" /p:OutputPath=..\\..\\artifacts"
 popd
+
+pushd ${NET_SELFHOST_ROOT}
+cmd.exe /c "nuget.exe restore Tix.Web.SelfHost.csproj"
+cmd.exe /c "MSBUILD Tix.Web.SelfHost.csproj /p:Configuration=Debug /p:Platform=\"Any CPU\" /p:OutputPath=..\\..\\artifacts"
+popd
+# /p:OutDir=${NET_ARTIFACTS_ROOT} /p:GenerateProjectSpecificOutputFolder=false"
