@@ -16,7 +16,9 @@ fi
 if [ ! -e $CSDK_PATH ]; then
   echo "--Installing Visual Studio Express Visual C++ SDK"
   curl -L "http://go.microsoft.com/?linkid=9816758" > $CSDK_PATH
-  cmd.exe /c $CSDK_PATH
+  pushd "${INSTALL_ROOT}/src/bin"
+  cmd.exe /c wdexpress_full.exe
+  popd
 fi
 
 if [ ! -e $NODE_PATH ]; then
