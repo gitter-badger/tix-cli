@@ -10,7 +10,7 @@ SRC_BIN_ROOT="${INSTALL_ROOT}/src/bin"
 CSDK_ROOT="${SRC_BIN_ROOT}/VS2013_4_CE_ENU"
 NUGET_PATH="${LOCAL_BIN_ROOT}/nuget.exe"
 NODE_PATH="${LOCAL_BIN_ROOT}/node.exe"
-MSVS_VERSION=2013
+MSVS_VERSION=2012
 
 if [ ! -e $NPMRC_PATH ]; then
   echo "--Creating new ~/.npmrc--" | tee $INSTALL_LOG_PATH
