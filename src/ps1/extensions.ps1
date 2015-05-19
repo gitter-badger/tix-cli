@@ -50,10 +50,10 @@ Function Expand-Zip ($zipPath, $destDir) {
 Function Execute($filePath, $arguments)
 {
     If($arguments) {
-        Start-Process $filePath -ArgumentList $arguments -Wait -PassThru -RedirectStandardOutput $INSTALL_LOG_PATH -RedirectStandardError $INSTALL_LOG_PATH -WindowStyle Hidden
+        Start-Process $filePath -ArgumentList $arguments -Wait -PassThru -WindowStyle Hidden | Out-File $INSTALL_LOG_PATH -Append
     }
     Else {
-        Start-Process $filePath -Wait -PassThru -RedirectStandardOutput $INSTALL_LOG_PATH -RedirectStandardError $INSTALL_LOG_PATH -WindowStyle Hidden
+        Start-Process $filePath -Wait -PassThru -WindowStyle Hidden | Out-File $INSTALL_LOG_PATH -Append
     }
 }
 
