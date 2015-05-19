@@ -18,6 +18,8 @@ if [ ! -e $NPMRC_PATH ]; then
 fi
 
 if [ -d $CSDK_ROOT ]; then
+  ### Probably switch over to this
+  #choco install visualstudioexpress2013windowsdesktop -y
   echo "--Installing Visual Studio 2013 Community--" | tee $INSTALL_LOG_PATH
   echo "--You must install the Visual Studio MFC C++ Tools for this to work--" | tee $INSTALL_LOG_PATH
   ### Web installer
