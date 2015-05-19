@@ -19,7 +19,7 @@ fi
 
 if [ -d $CSDK_ROOT ]; then
   echo "--Installing Visual Studio 2013 Community--" | tee $INSTALL_LOG_PATH
-  echo "--You must install the Visual Studio C++ Tools for Windows Desktop for this to work--" | tee $INSTALL_LOG_PATH
+  echo "--You must install the Visual Studio MFC C++ Tools for this to work--" | tee $INSTALL_LOG_PATH
   ### Web installer
   ###curl -L "http://go.microsoft.com/?linkid=9816758" > $CSDK_PATH
   pushd "${CSDK_ROOT}"
