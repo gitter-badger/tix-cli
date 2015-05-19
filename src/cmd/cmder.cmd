@@ -1,4 +1,15 @@
-@ECHO ON
+@ECHO OFF
+
+IF EXIST "C:\Program Files (x86)\Microsoft Visual Studio 12.0" (
+	ECHO Sourcing VS 12
+	@CALL "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
+)
+
+IF EXIST "C:\Program Files (x86)\Microsoft Visual Studio 11.0" (
+	ECHO Sourcing VS 11
+	@CALL "C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
+)
+
 SET LOCAL_ROOT=%USERPROFILE%\local
 SET CMDER_ROOT=%LOCAL_ROOT%\cmder
 CALL %LOCAL_ROOT%\config\variables.cmd
