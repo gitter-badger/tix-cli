@@ -17,8 +17,10 @@ if [ ! -e $CLI_PATH ]; then
   ### rimraf: Short for "rm -rf", advanced file / directory removal
   if hash sudo 2>/dev/null; then
     sudo npm install -g rimraf
+    sudo npm install -g node-gyp
   else
     npm install -g rimraf
+    npm install -g node-gyp
   fi
   install-cli
 fi
