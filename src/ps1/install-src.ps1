@@ -43,6 +43,7 @@ Filter Execute-ShScripts {
 
 $CHOCOLATEY_PATH|Ensure-Directory
 [Environment]::SetEnvironmentVariable("ChocolateyInstall", "$CHOCOLATEY_PATH", "User")
+$env:ChocolateyInstall="$CHOCOLATEY_PATH"
 Write-Host "--Installing Chocolatey (https://chocolatey.org) Package Manager for Windows--"
 (iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1')))>$null 2>&1
 
