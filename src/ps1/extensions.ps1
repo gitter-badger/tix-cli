@@ -3,7 +3,6 @@ param($INSTALL_ROOT=$HOME)
 # Reusable functions for powershell.            #
 #################################################
 
-$INSTALL_LOG_PATH=Join-Path $INSTALL_ROOT tix-install.log
 $LOCAL_ROOT=Join-Path $INSTALL_ROOT local
 $7ZA_PATH=Join-Path $LOCAL_ROOT '7z\7za.exe'
 $LOCAL_BIN_ROOT=Join-Path $LOCAL_ROOT bin
