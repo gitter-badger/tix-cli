@@ -96,14 +96,6 @@ if ! hash node-gyp 2>/dev/null; then
   npm install -g node-gyp >> $INSTALL_LOG_PATH
 fi
 
-### Change these back to npm install -g automattic/socket.io when issues with socket.io versions have been fixed on npm
-#echo "--**socket.io**--" | tee $INSTALL_LOG_PATH
-#npm install -g automattic/socket.io 2>&1 >> $INSTALL_LOG_PATH
-#echo "--**socket.io-client**--" | tee $INSTALL_LOG_PATH
-#npm install -g automattic/socket.io-client 2>&1 >> $INSTALL_LOG_PATH
-#echo "--**engine.io-client**--" | tee $INSTALL_LOG_PATH
-#npm install -g automattic/engine.io 2>&1 >> $INSTALL_LOG_PATH
-
 if ! hash browser-sync 2>/dev/null; then
   echo "--**browser-sync**--" | tee $INSTALL_LOG_PATH
   npm install -g browser-sync >> $INSTALL_LOG_PATH
