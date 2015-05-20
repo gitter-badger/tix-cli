@@ -12,17 +12,17 @@ NUGET_PATH="${LOCAL_BIN_ROOT}/nuget.exe"
 NODE_PATH="${LOCAL_BIN_ROOT}/node.exe"
 MSVS_VERSION=2012
 
-if [ ! -e $NPMRC_PATH ]; then
+if [ ! -e "$NPMRC_PATH" ]; then
   echo "--Creating new ~/.npmrc--" | tee $INSTALL_LOG_PATH
   echo prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
   echo "//registry.npmjs.org/:_authToken=aca97731-9f24-46fa-a0bb-7f547b937342" >> $NPMRC_PATH
 fi
 
 echo "--Installing Visual Studio Express 2012 for Windows Desktop 11.0--"
-choco install visualstudio2012wdx --yes --force 2>&1 >> $INSTALL_LOG_PATH
+choco install visualstudio2012wdx --yes --force >> $INSTALL_LOG_PATH
 
 ### Optional step for setting up VS 2013 community
-if [ -d $CSDK_ROOT ]; then
+if [ -d "$CSDK_ROOT" ]; then
   echo "--Installing Visual Studio 2013 Community--" | tee $INSTALL_LOG_PATH
   echo "--You must install the Visual Studio MFC C++ Tools for this to work--" | tee $INSTALL_LOG_PATH
   ### Web installer
@@ -34,7 +34,7 @@ if [ -d $CSDK_ROOT ]; then
   read
 fi
 
-if [ ! -e $NUGET_PATH ]; then
+if [ ! -e "$NUGET_PATH" ]; then
   curl -L "https://nuget.org/nuget.exe" > $NUGET_PATH
 fi
 
@@ -45,7 +45,7 @@ fi
 
 if ! hash npm 2>/dev/null; then
   echo "--Installing NPM--" | tee $INSTALL_LOG_PATH
-  curl -L https://www.npmjs.org/install.sh | sh 2>&1 >> $INSTALL_LOG_PATH
+  curl -L https://www.npmjs.org/install.sh | sh >> $INSTALL_LOG_PATH
 
   echo "--Setting VS tools version to ${MSVS_VERSION}" | tee $INSTALL_LOG_PATH
   npm config set msvs_version ${MSVS_VERSION} --global 2>&1 | tee $INSTALL_LOG_PATH
@@ -55,21 +55,21 @@ echo "--Installing Global Node Tools--" | tee $INSTALL_LOG_PATH
 if ! hash rimraf 2>/dev/null; then
   echo "--**installing rimraf**--" | tee $INSTALL_LOG_PATH
   echo "--**short for 'rm -rf' (remove recursive/force)**--" | tee $INSTALL_LOG_PATH
-  npm install -g rimraf 2>&1 >> $INSTALL_LOG_PATH
+  npm install -g rimraf >> $INSTALL_LOG_PATH
 fi
 if ! hash nodemon 2>/dev/null; then
   echo "--**installing nodemon**--" | tee $INSTALL_LOG_PATH
   echo "--**runs node.js and watches server-side files for updates to trigger process reload**--" | tee $INSTALL_LOG_PATH
-  npm install -g nodemon 2>&1 >> $INSTALL_LOG_PATH
+  npm install -g nodemon >> $INSTALL_LOG_PATH
 fi
 if ! hash nodemon 2>/dev/null; then
   echo "--**installing forever**--" | tee $INSTALL_LOG_PATH
   echo "--**runs node.js in a production setting, ensuring the process never goes down**--" | tee $INSTALL_LOG_PATH
-  npm install -g forever 2>&1 >> $INSTALL_LOG_PATH
+  npm install -g forever >> $INSTALL_LOG_PATH
 fi
 if ! hash node-gyp 2>/dev/null; then
   echo "--**node-gyp**--" | tee $INSTALL_LOG_PATH
-  npm install -g node-gyp 2>&1 >> $INSTALL_LOG_PATH
+  npm install -g node-gyp >> $INSTALL_LOG_PATH
 fi
 
 ### Change these back to npm install -g automattic/socket.io when issues with socket.io versions have been fixed on npm
@@ -82,7 +82,7 @@ fi
 
 if ! hash browser-sync 2>/dev/null; then
   echo "--**browser-sync**--" | tee $INSTALL_LOG_PATH
-  npm install -g browser-sync 2>&1 >> $INSTALL_LOG_PATH
+  npm install -g browser-sync >> $INSTALL_LOG_PATH
   echo "--**installing ws@latest to fix current npm issues with browser-sync**--" | tee $INSTALL_LOG_PATH
   echo "--**see https://github.com/Automattic/socket.io/issues/2057**--" | tee $INSTALL_LOG_PATH
   browser_sync_engine_io_modules_root="${LOCAL_BIN_ROOT}/node_modules/browser-sync/node_modules/socket.io/node_modules/engine.io/node_modules"
@@ -99,11 +99,11 @@ fi
 
 if ! hash gulp 2>/dev/null; then
   echo "--**gulp**--" | tee $INSTALL_LOG_PATH
-  npm install -g gulp &>> $INSTALL_LOG_PATH
+  npm install -g gulp >> $INSTALL_LOG_PATH
 fi
 
 echo "--Installing tix-cli globally--" | tee $INSTALL_LOG_PATH
-npm install -g tix-cli &>> $INSTALL_LOG_PATH
+npm install -g tix-cli >> $INSTALL_LOG_PATH
 
 echo "--Running tix-cli with optional applications and extended mode and no-run--" | tee $INSTALL_LOG_PATH
 tix -oxn
