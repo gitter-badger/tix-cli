@@ -7,6 +7,7 @@ param($RootPath=$HOME)
 $CHOCOLATEY_PATH=Join-Path $base.local chocolatey
 $INSTALL_SRC_CMD_PATH=Join-Path $src.cmd install-src.cmd
 $DESKTOP_ROOT=Join-Path $HOME Desktop
+$PENDING_REBOOT_PS1_PATH=Join-Path $src.ps1 get-pendingreboot.ps1
 
 Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
@@ -43,8 +44,7 @@ Filter Execute-ShScripts {
   Execute-Sh $_.command
 }
 
-pushd $src.ps1
-. .\get-rebootpending.ps1
+. $PENDING_REBOOT_PS1_PATH
 $rebootStatus=Get-PendingReboot
 If($rebootStatus.PendingReboot) {
   echo "This computer is currently set to reboot."
@@ -54,8 +54,6 @@ If($rebootStatus.PendingReboot) {
   Read-Host 'Press enter to exit...'
   Exit 0
 }
-popd
-
 
 $CHOCOLATEY_PATH|Ensure-Directory
 [Environment]::SetEnvironmentVariable("ChocolateyInstall", "$CHOCOLATEY_PATH", "User")
