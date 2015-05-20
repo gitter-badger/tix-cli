@@ -26,16 +26,11 @@ npm install -g tix-cli
 npm install -g tix-cli && tix
 ```
 
-##### Install and start tix shell extended (private repository and deployment access)
-
+##### Install with optional dependencies and and start tix shell extended (private repository and deployment access)
 ```sh
-npm install -g tix-cli && tix -ix
+npm install -g tix-cli && tix -ox
 ```
 
-##### Install and start tix shell in leet mode...
-```sh
-npm install -g tix-cli && tix --1337
-```
 
 
 ### Table of Contents
