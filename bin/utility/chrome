@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Opens chrome with parameters
+
+source $HOME/.tixrc
+
+"$CHROME_PATH" $@

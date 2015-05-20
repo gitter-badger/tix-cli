@@ -44,6 +44,7 @@ Filter Execute-ShScripts {
   Execute-Sh $_.command
 }
 
+### Check to see if there is a pending reboot
 . $PENDING_REBOOT_PS1_PATH
 $rebootStatus=Get-PendingReboot
 If($rebootStatus.RebootPending) {
@@ -86,4 +87,4 @@ $installs.hardLinks|Write-PipeList -PassThru|Add-HardLinks
 Write-Host "--Executing install.sh bash script and exiting--"
 Execute-Sh "$RootPath\src\sh\install.sh"
 
-exit
+Exit 0

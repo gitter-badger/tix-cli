@@ -62,6 +62,11 @@ export GITHUB_URL_CLI="$GITHUB_URL_TIX/tix-cli"
 ### All paths are absolute.
 ### ROOT suffix => directory, PATH suffix => file
 
+
+### SYSTEM PATHS
+export CHROME_PATH="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+
+
 ### LOCAL PATHS
 export INSTALL_ROOT="${HOME}"                                            # ./
 export NPMRC_PATH="${HOME}/.npmrc"                                       # ~/.npmrc

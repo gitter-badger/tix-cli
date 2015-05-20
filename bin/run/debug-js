@@ -6,7 +6,7 @@ source $HOME/.tixrc
 
 pushd $JS_ROOT
 echo "--Running npm install on tixinc-js, this will take a minute...--"
-npm install 2>&1 >> $LOG_PATH
+npm install &>/dev/null
 
 echo "--Debugging on port 1336--"
 chrome_path="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
