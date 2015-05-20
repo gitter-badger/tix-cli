@@ -10,10 +10,14 @@ Purpose
 Windows has some poor design choices at its core:
 
 * Ugly File System
-  * User AppData folder... what is this \Roaming, \Local, \LocalLow
+  * User AppData folder - \Roaming, \Local, \LocalLow
   * Spaces commonly used in path names
+    * Lots of confusing path backslash escaping
   * Root of file system is a drive letter
+    * Hard to type, C:/blah is more confusing to read than /c/blah
   * Using '\' in paths instead of what every other OS (and URIs) use: '/'
+    * Most path strings on Windows require double back-slashes to escape them
+    * Its harder to type backslash
 
 
 * Registry - Apps cannot be portable because they are installed to the file system and registry, often leaving behind junk or not uninstalling properly.
@@ -22,7 +26,7 @@ Windows has some poor design choices at its core:
   * One wrong edit will leave computer broken
 
 * Max file path - 260 characters
-  * Windows has the shortest max path length and the longest (verbose) file system paths of modern operating systems
+  * Shortest max path length and longest (verbose) file system paths of all modern OS's
 
 
 Git and many modern development tools do not run natively on Windows.  Instead they require a Linux-like shell be installed on the local machine to emulate running Linux processes.
@@ -30,7 +34,7 @@ Git and many modern development tools do not run natively on Windows.  Instead t
 Linux comes in many flavors with differing goals.  There are also multiple ports of it to Windows.
 
 
-This project aims to allow a complete silent portable install and configuration of Linux development tools (shell, git, node.js) to the users home directory.  This should bypass a lot of issues that are caused by Windows UAC.
+This project allows a complete silent portable install and configuration of Linux development tools (shell, git, node.js) to the users home directory.  This should bypass a lot of issues that are caused by Windows UAC.
 
 ___
 
