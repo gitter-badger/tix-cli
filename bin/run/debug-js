@@ -10,6 +10,6 @@ npm install --silent &>/dev/null
 
 echo "--Debugging on port 1336--"
 debug_url="http://localhost:1336"
-browser-sync start --proxy localhost:1336 --no-open & nodemon bin/www & chrome-box $debug_url
+browser-sync start --proxy localhost:1336 --no-open & nodemon bin/www & chrome-box $debug_url & echo
 
 popd

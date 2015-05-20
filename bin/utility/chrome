@@ -3,6 +3,4 @@
 # Opens chrome with parameters
 
 source $HOME/.tixrc
-
-echo "$CHROME_PATH" $@
 "$CHROME_PATH" $@
