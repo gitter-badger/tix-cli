@@ -20,7 +20,21 @@ if hash brew 2>/dev/null; then
   brew install the_silver_searcher
 elif hash pacman 2>/dev/null; then
   pacman -S the_silver_searcher
-elif hash choco 2>/dev/null; then
-  choco install ag --yes --force
 fi
 
+
+if [ "$PNAME" = "windows" ]; then
+  ### ag: the_silver_searcher
+  if ! hash ag 2>/dev/null; then
+    choco install ag --yes --force
+  fi
+
+  ### sysinternals: process explorer
+  ### Good for looking at windows processes, file locking, etc.
+  procexp_url="https://download.sysinternals.com/files/ProcessExplorer.zip"
+  procexp_path="${LOCAL_BIN_ROOT}/procexp.exe"
+  pushd $SRC_ZIP_ROOT
+  curl -L $procexp_url >ProcessExplorer.zip
+  unzip -po ProcessExplorer.zip procexp.exe >$proc_exp_path
+  popd
+fi

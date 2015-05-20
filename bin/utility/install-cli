@@ -19,11 +19,11 @@ pushd $MODULE_ROOT
 
   git clone --depth 1 $GITHUB_URL_CLI
   pushd $CLI_ROOT
-    rm -rf .git
-    rm -rf .gitignore
-    rm -rf .settings
-    rm -rf img
-    rm -rf src
+    rimraf .git
+    rimraf .gitignore
+    rimraf .settings
+    rimraf img
+    rimraf src
 
     npm install minimist --save
     npm install shelljs --save
