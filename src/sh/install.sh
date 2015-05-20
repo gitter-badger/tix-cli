@@ -28,7 +28,8 @@ if [ ! -e "$VS2012_WDX" ]; then
     pushd $VS2012_WDX
       echo "--Installing VS2012 tools for windows desktop...--"
       cmd.exe /c wdexpress_full.exe
-      echo "--Hit enter when finished with install / registration--"
+      echo -n "--Hit enter when finished with install / registration--"
+      read
     popd
   popd
 fi
