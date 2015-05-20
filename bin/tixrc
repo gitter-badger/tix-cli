@@ -73,7 +73,10 @@ export NPMRC_PATH="${HOME}/.npmrc"                                       # ~/.np
 export CONFIG_PATH="${INSTALL_ROOT}/.tixrc"                              # ./.tixrc
 export LOCAL_ROOT="${INSTALL_ROOT}/local"                                # ./local
 export LOG_PATH="${LOCAL_ROOT}/tix.log"                                  # ./local/tix.log
+export LOCAL_CONFIG_ROOT="${LOCAL_ROOT}/config"                          # ./local/config
+export RES_CONFIG_PATH="${LOCAL_CONFIG_ROOT}/res.config"                 # ./local/config/res.config
 export LOCAL_BIN_ROOT="${LOCAL_ROOT}/bin"                                # ./local/bin
+export LOCAL_CHROME_ROOT="${LOCAL_ROOT}/chrome"                          # ./local/chrome
 
 ### Prepend path with ./local/bin
 if ! grep -q "${LOCAL_BIN_ROOT}" <<< "$PATH" ; then

@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Opens chrome with parameters
+
+source $HOME/.tixrc
+
+mkdir -p $LOCAL_CHROME_ROOT
+chrome --user-data-dir=$LOCAL_CHROME_ROOT --window-size=1280,1080 --window-position=0,0 --app="%1"

@@ -41,11 +41,6 @@ $installs.Add('copy', @(
     dest=Join-Path $local.bin cmder.cmd
   },
   @{
-    title='chrome init file'
-    src=Join-Path $src.cmd chrome.cmd
-    dest=Join-Path $local.bin chrome.cmd
-  }
-  @{
     title='ConEmu.xml - configuration file for cmder'
     src=Join-Path $src.xml ConEmu.xml
     dest=Join-Path $base.local 'cmder\config\ConEmu.xml'

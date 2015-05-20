@@ -19,13 +19,15 @@ pushd $MODULE_ROOT
     rimraf img
     rimraf src
 
-    npm install minimist --save
+    echo "--Installing NPM Components...--"
+    npm install minimist --save >
     npm install shelljs --save
     npm install lodash --save
     npm install colors --save
     npm install read --save
     npm install q --save
     npm install ftp --save
+    echo "--NPM Components installed successfully--"
   popd
 popd
 

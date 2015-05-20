@@ -9,8 +9,7 @@ echo "--Running npm install on tixinc-js, this will take a minute...--"
 npm install &>/dev/null
 
 echo "--Debugging on port 1336--"
-chrome_path="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
 debug_url="http://localhost:1336"
-browser-sync start --proxy localhost:1336 --no-open & nodemon bin/www & "$chrome_path" "$debug_url"
+browser-sync start --proxy localhost:1336 --no-open & nodemon bin/www & chrome-box $debug_url
 
 popd

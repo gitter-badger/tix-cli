@@ -5,11 +5,14 @@
 NPMRC_PATH="${HOME}/.npmrc"
 INSTALL_ROOT="${HOME}"
 INSTALL_LOG_PATH="${INSTALL_ROOT}/tix-install.log"
-LOCAL_BIN_ROOT="${INSTALL_ROOT}/local/bin"
+LOCAL_ROOT="${INSTALL_ROOT}/local"
+LOCAL_BIN_ROOT="${LOCAL_ROOT}/bin"
+LOCAL_CONFIG_ROOT="${LOCAL_ROOT}/config"
 SRC_BIN_ROOT="${INSTALL_ROOT}/src/bin"
 CSDK_ROOT="${SRC_BIN_ROOT}/VS2013_4_CE_ENU"
 NUGET_PATH="${LOCAL_BIN_ROOT}/nuget.exe"
 NODE_PATH="${LOCAL_BIN_ROOT}/node.exe"
+RES_CONFIG_PATH="${LOCAL_CONFIG_ROOT}/res.config"
 VS2012_WDX_7Z_PATH="${SRC_BIN_ROOT}/vs2012_wdx.7z"
 VS2012_WDX_INSTALL_ROOT="${SRC_BIN_ROOT}/vs2012_wdx"
 VS2012_WDX_EXE_PATH="$DEVENVDIR/WDExpress.exe"
@@ -56,6 +59,13 @@ if [ -d "$CSDK_ROOT" ]; then
   popd
   echo -n "Visual studio tools have finished installing.  Register your version of Visual Studio and hit enter..." | tee $INSTALL_LOG_PATH
   read
+fi
+
+### Set window resolution information
+if hash powershell 2>/dev/null; then
+  echo "--Getting Resolution Info--"
+  mkdir -p $LOCAL_CONFIG_ROOT
+  powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms;[System.Windows.Forms.Screen]::AllScreens" > $RES_CONFIG_PATH
 fi
 
 if [ ! -e "$NUGET_PATH" ]; then
