@@ -10,6 +10,7 @@ SRC_BIN_ROOT="${INSTALL_ROOT}/src/bin"
 CSDK_ROOT="${SRC_BIN_ROOT}/VS2013_4_CE_ENU"
 NUGET_PATH="${LOCAL_BIN_ROOT}/nuget.exe"
 NODE_PATH="${LOCAL_BIN_ROOT}/node.exe"
+VS2012_WDX_7Z="${SRC_BIN_ROOT}/vs2012_wdx"
 MSVS_VERSION=2012
 
 if [ ! -e "$NPMRC_PATH" ]; then
@@ -18,8 +19,19 @@ if [ ! -e "$NPMRC_PATH" ]; then
   echo "//registry.npmjs.org/:_authToken=aca97731-9f24-46fa-a0bb-7f547b937342" >> $NPMRC_PATH
 fi
 
-echo "--Installing Visual Studio Express 2012 for Windows Desktop 11.0--"
-choco install visualstudio2012wdx --yes --force >> $INSTALL_LOG_PATH
+pushd $LOCAL_BIN_ROOT
+curl -L https://s3-us-west-2.amazonaws.com/tixinc/vs2012_wdx/vs2012_wdx.7z >vs2012_wdx.7z
+7za x vs2012_wdx.7z
+pushd vs2012_wdx
+echo "--Installing VS2012 tools for windows desktop...--"
+cmd.exe /c wdexpress_full.exe
+echo "--Hit enter when finished with install / registration--"
+popd
+popd
+
+### choco install of the VS 2012 for windows desktop does not seem to work
+#echo "--Installing Visual Studio Express 2012 for Windows Desktop 11.0--"
+#choco install visualstudio2012wdx --yes --force >> $INSTALL_LOG_PATH
 
 ### Optional step for setting up VS 2013 community
 if [ -d "$CSDK_ROOT" ]; then
