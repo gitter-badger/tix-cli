@@ -58,7 +58,7 @@ Function Execute($filePath, $arguments)
 
 Function Execute-Sh($command) {
     Echo Executing:"$CMDER_PATH $command"
-    Execute $CMDER_PATH $command
+    Start-Process $CMDER_PATH -ArgumentList $command
 }
 
 Function Execute-7z($arguments) {

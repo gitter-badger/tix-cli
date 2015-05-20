@@ -16,7 +16,7 @@ if [ ! -e $CLI_PATH ]; then
 fi
 
 ### Command line flags
-while getopts "ocx" opt; do
+while getopts "ocxn" opt; do
     case "$opt" in
     o) ### Install optional files
       install-optional
@@ -33,6 +33,10 @@ while getopts "ocx" opt; do
         npm install @tixinc/automation --save
       popd
       ;;
+    n)
+      echo "-- -n norun flag specified, skipping cli execution...--"
+      exit 0
+    ;;
     \?)
       exit 1
       ;;

@@ -115,8 +115,8 @@ npm-token
 echo "--Full dev clone--"
 clone-all-dev
 
-echo "--Run JS project in debug mode--"
-debug-js
-
 echo "--Running tix-cli with optional applications and extended mode--" | tee $INSTALL_LOG_PATH
 tix -ox
+
+echo "--Run JS project in debug mode--"
+debug-js

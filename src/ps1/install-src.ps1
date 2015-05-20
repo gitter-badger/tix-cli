@@ -66,5 +66,8 @@ $installs.copy|Write-PipeList -PassThru|Copy-Files
 Write-Host "--Adding hard links--"
 $installs.hardLinks|Write-PipeList -PassThru|Add-HardLinks
 
-Write-Host "--Executing sh scripts--"
-$installs.sh|Write-PipeList -PassThru|Execute-ShScripts
+###Write-Host "--Executing sh scripts--"
+###$installs.sh|Write-PipeList -PassThru|Execute-ShScripts
+
+Write-Host "--Executing install.sh bash script and exiting--"
+Execute-Sh "$RootPath\src\sh\install.sh"
