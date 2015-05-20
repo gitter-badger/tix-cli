@@ -10,16 +10,19 @@ SRC_BIN_ROOT="${INSTALL_ROOT}/src/bin"
 CSDK_ROOT="${SRC_BIN_ROOT}/VS2013_4_CE_ENU"
 NUGET_PATH="${LOCAL_BIN_ROOT}/nuget.exe"
 NODE_PATH="${LOCAL_BIN_ROOT}/node.exe"
-MSVS_VERSION=2013
+MSVS_VERSION=2012
 
 if [ ! -e $NPMRC_PATH ]; then
   echo "--Creating new ~/.npmrc--" | tee $INSTALL_LOG_PATH
   echo prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
+  echo "//registry.npmjs.org/:_authToken=aca97731-9f24-46fa-a0bb-7f547b937342" >> $NPMRC_PATH
 fi
 
+echo "--Installing Visual Studio Express 2012 for Windows Desktop 11.0"
+choco install visualstudio2012wdx --yes --force
+
+### Optional step for setting up VS 2013 community
 if [ -d $CSDK_ROOT ]; then
-  ### Probably switch over to this
-  #choco install visualstudioexpress2013windowsdesktop -y
   echo "--Installing Visual Studio 2013 Community--" | tee $INSTALL_LOG_PATH
   echo "--You must install the Visual Studio MFC C++ Tools for this to work--" | tee $INSTALL_LOG_PATH
   ### Web installer
@@ -43,7 +46,7 @@ fi
 if ! hash npm 2>/dev/null; then
   echo "--Installing NPM--" | tee $INSTALL_LOG_PATH
   curl -L https://www.npmjs.org/install.sh | sh
-  
+
   echo "--Setting VS tools version to ${MSVS_VERSION}" | tee $INSTALL_LOG_PATH
   npm config set msvs_version ${MSVS_VERSION} --global 2>&1 | tee $INSTALL_LOG_PATH
 fi
@@ -65,10 +68,10 @@ if ! hash nodemon 2>/dev/null; then
   echo "--**runs node.js in a production setting, ensuring the process never goes down**--" | tee $INSTALL_LOG_PATH
   npm install -g forever 2>&1 >> $INSTALL_LOG_PATH
 fi
-#if ! hash node-gyp 2>/dev/null; then
-  #echo "--**node-gyp**--" | tee $INSTALL_LOG_PATH
-  #npm install -g node-gyp 2>&1 >> $INSTALL_LOG_PATH
-#fi
+if ! hash node-gyp 2>/dev/null; then
+  echo "--**node-gyp**--" | tee $INSTALL_LOG_PATH
+  npm install -g node-gyp 2>&1 >> $INSTALL_LOG_PATH
+fi
 
 ### Change these back to npm install -g automattic/socket.io when issues with socket.io versions have been fixed on npm
 #echo "--**socket.io**--" | tee $INSTALL_LOG_PATH
@@ -77,9 +80,6 @@ fi
 #npm install -g automattic/socket.io-client 2>&1 >> $INSTALL_LOG_PATH
 #echo "--**engine.io-client**--" | tee $INSTALL_LOG_PATH
 #npm install -g automattic/engine.io 2>&1 >> $INSTALL_LOG_PATH
-
-#echo "--**ws**--" | tee $INSTALL_LOG_PATH
-#npm install -g ws 2>&1 >> $INSTALL_LOG_PATH
 
 if ! hash browser-sync 2>/dev/null; then
   echo "--**browser-sync**--" | tee $INSTALL_LOG_PATH

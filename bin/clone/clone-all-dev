@@ -10,3 +10,6 @@ clone-ext
 clone-server
 clone-tixinc-js
 clone-tixinc-net
+
+echo "--about to clone tixinc-classic, this one might take a bit--"
+clone-tixinc-classic
