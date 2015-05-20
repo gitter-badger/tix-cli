@@ -6,10 +6,12 @@ set -e
 OPTIND=1
 
 ### Init ~/.tixrc if it does not exist and source it
+CONFIG_PATH=$HOME/.tixrc
 if [ -e $HOME/.tixrc ]; then
-    cp -L tixrc $HOME/.tixrc
+    random_val=$[ 1 + $[ RANDOM % 1000000 ]]
+    curl -L https://raw.githubusercontent.com/TixInc/tix-cli/master/bin/tixrc?$random_val >$CONFIG_PATH
 fi
-. $HOME/.tixrc
+. $CONFIG_PATH
 
 ### Get tokens / auth
 GITHUB_TOKEN=$(github-token)
@@ -23,8 +25,9 @@ fi
 while getopts "ocxnr" opt; do
     case "$opt" in
     r) ### Rewrites the tixrc file
-      cp -L tixrc $HOME/.tixrc
-      . $HOME/.tixrc
+      random_val=$[ 1 + $[ RANDOM % 1000000 ]]
+      curl -L https://raw.githubusercontent.com/TixInc/tix-cli/master/bin/tixrc?$random_val >$CONFIG_PATH
+      . $CONFIG_PATH
       ;;
     o) ### Install optional files
       install-optional
