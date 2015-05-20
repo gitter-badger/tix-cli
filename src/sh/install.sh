@@ -10,7 +10,9 @@ SRC_BIN_ROOT="${INSTALL_ROOT}/src/bin"
 CSDK_ROOT="${SRC_BIN_ROOT}/VS2013_4_CE_ENU"
 NUGET_PATH="${LOCAL_BIN_ROOT}/nuget.exe"
 NODE_PATH="${LOCAL_BIN_ROOT}/node.exe"
-VS2012_WDX="${SRC_BIN_ROOT}/vs2012_wdx"
+VS2012_WDX_7Z_PATH="${SRC_BIN_ROOT}/vs2012_wdx.7z"
+VS2012_WDX_INSTALL_ROOT="${SRC_BIN_ROOT}/vs2012_wdx"
+VS2012_WDX_EXE_PATH="$DEVENVDIR/WDExpress.exe"
 MSVS_VERSION=2012
 
 if [ ! -e "$NPMRC_PATH" ]; then
@@ -19,13 +21,18 @@ if [ ! -e "$NPMRC_PATH" ]; then
   echo "//registry.npmjs.org/:_authToken=aca97731-9f24-46fa-a0bb-7f547b937342" >> $NPMRC_PATH
 fi
 
-if [ ! -e "$VS2012_WDX" ]; then
+
+if [ ! -f "$VS2012_WDX_EXE_PATH" ]; then
   pushd $SRC_BIN_ROOT
     echo "--Downloading VS2012 express tools for windows desktop...--"
-    curl -L https://s3-us-west-2.amazonaws.com/tixinc/vs2012_wdx/vs2012_wdx.7z >vs2012_wdx.7z
-    mkdir -p $VS2012_WDX
-    7za x vs2012_wdx.7z -o"$VS2012_WDX"
-    pushd $VS2012_WDX
+    if [ ! -f "$VS2012_WDX_7Z_PATH" ]; then
+      curl -L https://s3-us-west-2.amazonaws.com/tixinc/vs2012_wdx/vs2012_wdx.7z >vs2012_wdx.7z
+    fi
+    if [ ! -d "$VS2012_WDX_INSTALL_ROOT" ]; then
+      mkdir -p $VS2012_WDX_INSTALL_ROOT
+      7za x vs2012_wdx.7z -o"$VS2012_WDX"
+    fi
+    pushd $VS2012_WDX_INSTALL_ROOT
       echo "--Installing VS2012 tools for windows desktop...--"
       cmd.exe /c wdexpress_full.exe
       echo -n "--Hit enter when finished with install / registration--"
