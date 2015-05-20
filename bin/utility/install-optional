@@ -33,11 +33,23 @@ if [ "$PNAME" = "windows" ]; then
 
   ### sysinternals: process explorer
   ### Good for looking at windows processes, file locking, etc.
-  procexp_url="https://download.sysinternals.com/files/ProcessExplorer.zip"
-  procexp_path="${LOCAL_BIN_ROOT}/procexp.exe"
-  mkdir -p $SRC_ZIP_ROOT
-  pushd $SRC_ZIP_ROOT
-  curl -L $procexp_url >ProcessExplorer.zip
-  unzip -po ProcessExplorer.zip procexp.exe >$procexp_path
-  popd
+  if ! hash procexp 2>/dev/null; then
+    procexp_url="https://download.sysinternals.com/files/ProcessExplorer.zip"
+    procexp_path="${LOCAL_BIN_ROOT}/procexp.exe"
+    mkdir -p $SRC_ZIP_ROOT
+    pushd $SRC_ZIP_ROOT
+      curl -L $procexp_url >ProcessExplorer.zip
+      unzip -po ProcessExplorer.zip procexp.exe >$procexp_path
+    popd
+  fi
+
+  if ! hash procmon 2>/dev/null; then
+    procmon_url="https://download.sysinternals.com/files/ProcessMonitor.zip"
+    procmon_path="${LOCAL_BIN_ROOT}/procmon.exe"
+    mkdir -p $SRC_ZIP_ROOT
+    pushd $SRC_ZIP_ROOT
+      curl -L $procmon_url >ProcessMonitor.zip
+      unzip -po ProcessMonitor.zip Procmon.exe >$procmon_path
+    popd
+  fi
 fi
