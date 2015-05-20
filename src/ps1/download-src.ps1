@@ -129,3 +129,5 @@ If($Install) {
   Write-Host "--Installing in $RootPath--"
   . $RootPath\src\ps1\install-src.ps1 -RootPath $RootPath
 }
+
+exit

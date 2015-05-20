@@ -68,7 +68,6 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             chrome_path="unknown"
             token_url="https://github.com/settings/tokens"
             >&2 chrome-box "$token_url"
-            read
             ;;
           *Bad\ credentials*) ### Wrong username/password provided
             >&2 echo "The username / password combination you provided was incorrect.  Try again..."
