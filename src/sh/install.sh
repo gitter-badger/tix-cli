@@ -90,10 +90,10 @@ if ! hash browser-sync 2>/dev/null; then
   mkdir -p $browser_sync_engine_io_modules_root
   mkdir -p $browser_sync_engine_io_client_modules_root
   pushd $browser_sync_engine_io_modules_root
-    npm install ws@latest 2>&1 >> $INSTALL_LOG_PATH
+    npm install ws@latest &>/dev/null
   popd
   pushd $browser_sync_engine_io_client_modules_root
-    npm install ws@latest 2>&1 >> $INSTALL_LOG_PATH
+    npm install ws@latest &>/dev/null
   popd
 fi
 
