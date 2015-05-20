@@ -45,16 +45,16 @@ Filter Execute-ShScripts {
 }
 
 ### Check to see if there is a pending reboot
-. $PENDING_REBOOT_PS1_PATH
-$rebootStatus=Get-PendingReboot
-If($rebootStatus.RebootPending) {
-  echo "This computer is currently set to reboot."
-  echo "A script is being copied to your desktop named 'install-src.cmd'"
-  echo "Restart the computer and run the file to resume."
-  Copy-Item $INSTALL_SRC_CMD_PATH $DESKTOP_ROOT
-  Read-Host 'Press enter to exit...'
-  Exit 0
-}
+#. $PENDING_REBOOT_PS1_PATH
+#$rebootStatus=Get-PendingReboot
+#If($rebootStatus.RebootPending) {
+#  echo "This computer is currently set to reboot."
+#  echo "A script is being copied to your desktop named 'install-src.cmd'"
+#  echo "Restart the computer and run the file to resume."
+#  Copy-Item $INSTALL_SRC_CMD_PATH $DESKTOP_ROOT
+#  Read-Host 'Press enter to exit...'
+#  Exit 0
+#}
 
 $CHOCOLATEY_PATH|Ensure-Directory
 [Environment]::SetEnvironmentVariable("ChocolateyInstall", "$CHOCOLATEY_PATH", "User")
