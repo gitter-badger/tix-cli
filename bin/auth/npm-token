@@ -2,7 +2,7 @@
 #
 # This script will check to see if the user has authenticated with NPM, if not it will authenticate.
 
-source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
+source $HOME/.tixrc
 
 ### Check if ~/.npmrc exists and if it contains an auth token
 if [ ! -e "$NPMRC_PATH" ] || ! grep -q _authToken $NPMRC_PATH; then

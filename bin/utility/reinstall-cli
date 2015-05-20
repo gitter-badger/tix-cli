@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
+source $HOME/.tixrc
 
 if [ -e $CLI_ROOT ]; then
     echo "Uninstalling CLI from $CLI_ROOT..."

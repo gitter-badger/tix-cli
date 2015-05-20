@@ -2,11 +2,7 @@
 #
 # Clones the specified module to a directory in the modules installation root
 
-readonly INSTALL_ROOT=$HOME
-readonly MODULE_ROOT="${INSTALL_ROOT}/tixinc"
-
-readonly GITHUB_URL_BASE=https://$(github-token)@github.com
-readonly GITHUB_URL_TIX="${GITHUB_URL_BASE}/TixInc"
+source $HOME/.tixrc
 
 ### if no arguments, throw an error
 if [ $# -eq 0 ]; then

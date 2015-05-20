@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# This script runs at the start of the tix-cli initiation and exports all variables used by the package.
-# Users or scripts may write variables to this file with:
-# echo 'export VARIABLE_NAME="VARIABLE_VALUE"' >>${HOME}/tixinc/tix-cli-src/bin/tix-init
+# This script ($HOME/.tixrc) runs at the start of the tix-cli initiation and exports all variables used by the package.
+# Users or scripts may write variables to this file with the following command:
+# echo 'export VARIABLE_NAME="VARIABLE_VALUE"' >>${HOME}/.tixrc
 
 ### --PLATFORM--
 ### Figure out what platform this OS this is and standardize it
@@ -48,6 +48,14 @@ esac
 
 export PLATFORM
 export PNAME
+
+
+### --URLs--
+### Store any commonly used URLs here
+
+export GITHUB_URL_BASE="https://github.com"
+export GITHUB_URL_TIX="$GITHUB_URL_BASE/TixInc"
+export GITHUB_URL_CLI="$GITHUB_URL_TIX/tix-cli"
 
 
 ### --PATHS--

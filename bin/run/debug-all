@@ -2,6 +2,6 @@
 #
 # This script runs the tixinc-js alongside the tixinc-net project in debug mode
 
-source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
+source $HOME/.tixrc
 
 debug-net & debug-js

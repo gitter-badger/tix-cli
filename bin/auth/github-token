@@ -3,7 +3,7 @@
 # Gets a git token from .tixrc or creates one
 # All stdout from this script should be redirected to stderr since the expectation is that this script will only produce a token on stdout
 
-source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
+source $HOME/.tixrc
 
 readonly GITHUB_TOKEN_KEY="GITHUB_TOKEN"
 
@@ -90,7 +90,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
     echo $oauth_response | tr ',' '\n' | tr -d '" {}' | grep ^token: | sed s/token:// | while read token
         do
          if [ ${#token} -eq 40 ]; then
-            echo "$GITHUB_TOKEN_KEY=$token" > $CONFIG_PATH
+            echo "export $GITHUB_TOKEN_KEY=\"$token\"" > $CONFIG_PATH
          fi
         done
 fi

@@ -2,18 +2,12 @@
 #
 # This script installs the tix-cli
 
-source $HOME/local/bin/node_modules/tix-cli/bin/tix-init
-
-#URLs
-readonly GITHUB_URL_BASE="https://github.com"
-readonly GITHUB_URL_TIX="$GITHUB_URL_BASE/TixInc"
-readonly GITHUB_URL_CLI="$GITHUB_URL_TIX/tix-cli"
+source $HOME/.tixrc
 
 echo "Installing CLI to $CLI_ROOT..."
-
 mkdir -p $MODULE_ROOT
 pushd $MODULE_ROOT
-  if [ -e $CLI_ROOT ];then
+  if [ -d $CLI_ROOT ];then
     rimraf $CLI_ROOT
   fi
 
