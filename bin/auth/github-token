@@ -96,7 +96,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
 fi
 
 ### Source the variable from the config file
-source $CONFIG_PATH
+. $CONFIG_PATH
 
 if [ -n $GITHUB_TOKEN ]; then
     echo "$GITHUB_TOKEN" | tr -d '\n'
