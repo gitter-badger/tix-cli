@@ -7,7 +7,7 @@ OPTIND=1
 
 ### Init ~/.tixrc if it does not exist and source it
 CONFIG_PATH=$HOME/.tixrc
-if [ -e $CONFIG_PATH ]; then
+if ! -f $CONFIG_PATH; then
     echo "$CONFIG_PATH doesn't exist, sourcing from GitHub..."
     random_val=$[ 1 + $[ RANDOM % 1000000 ]]
     curl -L https://raw.githubusercontent.com/TixInc/tix-cli/master/bin/tixrc?$random_val >$CONFIG_PATH
@@ -18,7 +18,7 @@ fi
 GITHUB_TOKEN=$(github-token)
 npm-token
 
-if [ ! -e $CLI_PATH ]; then
+if ! -e $CLI_PATH; then
   install-cli
 fi
 
