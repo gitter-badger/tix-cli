@@ -38,6 +38,6 @@ if [ "$PNAME" = "windows" ]; then
   mkdir -p $SRC_ZIP_ROOT
   pushd $SRC_ZIP_ROOT
   curl -L $procexp_url >ProcessExplorer.zip
-  unzip -po ProcessExplorer.zip procexp.exe >$proc_exp_path
+  unzip -po ProcessExplorer.zip procexp.exe >$procexp_path
   popd
 fi
