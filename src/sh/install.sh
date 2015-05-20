@@ -99,11 +99,11 @@ fi
 
 if ! hash gulp 2>/dev/null; then
   echo "--**gulp**--" | tee $INSTALL_LOG_PATH
-  npm install -g gulp 2>&1 >> $INSTALL_LOG_PATH
+  npm install -g gulp &>> $INSTALL_LOG_PATH
 fi
 
 echo "--Installing tix-cli globally--" | tee $INSTALL_LOG_PATH
-npm install -g tix-cli 2>&1 >> $INSTALL_LOG_PATH
+npm install -g tix-cli &>> $INSTALL_LOG_PATH
 
 echo "--Running tix-cli with optional applications and extended mode and no-run--" | tee $INSTALL_LOG_PATH
 tix -oxn
