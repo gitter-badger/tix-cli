@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Gets status of all modules being used for current development
+
+. $HOME/.tixrc
+
+pushd $MODULE_ROOT
+    if [ -d tix-cli-src ]; then
+        status-module tix-cli-src
+    fi
+    if [ -d automation ]; then
+        status-module automation
+    fi
+    if [ -d config ]; then
+        status-module config
+    fi
+    if [ -d ext ]; then
+        status-module ext
+    fi
+    if [ -d client ]; then
+        status-module client
+    fi
+    if [ -d server ]; then
+        status-module server
+    fi
+    if [ -d tixinc-js ]; then
+        status-module tixinc-js
+    fi
+    if [ -d tixinc-net ]; then
+        status-module tixinc-net
+    fi
+    if [ -d tixinc-classic ]; then
+        status-module tixinc-classic
+    fi
+popd
