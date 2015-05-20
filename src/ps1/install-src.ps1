@@ -87,4 +87,4 @@ $installs.hardLinks|Write-PipeList -PassThru|Add-HardLinks
 Write-Host "--Executing install.sh bash script and exiting--"
 Execute-Sh "$RootPath\src\sh\install.sh"
 
-Exit 0
+exit
