@@ -5,6 +5,8 @@ param($RootPath=$HOME)
 
 . $RootPath\src\ps1\install-config.ps1 -RootPath $RootPath
 $CHOCOLATEY_PATH=Join-Path $base.local chocolatey
+$INSTALL_SRC_CMD_PATH=Join-Path $src.cmd install-src.cmd
+$DESKTOP_ROOT=Join-Path $HOME Desktop
 
 Filter Expand-ZipArchives {
   Expand-Zip $_.src $_.dest
@@ -40,6 +42,18 @@ Filter Add-HardLinks {
 Filter Execute-ShScripts {
   Execute-Sh $_.command
 }
+
+. .\get-rebootpending.ps1
+$rebootStatus=Get-PendingReboot
+If($rebootStatus.PendingReboot) {
+  echo "This computer is currently set to reboot."
+  echo "A script is being copied to your desktop named 'install-src.cmd'"
+  echo "Restart the computer and run the file to resume."
+  Copy-Item $INSTALL_SRC_CMD_PATH $DESKTOP_ROOT
+  Read-Host 'Press enter to exit...'
+  Exit 0
+}
+
 
 $CHOCOLATEY_PATH|Ensure-Directory
 [Environment]::SetEnvironmentVariable("ChocolateyInstall", "$CHOCOLATEY_PATH", "User")
