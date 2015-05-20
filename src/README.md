@@ -9,7 +9,7 @@ Purpose
 
 Windows has some poor design choices at its core:
 
-* Ugly File System
+* Ugly file system
   * User AppData folder - \Roaming, \Local, \LocalLow
   * Spaces commonly used in path names
     * Lots of confusing path backslash escaping
