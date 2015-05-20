@@ -67,12 +67,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             >&2 echo "A token has already been granted for you but has been deleted from this machine.  Delete the \"$oauth_note\" token at spawned window and hit enter..."
             chrome_path="unknown"
             token_url="https://github.com/settings/tokens"
-            if [ "$PNAME" = "windows" ]; then
-              chrome_path="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
-            elif [ "$PLATFORM" = "osx" ]; then
-              chrome_path="$(osascript -e 'POSIX path of (path to application "Chrome")')Contents/MacOS/Google Chrome"
-            fi
-            >&2 "$chrome_path" "$token_url"
+            >&2 chrome-box "$token_url"
             read
             ;;
           *Bad\ credentials*) ### Wrong username/password provided

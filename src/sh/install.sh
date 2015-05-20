@@ -108,7 +108,7 @@ fi
 
 if ! hash browser-sync 2>/dev/null; then
   echo "--**browser-sync**--" | tee $INSTALL_LOG_PATH
-  npm install -g browser-sync >> $INSTALL_LOG_PATH
+  npm install -g browser-sync &>/dev/null
   echo "--**installing ws@latest to fix current npm issues with browser-sync**--" | tee $INSTALL_LOG_PATH
   echo "--**see https://github.com/Automattic/socket.io/issues/2057**--" | tee $INSTALL_LOG_PATH
   browser_sync_engine_io_modules_root="${LOCAL_BIN_ROOT}/node_modules/browser-sync/node_modules/socket.io/node_modules/engine.io/node_modules"

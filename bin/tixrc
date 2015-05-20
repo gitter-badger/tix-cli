@@ -64,7 +64,13 @@ export GITHUB_URL_CLI="$GITHUB_URL_TIX/tix-cli"
 
 
 ### SYSTEM PATHS
-export CHROME_PATH="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+CHROME_PATH="unknown"
+if [ "$PNAME" = "windows" ]; then
+  CHROME_PATH="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+elif [ "$PLATFORM" = "osx" ]; then
+  CHROME_PATH="$(osascript -e 'POSIX path of (path to application "Chrome")')Contents/MacOS/Google Chrome"
+fi
+export CHROME_PATH
 
 
 ### LOCAL PATHS
