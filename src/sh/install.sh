@@ -18,8 +18,8 @@ if [ ! -e $NPMRC_PATH ]; then
   echo "//registry.npmjs.org/:_authToken=aca97731-9f24-46fa-a0bb-7f547b937342" >> $NPMRC_PATH
 fi
 
-echo "--Installing Visual Studio Express 2012 for Windows Desktop 11.0"
-choco install visualstudio2012wdx --yes --force
+echo "--Installing Visual Studio Express 2012 for Windows Desktop 11.0--"
+choco install visualstudio2012wdx --yes --force 2>&1 >> $INSTALL_LOG_PATH
 
 ### Optional step for setting up VS 2013 community
 if [ -d $CSDK_ROOT ]; then
@@ -45,12 +45,11 @@ fi
 
 if ! hash npm 2>/dev/null; then
   echo "--Installing NPM--" | tee $INSTALL_LOG_PATH
-  curl -L https://www.npmjs.org/install.sh | sh
+  curl -L https://www.npmjs.org/install.sh | sh 2>&1 >> $INSTALL_LOG_PATH
 
   echo "--Setting VS tools version to ${MSVS_VERSION}" | tee $INSTALL_LOG_PATH
   npm config set msvs_version ${MSVS_VERSION} --global 2>&1 | tee $INSTALL_LOG_PATH
 fi
-
 
 echo "--Installing Global Node Tools--" | tee $INSTALL_LOG_PATH
 if ! hash rimraf 2>/dev/null; then
@@ -109,6 +108,7 @@ npm install -g tix-cli 2>&1 >> $INSTALL_LOG_PATH
 echo "--GitHub auth--"
 github-token
 
+echo "\n"
 echo "--private NPM auth--"
 npm-token
 
@@ -118,5 +118,5 @@ clone-all-dev
 echo "--Run JS project in debug mode--"
 debug-js
 
-echo "--Running tix-cli with optional applications and extended mode--" | tee $INSTAL_LOG_PATH
+echo "--Running tix-cli with optional applications and extended mode--" | tee $INSTALL_LOG_PATH
 tix -ox
