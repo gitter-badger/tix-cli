@@ -105,18 +105,11 @@ fi
 echo "--Installing tix-cli globally--" | tee $INSTALL_LOG_PATH
 npm install -g tix-cli 2>&1 >> $INSTALL_LOG_PATH
 
-echo "--GitHub auth--"
-github-token
-
-echo "\n"
-echo "--private NPM auth--"
-npm-token
+echo "--Running tix-cli with optional applications and extended mode and no-run--" | tee $INSTALL_LOG_PATH
+tix -oxn
 
 echo "--Full dev clone--"
 clone-all-dev
-
-echo "--Running tix-cli with optional applications and extended mode--" | tee $INSTALL_LOG_PATH
-tix -ox
 
 echo "--Run JS project in debug mode--"
 debug-js
