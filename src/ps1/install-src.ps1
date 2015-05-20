@@ -43,6 +43,7 @@ Filter Execute-ShScripts {
   Execute-Sh $_.command
 }
 
+pushd $src.ps1
 . .\get-rebootpending.ps1
 $rebootStatus=Get-PendingReboot
 If($rebootStatus.PendingReboot) {
@@ -53,6 +54,7 @@ If($rebootStatus.PendingReboot) {
   Read-Host 'Press enter to exit...'
   Exit 0
 }
+popd
 
 
 $CHOCOLATEY_PATH|Ensure-Directory
