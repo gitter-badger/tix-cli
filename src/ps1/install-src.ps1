@@ -46,7 +46,7 @@ Filter Execute-ShScripts {
 
 . $PENDING_REBOOT_PS1_PATH
 $rebootStatus=Get-PendingReboot
-If($rebootStatus.PendingReboot) {
+If($rebootStatus.RebootPending) {
   echo "This computer is currently set to reboot."
   echo "A script is being copied to your desktop named 'install-src.cmd'"
   echo "Restart the computer and run the file to resume."
