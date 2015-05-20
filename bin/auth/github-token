@@ -64,7 +64,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             ;;
           *already_exists*) ### Token already exists but was not found on this machine...
             oauth_credentials_ok=true
-            >&2 echo "A token has already been granted for you but has been deleted from this machine.  Delete the \"$oauth_note\" token at spawned window and hit enter..."
+            >&2 echo "A token has already been granted for you but has been deleted from this machine.  Login to the window at the right, delete the \"$oauth_note\" token, and close the window..."
             chrome_path="unknown"
             token_url="https://github.com/settings/tokens"
             >&2 chrome-box "$token_url"
