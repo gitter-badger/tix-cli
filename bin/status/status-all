@@ -6,30 +6,30 @@
 
 pushd $MODULE_ROOT
     if [ -d tix-cli-src ]; then
-        status-module tix-cli-src
+        status-module tix-cli-src 2>&1
     fi
     if [ -d automation ]; then
-        status-module automation
+        status-module automation 2>&1
     fi
     if [ -d config ]; then
-        status-module config
+        status-module config 2>&1
     fi
     if [ -d ext ]; then
-        status-module ext
+        status-module ext 2>&1
     fi
     if [ -d client ]; then
-        status-module client
+        status-module client 2>&1
     fi
     if [ -d server ]; then
-        status-module server
+        status-module server 2>&1
     fi
     if [ -d tixinc-js ]; then
-        status-module tixinc-js
+        status-module tixinc-js 2>&1
     fi
     if [ -d tixinc-net ]; then
-        status-module tixinc-net
+        status-module tixinc-net 2>&1
     fi
     if [ -d tixinc-classic ]; then
-        status-module tixinc-classic
+        status-module tixinc-classic 2>&1
     fi
 popd
