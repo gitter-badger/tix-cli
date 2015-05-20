@@ -21,6 +21,6 @@ if hash brew 2>/dev/null; then
 elif hash pacman 2>/dev/null; then
   pacman -S the_silver_searcher
 elif hash choco 2>/dev/null; then
-  choco install ag -y
+  choco install ag --yes --force
 fi
 
