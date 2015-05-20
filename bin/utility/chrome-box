@@ -5,4 +5,4 @@
 source $HOME/.tixrc
 
 mkdir -p $LOCAL_CHROME_ROOT
-chrome --user-data-dir=$LOCAL_CHROME_ROOT --window-size=1000,900 --window-position=642,0 --app="$1"
+chrome --user-data-dir=$LOCAL_CHROME_ROOT --window-size=1000,900 --window-position=645,0 --app="$1"
