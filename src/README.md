@@ -57,7 +57,7 @@ Scripts
 
 [**To download and install the platform, open Windows command prompt (Start > "cmd.exe" > [enter]) and run:**](cmd/download-install-src.cmd)
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "If(Test-Path %TEMP%\t.ps1){rm %TEMP%\t.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File %TEMP%\t.ps1;%TEMP%\t.ps1 -Install -CleanSource -CleanLocal;rm %TEMP%\t.ps1"
+@PowerShell -NoProfile -ExecutionPolicy unrestricted -Command "If(Test-Path %TEMP%\t.ps1){rm %TEMP%\t.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File %TEMP%\t.ps1;%TEMP%\t.ps1 -Install -CleanSource -CleanLocal;rm %TEMP%\t.ps1" && exit
 ```
 
 
@@ -81,19 +81,18 @@ Other Cmd.exe Scripts
 
 [**Download updated sources to ~/src but do not install (same filenames will be skipped):**](cmd/download-src.cmd)
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'));"
+@PowerShell -NoProfile -ExecutionPolicy unrestricted -Command "If(Test-Path %TEMP%\t.ps1){rm %TEMP%\t.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))"
 ```
 
 [**Install the current ~/src configuration to ~/local:**](cmd/install-src.cmd)
 ```cmd
-@powershell -NoProfile -ExecutionPolicy unrestricted -File ~\src\ps1\install-src.ps1
+@PowerShell -NoProfile -ExecutionPolicy unrestricted -File ~\src\ps1\install-src.ps1
 ```
 
 **(WIP) Download and install to a custom directory (C:\\nix):**
 ```cmd
 @powershell -NoProfile -ExecutionPolicy unrestricted -Command "If(Test-Path ~\tmp.ps1){rm ~\tmp.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File ~\tmp.ps1;~\tmp.ps1 -RootPath C:\nix -Install -CleanSource;rm ~\tmp.ps1"
 ```
-
 
 
 ___
