@@ -20,13 +20,13 @@ pushd $MODULE_ROOT
     rimraf src
 
     echo "--Installing NPM Components...--"
-    npm install minimist --save >
-    npm install shelljs --save
-    npm install lodash --save
-    npm install colors --save
-    npm install read --save
-    npm install q --save
-    npm install ftp --save
+    npm install minimist --save &>/dev/null
+    npm install shelljs --save &>/dev/null
+    npm install lodash --save &>/dev/null
+    npm install colors --save &>/dev/null
+    npm install read --save &>/dev/null
+    npm install q --save &>/dev/null
+    npm install ftp --save &>/dev/null
     echo "--NPM Components installed successfully--"
   popd
 popd
