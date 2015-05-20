@@ -35,6 +35,7 @@ if [ "$PNAME" = "windows" ]; then
   ### Good for looking at windows processes, file locking, etc.
   procexp_url="https://download.sysinternals.com/files/ProcessExplorer.zip"
   procexp_path="${LOCAL_BIN_ROOT}/procexp.exe"
+  mkdir -p $SRC_ZIP_ROOT
   pushd $SRC_ZIP_ROOT
   curl -L $procexp_url >ProcessExplorer.zip
   unzip -po ProcessExplorer.zip procexp.exe >$proc_exp_path
