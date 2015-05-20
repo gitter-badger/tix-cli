@@ -20,10 +20,11 @@ if [ ! -e "$NPMRC_PATH" ]; then
 fi
 
 if [ ! -e "$VS2012_WDX" ]; then
-  pushd $LOCAL_BIN_ROOT
+  pushd $SRC_BIN_ROOT
     echo "--Downloading VS2012 express tools for windows desktop...--"
     curl -L https://s3-us-west-2.amazonaws.com/tixinc/vs2012_wdx/vs2012_wdx.7z >vs2012_wdx.7z
-    7za x vs2012_wdx.7z
+    mkdir -p $VS2012_WDX
+    7za x vs2012_wdx.7z -o"$VS2012_WDX"
     pushd $VS2012_WDX
       echo "--Installing VS2012 tools for windows desktop...--"
       cmd.exe /c wdexpress_full.exe
