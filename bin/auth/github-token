@@ -41,7 +41,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
     >&2 echo A token will be persisted to $CONFIG_PATH...
 
     oauth_note="OAuth token for interacting with GitHub API from tix-cli."
-    oauth_data="{\"scopes\":[\"repo\",\"user\"], \"note\":\"$oauth_note\"}"
+    oauth_data="{\"scopes\":[\"repo\",\"write:public_key\"], \"note\":\"$oauth_note\"}"
     oauth_credentials=""
     oauth_credentials_ok=false
     oauth_token_received=false
@@ -93,7 +93,9 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
         do
          if [ ${#token} -eq 40 ]; then
             ### Set the github token in the config
-            echo "export $GITHUB_TOKEN_KEY=\"$token\"" >> $CONFIG_PATH
+            echo "export $GITHUB_TOKEN_KEY=\"$token\"" >>$CONFIG_PATH
+            GITHUB_AUTH_HEADER="Authorization: token $token"
+            echo "export GITHUB_AUTH_HEADER=\"$GITHUB_AUTH_HEADER\"" >>$CONFIG_PATH
             ### Replace github url with token github url in config
             >&2 sed -bi "s/https:\/\/github.com/https:\/\/$token@github.com/" $CONFIG_PATH
 
@@ -102,8 +104,10 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
               email=$(git config --get user.email 2>&1)
               >&2 mkdir -p "$HOME/.ssh"
               echo -e "\n\n\n" | ssh-keygen -t rsa -N "" -C "$email" >&2
-              sshkey=$(cat $HOME/.ssh/id_rsa.pub)
-              >&2 curl -X POST -H "Content-type: application/json" -d "{\"title\": \"$email\",\"key\": \"$sshkey\"}" "https://api.github.com/user/keys?access_token=$token"
+              ssh_key=$(cat $HOME/.ssh/id_rsa.pub)
+              ssh_data="{\"title\": \"$email\",\"key\": \"$ssh_key\"}"
+
+              >&2 curl -X POST -H "Content-type: application/json" -H "$GITHUB_AUTH_HEADER" -d "$ssh_data" "https://api.github.com/user/keys"
               >&2 echo "--SSH key added successfully--"
             fi
          fi
