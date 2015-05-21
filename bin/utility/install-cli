@@ -2,7 +2,7 @@
 #
 # This script installs the tix-cli
 
-source $HOME/.tixrc
+. $HOME/.tixrc
 
 echo "Installing CLI to $CLI_ROOT..."
 mkdir -p $MODULE_ROOT

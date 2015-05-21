@@ -56,7 +56,7 @@ export PNAME
 export GITHUB_URL_BASE="https://github.com"
 export GITHUB_URL_TIX="$GITHUB_URL_BASE/TixInc"
 export GITHUB_URL_CLI="$GITHUB_URL_TIX/tix-cli"
-
+export GITHUB_URL_FONTS="https://github.com/powerline/fonts.git"
 
 ### --PATHS--
 ### All paths are absolute.
@@ -83,6 +83,7 @@ export LOCAL_CONFIG_ROOT="${LOCAL_ROOT}/config"                          # ./loc
 export RES_CONFIG_PATH="${LOCAL_CONFIG_ROOT}/res.config"                 # ./local/config/res.config
 export LOCAL_BIN_ROOT="${LOCAL_ROOT}/bin"                                # ./local/bin
 export LOCAL_CHROME_ROOT="${LOCAL_ROOT}/chrome"                          # ./local/chrome
+export LOCAL_FONTS_ROOT="${LOCAL_ROOT}/fonts"                          # ./local/chrome
 
 ### Prepend path with ./local/bin
 if ! grep -q "${LOCAL_BIN_ROOT}" <<< "$PATH" ; then
