@@ -138,8 +138,8 @@ tix -oxn
 echo "--Full dev clone--"
 clone-all-dev
 
-echo "--Installing custom fonts--"
-install-fonts >> $INSTALL_LOG_PATH
+#echo "--Installing custom fonts--"
+#install-fonts >> $INSTALL_LOG_PATH
 
 echo "--Run JS project in debug mode--"
 debug-js
