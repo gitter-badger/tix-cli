@@ -98,13 +98,12 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             >&2 sed -i "s/https:\/\/github.com/https:\/\/$token@github.com/" $CONFIG_PATH
             
             if [ ! -d "$HOME/.ssh" ]; then
-              >&2 echo "--No ssh key found for GitHub, you will be prompted for your email address now...--"
-              >&2 echo -n "GitHub Email: "
-              read github_email
+              >&2 echo "--No ssh key found for GitHub, adding now...--"
+              email=$(git config --get user.email)
               >&2 mkdir -p "$HOME/.ssh"
-              echo -e "\n\n\n" | ssh-keygen -t rsa -N "" -C $github_email >&2
+              echo -e "\n\n\n" | ssh-keygen -t rsa -N "" -C "$email" >&2
               sshkey=$(cat $HOME/.ssh/id_rsa.pub)
-              curl -X POST -H "Content-type: application/json" -d "{\"title\": \"$github_email\",\"key\": \"$sshkey\"}" "https://api.github.com/user/keys?access_token=$token"
+              >&2 curl -X POST -H "Content-type: application/json" -d "{\"title\": \"$email\",\"key\": \"$sshkey\"}" "https://api.github.com/user/keys?access_token=$token"
               >&2 echo "--SSH key added successfully--"
             fi
          fi
