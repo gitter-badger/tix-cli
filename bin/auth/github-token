@@ -14,8 +14,8 @@ GIT_CONFIG_PATH="$HOME/.gitconfig"
 if [ ! -f "$GIT_CONFIG_PATH" ]; then
   >&2 touch "$GIT_CONFIG_PATH"
   >&2 clear
-  >&2 "--First time git setup--"
-  >&2 "--You will be prompted for information regarding your global git configuration--"
+  >&2 echo "--First time git setup--"
+  >&2 echo "--You will be prompted for information regarding your global git configuration--"
 fi
 git_config=$(git config --global -l)
 
