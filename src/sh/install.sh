@@ -78,6 +78,9 @@ if ! hash node 2>/dev/null; then
   curl -L http://nodejs.org/dist/v0.12.3/node.exe > $NODE_PATH
 fi
 
+### Force UAC popup
+PowerShell -Command "Start-Process node.exe -Verb RunAs"
+
 if ! hash npm 2>/dev/null; then
   echo "--Installing NPM--" | tee $INSTALL_LOG_PATH
   curl -L https://www.npmjs.org/install.sh | sh >> $INSTALL_LOG_PATH

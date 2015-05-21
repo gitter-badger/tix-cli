@@ -94,9 +94,9 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
         do
          if [ ${#token} -eq 40 ]; then
             ### Set the github token in the config
-            echo "export $GITHUB_TOKEN_KEY=\"$token\"" >>$CONFIG_PATH
+            echo -e "\r\nexport $GITHUB_TOKEN_KEY=\"$token\"\r\n" >>$CONFIG_PATH
             GITHUB_AUTH_HEADER="Authorization: token $token"
-            echo "export GITHUB_AUTH_HEADER=\"$GITHUB_AUTH_HEADER\"" >>$CONFIG_PATH
+            echo -e "\r\nexport GITHUB_AUTH_HEADER=\"$GITHUB_AUTH_HEADER\"\r\n" >>$CONFIG_PATH
             ### Replace github url with token github url in config
             >&2 sed -bi "s/https:\/\/github.com/https:\/\/$token@github.com/" $CONFIG_PATH
 
