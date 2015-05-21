@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# This script deletes everything
+
+clean-settings
+clean-src
+echo "sleep 2 && rm -rf $HOME/local" >$TMP/clean-local
+sh $TMP/clean-local & disown
