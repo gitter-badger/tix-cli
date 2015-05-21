@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# This script deletes all user settings (git, github, npm, ssh)
+
+pushd $HOME
+
+rimraf .gitconfig
+rimraf .npmrc
+rimraf .tixrc
+rimraf .ssh
+
+popd
