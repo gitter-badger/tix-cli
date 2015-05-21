@@ -37,11 +37,12 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
     >&2 echo A token will be persisted to $CONFIG_PATH...
 
     oauth_note="OAuth token for interacting with GitHub API from tix-cli."
-    oauth_data="{\"scopes\":[\"repo\"], \"note\":\"$oauth_note\"}"
+    oauth_data="{\"scopes\":[\"repo\",\"user\"], \"note\":\"$oauth_note\"}"
     oauth_credentials=""
     oauth_credentials_ok=false
     oauth_token_received=false
     oauth_response=""
+
 
     while [ "$oauth_token_received" = false ]; do
       if [ "$oauth_credentials_ok" = false ]; then
@@ -51,7 +52,10 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
         >&2 echo -n "GitHub Password: "
         read -s password
         oauth_credentials="$username:$password"
+
       fi
+      
+
 
       ### Call GitHub API to get a token.
       oauth_response=$(curl -s -u $oauth_credentials -X POST -d "$oauth_data" https://api.github.com/authorizations) 2>&1
@@ -88,6 +92,17 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             echo "export $GITHUB_TOKEN_KEY=\"$token\"" >> $CONFIG_PATH
             ### Replace github url with token github url in config
             >&2 sed -i "s/https:\/\/github.com/https:\/\/$token@github.com/" $CONFIG_PATH
+            
+            if [ ! -d "$HOME/.ssh" ]; then
+              >&2 echo "--No ssh key found for GitHub, you will be prompted for your email address now...--"
+              >&2 echo -n "GitHub Email: "
+              read github_email
+              >&2 mkdir -p "$HOME/.ssh"
+              echo -e "\n\n\n" | ssh-keygen -t rsa -N "" -C $github_email >&2
+              sshkey=$(cat $HOME/.ssh/id_rsa.pub)
+              curl -X POST -H "Content-type: application/json" -d "{\"title\": \"$github_email\",\"key\": \"$sshkey\"}" "https://api.github.com/user/keys?access_token=$token"
+              >&2 echo "--SSH key added successfully--"
+            fi
          fi
         done
 fi
