@@ -16,6 +16,7 @@ fi
 ### Get tokens / auth
 GITHUB_TOKEN=$(github-token)
 npm-token
+. $CONFIG_PATH
 
 if [ ! -e "$CLI_PATH" ]; then
   install-cli

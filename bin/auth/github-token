@@ -84,7 +84,10 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
     echo $oauth_response | tr ',' '\n' | tr -d '" {}' | grep ^token: | sed s/token:// | while read token
         do
          if [ ${#token} -eq 40 ]; then
+            ### Set the github token in the config
             echo "export $GITHUB_TOKEN_KEY=\"$token\"" >> $CONFIG_PATH
+            ### Replace github url with token github url in config
+            sed -i '' "s/https:\/\/github.com/https;\/\/$token@github.com/" $CONFIG_PATH
          fi
         done
 fi

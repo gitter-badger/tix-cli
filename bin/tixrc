@@ -56,7 +56,7 @@ export PNAME
 export GITHUB_URL_BASE="https://github.com"
 export GITHUB_URL_TIX="$GITHUB_URL_BASE/TixInc"
 export GITHUB_URL_CLI="$GITHUB_URL_TIX/tix-cli"
-export GITHUB_URL_FONTS="https://github.com/powerline/fonts.git"
+export GITHUB_URL_FONTS="$GITHUB_URL_BASE/powerline/fonts.git"
 
 ### --PATHS--
 ### All paths are absolute.
