@@ -58,7 +58,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
         oauth_credentials="$username:$password"
 
       fi
-      
+
 
 
       ### Call GitHub API to get a token.
@@ -95,8 +95,8 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             ### Set the github token in the config
             echo "export $GITHUB_TOKEN_KEY=\"$token\"" >> $CONFIG_PATH
             ### Replace github url with token github url in config
-            >&2 sed -i "s/https:\/\/github.com/https:\/\/$token@github.com/" $CONFIG_PATH
-            
+            >&2 sed -bi "s/https:\/\/github.com/https:\/\/$token@github.com/" $CONFIG_PATH
+
             if [ ! -d "$HOME/.ssh" ]; then
               >&2 echo "--No ssh key found for GitHub, adding now...--"
               email=$(git config --get user.email 2>&1)
