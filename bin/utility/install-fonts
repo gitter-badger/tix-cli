@@ -1,0 +1,17 @@
+#!/bin/bash
+
+. $HOME/.tixrc
+
+mkdir -p $LOCAL_ROOT
+pushd $LOCAL_ROOT
+
+if [ -d "$LOCAL_FONTS_ROOT" ]; then
+    rimraf $LOCAL_FONTS_ROOT
+fi
+
+git clone --depth 1 $GITHUB_URL_FONTS fonts
+pushd fonts
+  rimraf .git
+  rimraf .gitignore
+popd
+
