@@ -48,7 +48,6 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
     oauth_token_received=false
     oauth_response=""
 
-
     while [ "$oauth_token_received" = false ]; do
       if [ "$oauth_credentials_ok" = false ]; then
         ### Read users GitHub credentials
@@ -57,10 +56,8 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
         >&2 echo -n "GitHub Password: "
         read -s password
         oauth_credentials="$username:$password"
-        >&2 echo "\n"
+        >&2 echo -e "\r\n"
       fi
-
-
 
       ### Call GitHub API to get a token.
       oauth_response=$(curl -s -u $oauth_credentials -X POST -d "$oauth_data" https://api.github.com/authorizations) 2>&1
