@@ -57,7 +57,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
         >&2 echo -n "GitHub Password: "
         read -s password
         oauth_credentials="$username:$password"
-
+        >&2 echo "\n"
       fi
 
 
