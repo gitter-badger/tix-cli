@@ -99,7 +99,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             
             if [ ! -d "$HOME/.ssh" ]; then
               >&2 echo "--No ssh key found for GitHub, adding now...--"
-              email=$(git config --get user.email)
+              email=$(git config --get user.email 2>&1)
               >&2 mkdir -p "$HOME/.ssh"
               echo -e "\n\n\n" | ssh-keygen -t rsa -N "" -C "$email" >&2
               sshkey=$(cat $HOME/.ssh/id_rsa.pub)
