@@ -12,33 +12,34 @@ readonly GITHUB_TOKEN_KEY="GITHUB_TOKEN"
 
 GIT_CONFIG_PATH="$HOME/.gitconfig"
 if [ ! -f "$GIT_CONFIG_PATH" ]; then
-  touch "$GIT_CONFIG_PATH"
+  >&2 touch "$GIT_CONFIG_PATH"
+  >&2 clear
+  >&2 "--First time git setup--"
+  >&2 "--You will be prompted for information regarding your global git configuration--"
 fi
 git_config=$(git config --global -l)
 
 if ! grep -q user.name <<< "$git_config" ; then
-  >&2 echo "No user found in git global configuration."
-  >&2 echo -n "Your name: "
+  >&2 echo "--No user name set in git global configuration--"
+  >&2 echo -n "Your full name (e.g. 'John Doe'): "
   read git_user
-  git config --global user.name "$git_user"
+  >&2 git config --global user.name "$git_user"
 fi
 if ! grep -q user.email <<< "$git_config" ; then
-  >&2 echo "No user email found in git global configuration."
-  >&2 echo -n "Your email: "
+  >&2 echo "--No user email set in git global configuration--"
+  >&2 echo -n "Your email address: "
   read git_email
-  git config --global user.email $git_email
+  >&2 git config --global user.email $git_email
 fi
 if ! grep -q credential.helper <<< "$git_config" ; then
-  >&2 echo "Configuring credential helper..."
-  git config --global credential.helper wincred
+  >&2 echo "--Git credential helper not configured, configuring now--"
+  >&2 git config --global credential.helper wincred
 fi
-
-
 
 ### If config file does not exist or does not contain the github token
 if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
-    >&2 echo Your GitHub credentials are required to interact with the GitHub api.
-    >&2 echo A token will be persisted to $CONFIG_PATH...
+    >&2 echo "--GitHub credentials are required to interact with the GitHub api--"
+    >&2 echo "--Your basic credentials will be exchanged for a token and persisted to ${CONFIG_PATH}--"
 
     oauth_note="OAuth token for interacting with GitHub API from tix-cli."
     oauth_data="{\"scopes\":[\"repo\",\"write:public_key\"], \"note\":\"$oauth_note\"}"
@@ -68,21 +69,21 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
           *"token"*) ### Token Found!
             oauth_credentials_ok=true
             oauth_token_received=true
-            >&2 echo "Token received, persisting..."
+            >&2 echo "--Token received, persisting to ${CONFIG_PATH}--"
             ;;
           *already_exists*) ### Token already exists but was not found on this machine...
             oauth_credentials_ok=true
-            >&2 echo "A token has already been granted for you but has been deleted from this machine.  Login to the window at the right, delete the \"$oauth_note\" token, and close the window..."
+            >&2 echo "--Token has already been granted for you but was lost.  Login to window at the right, revoke token named \"$oauth_note\", and close the window--"
             chrome_path="unknown"
             token_url="https://github.com/settings/tokens"
             >&2 chrome-box "$token_url"
             ;;
           *Bad\ credentials*) ### Wrong username/password provided
-            >&2 echo "The username / password combination you provided was incorrect.  Try again..."
+            >&2 echo "--The username / password combination you provided was incorrect.  Try again--"
             ;;
           *) ### Unknown Issue
-            >&2 echo "An unknown error occurred.  Log file saved to $LOG_PATH..."
-            echo "Unknown issue authenticating with GitHub API - response: $oauth_response" >> $LOG_PATH
+            >&2 echo "--An unknown error occurred.  Log file saved to ${LOG_PATH}--"
+            echo "--Unknown issue authenticating with GitHub API - response: $oauth_response--" >> $LOG_PATH
             exit 1
             ;;
       esac
@@ -100,10 +101,10 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
             >&2 sed -bi "s/https:\/\/github.com/https:\/\/$token@github.com/" $CONFIG_PATH
 
             if [ ! -d "$HOME/.ssh" ]; then
-              >&2 echo "--No ssh key found for GitHub, adding now...--"
+              >&2 echo "--No ssh key found for GitHub, adding now--"
               email=$(git config --get user.email 2>&1)
               >&2 mkdir -p "$HOME/.ssh"
-              echo -e "\n\n\n" | ssh-keygen -t rsa -N "" -C "$email" >&2
+              echo -e "\n\n\n" | ssh-keygen -t rsa -b 4096 -N "" -C "$email" >&2
               ssh_key=$(cat $HOME/.ssh/id_rsa.pub)
               ssh_data="{\"title\": \"$email\",\"key\": \"$ssh_key\"}"
 
@@ -121,6 +122,6 @@ if [ -n $GITHUB_TOKEN ]; then
     echo "$GITHUB_TOKEN" | tr -d '\n'
     exit 0
 else
-    >&2 echo "$GITHUB_TOKEN_KEY not found in the config file! Exiting..."
+    >&2 echo "--$GITHUB_TOKEN_KEY not found in the config file! Exiting...--"
     exit 1
 fi
