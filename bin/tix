@@ -9,8 +9,7 @@ OPTIND=1
 CONFIG_PATH=$HOME/.tixrc
 if [ ! -e "$CONFIG_PATH" ]; then
     echo "$CONFIG_PATH doesn't exist, sourcing from GitHub..."
-    random_val=$[ 1 + $[ RANDOM % 1000000 ]]
-    curl -L https://raw.githubusercontent.com/TixInc/tix-cli/master/bin/tixrc?$random_val >$CONFIG_PATH
+    cp $HOME/local/bin/node_modules/tix-cli/bin/tixrc >$CONFIG_PATH
 fi
 . $CONFIG_PATH
 
@@ -27,8 +26,7 @@ while getopts "ocxnr" opt; do
     case "$opt" in
     r) ### Rewrites the tixrc file
       rm $CONFIG_PATH
-      random_val=$[ 1 + $[ RANDOM % 1000000 ]]
-      curl -L https://raw.githubusercontent.com/TixInc/tix-cli/master/bin/tixrc?$random_val >$CONFIG_PATH
+      cp $HOME/local/bin/node_modules/tix-cli/bin/tixrc >$CONFIG_PATH
       . $CONFIG_PATH
       ;;
     o) ### Install optional files
