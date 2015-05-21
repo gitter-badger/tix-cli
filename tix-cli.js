@@ -16,7 +16,7 @@ var join = require('path').join;
 var config = {
   platform: getPlatform(),
   basePath: {
-    windows: process.env['HOME'], //'c:',
+    windows: process.env['HOME'],
     linux: process.env['HOME']
   },
   installPath: 'tixinc',
@@ -28,15 +28,6 @@ var config = {
     classicDir: 'tixinc.classic',
     cliFile: 'tix-cli.js'
   },
-  npmDependencies: [
-    'minimist',
-    'shelljs',
-    'lodash',
-    'colors',
-    'read',
-    'q',
-    'ftp'
-  ],
   flags: {
     cleanIfNotCliWorkingDir: true,
     promptToInstallDependencies: false

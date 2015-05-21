@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <key name="Software">
 	<key name="ConEmu">
-		<key name=".Vanilla" modified="2015-05-20 15:33:41" build="140707">
+		<key name=".Vanilla" modified="2015-05-21 10:19:53" build="140707">
 			<value name="ColorTable00" type="dword" data="00423607"/>
 			<value name="ColorTable01" type="dword" data="002f32dc"/>
 			<value name="ColorTable02" type="dword" data="00009985"/>
@@ -44,8 +44,8 @@
 			<value name="ExtendFontNormalIdx" type="hex" data="01"/>
 			<value name="ExtendFontBoldIdx" type="hex" data="0c"/>
 			<value name="ExtendFontItalicIdx" type="hex" data="0d"/>
-			<value name="CursorTypeActive" type="dword" data="00023283"/>
-			<value name="CursorTypeInactive" type="dword" data="00823282"/>
+			<value name="CursorTypeActive" type="dword" data="000232c1"/>
+			<value name="CursorTypeInactive" type="dword" data="00823283"/>
 			<value name="ClipboardDetectLineEnd" type="hex" data="01"/>
 			<value name="ClipboardBashMargin" type="hex" data="01"/>
 			<value name="ClipboardTrimTrailing" type="hex" data="02"/>
@@ -56,7 +56,7 @@
 			<value name="ClipboardClickPromptPosition" type="hex" data="00"/>
 			<value name="ClipboardDeleteLeftWord" type="hex" data="01"/>
 			<value name="TrueColorerSupport" type="hex" data="01"/>
-			<value name="FadeInactive" type="hex" data="01"/>
+			<value name="FadeInactive" type="hex" data="00"/>
 			<value name="FadeInactiveLow" type="hex" data="00"/>
 			<value name="FadeInactiveHigh" type="hex" data="c8"/>
 			<value name="ConVisible" type="hex" data="00"/>
@@ -108,10 +108,10 @@
 			<value name="Multi.SplitWidth" type="hex" data="04"/>
 			<value name="Multi.SplitHeight" type="hex" data="04"/>
 			<value name="KeyboardHooks" type="hex" data="02"/>
-			<value name="FontName" type="string" data="Consolas"/>
-			<value name="FontName2" type="string" data="Lucida Console"/>
-			<value name="FontAutoSize" type="hex" data="00"/>
-			<value name="FontSize" type="dword" data="0000000e"/>
+			<value name="FontName" type="string" data="Lucida Sans Typewriter"/>
+			<value name="FontName2" type="string" data="Consolas"/>
+			<value name="FontAutoSize" type="hex" data="01"/>
+			<value name="FontSize" type="dword" data="0000000c"/>
 			<value name="FontSizeX" type="dword" data="00000000"/>
 			<value name="FontSizeX2" type="dword" data="00000000"/>
 			<value name="FontSizeX3" type="dword" data="00000000"/>
@@ -119,15 +119,15 @@
 			<value name="Anti-aliasing" type="dword" data="00000006"/>
 			<value name="FontBold" type="hex" data="00"/>
 			<value name="FontItalic" type="hex" data="00"/>
-			<value name="Monospace" type="hex" data="01"/>
+			<value name="Monospace" type="hex" data="02"/>
 			<value name="BackGround Image show" type="hex" data="00"/>
 			<value name="BackGround Image" type="string" data="c:\back.bmp"/>
 			<value name="bgImageDarker" type="hex" data="ff"/>
 			<value name="bgImageColors" type="dword" data="ffffffff"/>
 			<value name="bgOperation" type="hex" data="00"/>
 			<value name="bgPluginAllowed" type="hex" data="01"/>
-			<value name="AlphaValue" type="hex" data="f8"/>
-			<value name="AlphaValueSeparate" type="hex" data="01"/>
+			<value name="AlphaValue" type="hex" data="ee"/>
+			<value name="AlphaValueSeparate" type="hex" data="00"/>
 			<value name="AlphaValueInactive" type="hex" data="ee"/>
 			<value name="UserScreenTransparent" type="hex" data="00"/>
 			<value name="ColorKeyTransparent" type="hex" data="00"/>
@@ -225,14 +225,14 @@
 			<value name="DragPanelBothEdges" type="hex" data="00"/>
 			<value name="KeyBarRClick" type="hex" data="01"/>
 			<value name="StatusBar.Show" type="hex" data="01"/>
-			<value name="StatusBar.Flags" type="dword" data="00000003"/>
-			<value name="StatusFontFace" type="string" data="Terminal"/>
+			<value name="StatusBar.Flags" type="dword" data="00000002"/>
+			<value name="StatusFontFace" type="string" data="Lucida Sans Typewriter"/>
 			<value name="StatusFontCharSet" type="dword" data="00000000"/>
 			<value name="StatusFontHeight" type="dword" data="0000000e"/>
-			<value name="StatusBar.Color.Back" type="dword" data="00423607"/>
+			<value name="StatusBar.Color.Back" type="dword" data="00d5e8ee"/>
 			<value name="StatusBar.Color.Light" type="dword" data="00837b65"/>
-			<value name="StatusBar.Color.Dark" type="dword" data="00423607"/>
-			<value name="StatusBar.Hide.VCon" type="hex" data="00"/>
+			<value name="StatusBar.Color.Dark" type="dword" data="00362b00"/>
+			<value name="StatusBar.Hide.VCon" type="hex" data="01"/>
 			<value name="StatusBar.Hide.CapsL" type="hex" data="00"/>
 			<value name="StatusBar.Hide.NumL" type="hex" data="01"/>
 			<value name="StatusBar.Hide.ScrL" type="hex" data="01"/>
@@ -247,20 +247,20 @@
 			<value name="StatusBar.Hide.hFocus" type="hex" data="01"/>
 			<value name="StatusBar.Hide.ABuf" type="hex" data="01"/>
 			<value name="StatusBar.Hide.CPos" type="hex" data="00"/>
-			<value name="StatusBar.Hide.CSize" type="hex" data="00"/>
+			<value name="StatusBar.Hide.CSize" type="hex" data="01"/>
 			<value name="StatusBar.Hide.BSize" type="hex" data="00"/>
 			<value name="StatusBar.Hide.CurX" type="hex" data="00"/>
 			<value name="StatusBar.Hide.CurY" type="hex" data="00"/>
-			<value name="StatusBar.Hide.CurS" type="hex" data="00"/>
+			<value name="StatusBar.Hide.CurS" type="hex" data="01"/>
 			<value name="StatusBar.Hide.CurI" type="hex" data="01"/>
 			<value name="StatusBar.Hide.ConEmuPID" type="hex" data="01"/>
 			<value name="StatusBar.Hide.ConEmuHWND" type="hex" data="01"/>
 			<value name="StatusBar.Hide.ConEmuView" type="hex" data="01"/>
-			<value name="StatusBar.Hide.Srv" type="hex" data="00"/>
+			<value name="StatusBar.Hide.Srv" type="hex" data="01"/>
 			<value name="StatusBar.Hide.SrvHWND" type="hex" data="01"/>
 			<value name="StatusBar.Hide.Transparency" type="hex" data="00"/>
-			<value name="StatusBar.Hide.New" type="hex" data="00"/>
-			<value name="StatusBar.Hide.Sync" type="hex" data="00"/>
+			<value name="StatusBar.Hide.New" type="hex" data="01"/>
+			<value name="StatusBar.Hide.Sync" type="hex" data="01"/>
 			<value name="StatusBar.Hide.Proc" type="hex" data="00"/>
 			<value name="StatusBar.Hide.Title" type="hex" data="01"/>
 			<value name="StatusBar.Hide.Time" type="hex" data="01"/>
@@ -296,8 +296,8 @@
 			<value name="HideInactiveConsoleTabs" type="hex" data="00"/>
 			<value name="ShowFarWindows" type="hex" data="00"/>
 			<value name="TryToCenter" type="hex" data="01"/>
-			<value name="CenterConsolePad" type="dword" data="00000006"/>
-			<value name="ShowScrollbar" type="hex" data="02"/>
+			<value name="CenterConsolePad" type="dword" data="00000008"/>
+			<value name="ShowScrollbar" type="hex" data="00"/>
 			<value name="ScrollBarAppearDelay" type="dword" data="000000c8"/>
 			<value name="ScrollBarDisappearDelay" type="dword" data="000003e8"/>
 			<value name="IconID" type="dword" data="00000001"/>
@@ -308,7 +308,7 @@
 			<value name="MonitorConsoleLang" type="hex" data="03"/>
 			<value name="DesktopMode" type="hex" data="00"/>
 			<value name="SnapToDesktopEdges" type="hex" data="01"/>
-			<value name="AlwaysOnTop" type="hex" data="00"/>
+			<value name="AlwaysOnTop" type="hex" data="01"/>
 			<value name="SleepInBackground" type="hex" data="01"/>
 			<value name="RetardInactivePanes" type="hex" data="00"/>
 			<value name="MinimizeOnLoseFocus" type="hex" data="00"/>
@@ -525,9 +525,9 @@
 			<value name="DndLKey" type="hex" data="00"/>
 			<value name="DndRKey" type="hex" data="a2"/>
 			<value name="WndDragKey" type="dword" data="00121101"/>
-				<key name="Tasks" modified="2015-05-20 15:33:41" build="140707">
+				<key name="Tasks" modified="2015-05-21 10:19:54" build="140707">
 				<value name="Count" type="dword" data="00000002"/>
-						<key name="Task1" modified="2015-05-20 15:33:41" build="140707">
+						<key name="Task1" modified="2015-05-21 10:19:54" build="140707">
 					<value name="Name" type="string" data="{cmd}"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
 					<value name="GuiArgs" type="string" data=" /icon &quot;%CMDER_ROOT%\cmder.exe&quot;"/>
@@ -535,7 +535,7 @@
 					<value name="Active" type="dword" data="00000000"/>
 					<value name="Count" type="dword" data="00000001"/>
 				</key>
-						<key name="Task2" modified="2015-05-20 15:33:41" build="140707">
+						<key name="Task2" modified="2015-05-21 10:19:54" build="140707">
 					<value name="Name" type="string" data="{PowerShell}"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
 					<value name="GuiArgs" type="string" data="/dir &quot;%userprofile%&quot;"/>
@@ -544,11 +544,11 @@
 					<value name="Count" type="dword" data="00000001"/>
 				</key>
 			</key>
-				<key name="Apps" modified="2015-05-20 15:33:41" build="140707">
+				<key name="Apps" modified="2015-05-21 10:19:54" build="140707">
 				<value name="Count" type="dword" data="00000000"/>
 			</key>
-				<key name="Colors" modified="2015-05-20 15:33:41" build="140707">
-			<key name="Palette1" modified="2015-05-20 15:33:41" build="140707">
+				<key name="Colors" modified="2015-05-21 10:19:54" build="140707">
+			<key name="Palette1" modified="2015-05-21 10:19:54" build="140707">
 					<value name="Name" type="string" data="Monokai"/>
 					<value name="ExtendColors" type="hex" data="00"/>
 					<value name="ExtendColorIdx" type="hex" data="0e"/>
