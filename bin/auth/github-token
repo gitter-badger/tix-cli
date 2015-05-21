@@ -110,6 +110,11 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
 
               >&2 curl -X POST -H "Content-type: application/json" -H "$GITHUB_AUTH_HEADER" -d "$ssh_data" "https://api.github.com/user/keys"
               >&2 echo "--SSH key added successfully--"
+              >&2 echo "--Adding key to ssh agent--"
+              >&2 eval $(ssh-agent -s)
+              >&2 ssh-add $HOME/.ssh/id_rsa
+              >&2 ssh -oStrictHostKeyChecking=no -T git@github.com
+              >&2 echo "--Key added successfully--"
             fi
          fi
         done
