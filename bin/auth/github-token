@@ -10,6 +10,10 @@ readonly GITHUB_TOKEN_KEY="GITHUB_TOKEN"
 ### --GIT CONFIG--
 ### Setup global git configuration if not set.
 
+GIT_CONFIG_PATH="$HOME/.gitconfig"
+if [ ! -f "$GIT_CONFIG_PATH" ]; then
+  touch "$GIT_CONFIG_PATH"
+fi
 git_config=$(git config --global -l)
 
 if ! grep -q user.name <<< "$git_config" ; then
