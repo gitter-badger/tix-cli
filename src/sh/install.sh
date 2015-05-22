@@ -105,26 +105,9 @@ if ! hash nodemon 2>/dev/null; then
   echo "--**runs node.js in a production setting, ensuring the process never goes down**--" | tee $INSTALL_LOG_PATH
   npm install -g forever >> $INSTALL_LOG_PATH
 fi
-if ! hash node-gyp 2>/dev/null; then
-  echo "--**node-gyp**--" | tee $INSTALL_LOG_PATH
-  npm install -g node-gyp >> $INSTALL_LOG_PATH
-fi
-
 if ! hash browser-sync 2>/dev/null; then
   echo "--**browser-sync**--" | tee $INSTALL_LOG_PATH
-  npm install -g browser-sync &>/dev/null
-  echo "--**installing ws@latest to fix current npm issues with browser-sync**--" | tee $INSTALL_LOG_PATH
-  echo "--**see https://github.com/Automattic/socket.io/issues/2057**--" | tee $INSTALL_LOG_PATH
-  browser_sync_engine_io_modules_root="${LOCAL_BIN_ROOT}/node_modules/browser-sync/node_modules/socket.io/node_modules/engine.io/node_modules"
-  browser_sync_engine_io_client_modules_root="${LOCAL_BIN_ROOT}/node_modules/browser-sync/node_modules/socket.io/node_modules/socket.io-client/node_modules/engine.io-client"
-  mkdir -p $browser_sync_engine_io_modules_root
-  mkdir -p $browser_sync_engine_io_client_modules_root
-  pushd $browser_sync_engine_io_modules_root
-    npm install ws@latest &>/dev/null
-  popd
-  pushd $browser_sync_engine_io_client_modules_root
-    npm install ws@latest &>/dev/null
-  popd
+  npm install -g browser-sync-x &>/dev/null
 fi
 
 if ! hash gulp 2>/dev/null; then
