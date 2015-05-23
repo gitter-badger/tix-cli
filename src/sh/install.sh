@@ -87,6 +87,10 @@ if ! hash npm 2>/dev/null; then
 
   echo "--Setting VS tools version to ${MSVS_VERSION}" | tee $INSTALL_LOG_PATH
   npm config set msvs_version ${MSVS_VERSION} --global 2>&1 | tee $INSTALL_LOG_PATH
+  echo "--Setting npm to use bash shell when using npm explore command--"
+  npm config set shell bash
+  echo "--Swapping npm's internal node-gyp for custom one--"
+  npm explore npm -g -- npm install cchamberlain/node-gyp
 fi
 
 echo "--Installing Global Node Tools--" | tee $INSTALL_LOG_PATH
@@ -100,7 +104,7 @@ if ! hash nodemon 2>/dev/null; then
   echo "--**runs node.js and watches server-side files for updates to trigger process reload**--" | tee $INSTALL_LOG_PATH
   npm install -g nodemon >> $INSTALL_LOG_PATH
 fi
-if ! hash nodemon 2>/dev/null; then
+if ! hash forever 2>/dev/null; then
   echo "--**installing forever**--" | tee $INSTALL_LOG_PATH
   echo "--**runs node.js in a production setting, ensuring the process never goes down**--" | tee $INSTALL_LOG_PATH
   npm install -g forever >> $INSTALL_LOG_PATH
