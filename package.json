@@ -49,6 +49,6 @@
     "darwin",
     "linux"
   ],
-  "license": "GPLv3",
+  "license": "MIT",
   "preferGlobal": true
 }

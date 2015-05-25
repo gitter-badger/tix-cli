@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# This script switches npm's internal node-gyp reference to use a custom one
+
+echo "--Installing custom node-gyp to internal npm...--"
+
+npm explore npm -g -- npm install cchamberlain/node-gyp
+
+echo "--Custom node-gyp installed successfully--"
