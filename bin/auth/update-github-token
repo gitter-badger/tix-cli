@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# Gets a git token from .tixrc or creates one
+# All stdout from this script should be redirected to stderr since the expectation is that this script will only produce a token on stdout
+
+. $HOME/.tixrc
+
+### if no arguments, throw an error
+if [ $# -eq 0 ]; then
+  >&2 echo Must specify a module to replace token...
+  exit 1
+fi
+
+if [ $# -eq 1 ]; then
+  >&2 echo Must specify a new token...
+  exit 1
+fi
+
+module_name=$1
+module_path="$MODULE_ROOT/$module_name"
+config_path="$module_path/.git/config"
+
+token=$2
+
+if [ -d $module_path ]; then
+  >&2 sed -bi "s/https:\/\/[a-zA-Z@]+github\.com/https:\/\/$token@github\.com/" $CONFIG_PATH
+fi

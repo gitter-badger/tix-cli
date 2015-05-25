@@ -113,6 +113,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
               >&2 ssh -oStrictHostKeyChecking=no -T git@github.com
               >&2 echo "--Key added successfully--"
             fi
+
          fi
         done
 fi
@@ -120,7 +121,11 @@ fi
 ### Source the variable from the config file
 . $CONFIG_PATH
 
+
 if [ -n $GITHUB_TOKEN ]; then
+    ### Update all github tokens
+    update-github-tokens $GITHUB_TOKEN
+
     echo "$GITHUB_TOKEN" | tr -d '\n'
     exit 0
 else

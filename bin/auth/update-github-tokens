@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Gets a git token from .tixrc or creates one
+# All stdout from this script should be redirected to stderr since the expectation is that this script will only produce a token on stdout
+
+. $HOME/.tixrc
+
+
+if [ $# -eq 0 ]; then
+  >&2 echo Must specify a new token...
+  exit 1
+fi
+
+token=$1
+
+update-github-token tix-cli-src $token
+update-github-token automation $token
+update-github-token client $token
+update-github-token server $token
+update-github-token config $token
+update-github-token ext $token
+update-github-token gyp $token
+update-github-token node-gyp $token
+update-github-token tixinc-js $token
+update-github-token tixinc-net $token
+update-github-token tixinc-classic $token
+
+
