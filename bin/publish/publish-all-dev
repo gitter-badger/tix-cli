@@ -19,3 +19,4 @@ publish-ext "$commit_message" 2>&1
 publish-server "$commit_message" 2>&1
 publish-tixinc-js "$commit_message" 2>&1
 publish-tixinc-net "$commit_message" 2>&1
+
