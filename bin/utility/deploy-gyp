@@ -7,7 +7,7 @@ set -e
 source $HOME/.tixrc
 
 echo "--publishing gyp--"
-publish-gyp
+$(publish-gyp)
 
 echo "--installing node-gyp--"
 install-node-gyp
