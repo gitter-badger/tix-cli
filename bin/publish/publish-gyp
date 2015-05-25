@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# Git commits and NPM publishes gyp and node-gyp modules
+
+set -e
+
+commit_message_gyp=${1-"Updates to gyp module..."}
+commit_message_node_gyp=${1-"Updates to gyp module..."}
+
+publish-module gyp "$commit_message_gyp" 2>&1
+
+pushd "$MODULE_ROOT/node-gyp"
+
+git add .  #| grep -qi "fatal" && >&2 echo "An error occurred while git adding." && exit 1
+git commit -am "$commit_message_node_gyp"  #| grep -qi "fatal" && >&2 echo "An error occurred while git committing." && exit 1
+git push origin master  #| grep -qi "fatal" && >&2 echo "An error occurred while git pushing to master." && exit 1
+
+popd

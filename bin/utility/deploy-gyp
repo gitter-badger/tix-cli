@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Git commits and NPM publishes gyp and node-gyp modules
+
+set -e
+
+source $HOME/.tixrc
+
+publish-gyp
+
+pushd $CLI_ROOT
+    npm remove @tixinc/automation
+    npm install @tixinc/automation >$GYP_DEPLOY_LOG
+popd
