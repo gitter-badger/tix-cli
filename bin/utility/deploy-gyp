@@ -5,7 +5,7 @@
 source $HOME/.tixrc
 
 echo "--publishing gyp--"
-$(publish-gyp)
+publish-gyp
 
 echo "--installing node-gyp--"
 install-node-gyp
@@ -14,5 +14,5 @@ pushd $CLI_ROOT
     echo "--removing @tixinc/automation--"
     npm remove @tixinc/automation
     echo "--installing @tixinc/automation--"
-    npm install @tixinc/automation >$GYP_DEPLOY_LOG
+    npm install @tixinc/automation &>$GYP_DEPLOY_LOG
 popd
