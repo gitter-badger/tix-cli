@@ -2,8 +2,6 @@
 #
 # Git commits and NPM publishes gyp and node-gyp modules
 
-set -e
-
 source $HOME/.tixrc
 
 echo "--publishing gyp--"

@@ -2,7 +2,6 @@
 #
 # Git commits and NPM publishes gyp and node-gyp modules
 
-set -e
 source $HOME/.tixrc
 
 commit_message_gyp=${1-"Updates to gyp module..."}
