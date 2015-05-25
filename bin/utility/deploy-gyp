@@ -8,6 +8,8 @@ source $HOME/.tixrc
 
 publish-gyp
 
+install-node-gyp
+
 pushd $CLI_ROOT
     npm remove @tixinc/automation
     npm install @tixinc/automation >$GYP_DEPLOY_LOG
