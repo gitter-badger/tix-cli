@@ -6,9 +6,9 @@ set -e
 
 source $HOME/.tixrc
 
-publish-gyp
+publish-gyp 2>&1
 
-install-node-gyp
+install-node-gyp 2>&1
 
 pushd $CLI_ROOT
     npm remove @tixinc/automation
