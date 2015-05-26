@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Git commits and publishes AngularJS / NodeJS
+
+. $HOME/.tixrc
+
+pushd $JS_ROOT >/dev/null
+popd >/dev/null

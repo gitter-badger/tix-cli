@@ -2,11 +2,11 @@
 #
 # Gets the current status of the module (git)
 
-source $HOME/.tixrc
+. $HOME/.tixrc
 
 ### if no arguments, throw an error
 if [ $# -eq 0 ]; then
-  >&2 echo Must specify a module to check status for...
+  >&2 echo "Must specify a module to check status for..."
   exit 1
 fi
 
@@ -17,10 +17,10 @@ module_url="$GITHUB_URL_TIX/$module_name"
 
 ### if module already cloned, throw an error
 if [ ! -d $module_root ]; then
-  >&2 echo Module $module_name does not exist at $module_root...
+  >&2 echo "Module $module_name does not exist at $module_root..."
   exit 1
 fi
 
-pushd $module_root >&2
-  git status 2>&1 | grep -qi "modified" && >&2 echo "Module has been modified." && exit 1 || >&2 echo "Module is clean." && exit 0
-popd >&2
+pushd $module_root >/dev/null
+  git status 2>&1 | grep -qi "modified" && >&2 echo "Module $module_name has been modified." && exit 1 || >&2 echo "Module $module_name is clean." && exit 0
+popd >/dev/null
