@@ -2,7 +2,7 @@
 #
 # Git commits and NPM publishes gyp and node-gyp modules
 
-source $HOME/.tixrc
+. $HOME/.tixrc
 
 pushd $NET_ROOT >/dev/null
     echo "--Restoring packages--"

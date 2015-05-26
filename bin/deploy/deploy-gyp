@@ -2,7 +2,7 @@
 #
 # Git commits and NPM publishes gyp and node-gyp modules
 
-source $HOME/.tixrc
+. $HOME/.tixrc
 
 echo "--publishing gyp--"
 publish-gyp
@@ -10,9 +10,9 @@ publish-gyp
 echo "--installing node-gyp--"
 install-node-gyp
 
-pushd $CLI_ROOT
+pushd $CLI_ROOT >/dev/null
     echo "--removing @tixinc/automation--"
     npm remove @tixinc/automation
     echo "--installing @tixinc/automation--"
     npm install @tixinc/automation
-popd
+popd >/dev/null

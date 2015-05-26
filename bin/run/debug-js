@@ -2,14 +2,14 @@
 #
 # This script runs the tixinc-js project in debug mode
 
-source $HOME/.tixrc
+. $HOME/.tixrc
 
-pushd $JS_ROOT
-echo "--Running npm install on tixinc-js, this will take a minute...--"
-npm install --silent &>/dev/null
+pushd $JS_ROOT >/dev/null
+  echo "--Running npm install on tixinc-js, this will take a minute...--"
+  npm install --silent &>/dev/null
+  echo "--npm install completed--"
 
-echo "--Debugging on port 1336--"
-debug_url="http://localhost:1336"
-browser-sync start --proxy localhost:1336 --no-open & nodemon bin/www & chrome-box $debug_url & echo
-
-popd
+  echo "--Debugging on port 1336--"
+  debug_url="http://localhost:1336"
+  browser-sync start --proxy localhost:1336 --no-open & nodemon bin/www & chrome-box $debug_url & echo
+popd >/dev/null

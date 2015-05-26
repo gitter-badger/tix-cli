@@ -2,13 +2,11 @@
 #
 # This script deletes all user settings (git, github, npm, ssh)
 
-pushd $HOME/src
-
-rimraf cmd
-rimraf ps1
-rimraf sh
-rimraf xml
-rimraf zip
-rimraf README.md
-
-popd
+pushd $HOME/src >/dev/null
+  rimraf cmd
+  rimraf ps1
+  rimraf sh
+  rimraf xml
+  rimraf zip
+  rimraf README.md
+popd >/dev/null
