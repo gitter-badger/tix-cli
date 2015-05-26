@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# This script deletes all artifacts and packages for tixinc-net project
+
+echo "--cleaning packages--"
+pushd $NET_ROOT >/dev/null
+  rimraf packages >/dev/null
+popd >/dev/null
+echo "--packages cleaned--"
+
+echo "--cleaning artifacts--"
+pushd $MODULE_ROOT >/dev/null
+  rimraf artifacts >/dev/null
+popd >/dev/null
+echo "--artifacts cleaned--"

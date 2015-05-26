@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Git commits and NPM publishes gyp and node-gyp modules
+
+source $HOME/.tixrc
+
+pushd $NET_ROOT >/dev/null
+    echo "--Restoring packages--"
+    nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
+    echo "--Packages restored--"
+
+    echo "--Building artifacts--"
+    cmd //c msbuild Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //nologo //p:Configuration=Debug //p:OutputPath=..\\..\\artifacts\\tixinc-net //m //v:m //clp:ErrorsOnly
+    echo "--Artifacts built--"
+popd >/dev/null
