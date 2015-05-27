@@ -23,12 +23,14 @@ if [ ! -d $module_root ]; then
 fi
 
 pushd $module_root >/dev/null
-  status=$(git status 2>&1)
+  status=$(git status --porcelain 2>&1)
   count=$(echo $status | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' ' | sed 's/ /\n/g')
   case "$status" in
-    *modified*)
-      modified_count=$(echo $status | grep modified | wc -l | tr -d ' ')
-      >&2 echo -e "${RED}Module $module_name has $modified_count dirty files.${NC}"
+    *modified*|*deleted*|*Untracked\ files*)
+      modified_count=$(echo $status | grep ' M ' | wc -l | tr -d ' ') || 0
+      deleted_count=$(echo $status | grep ' D ' | wc -l | tr -d ' ') || 0
+      untracked_count=$(echo $status | grep '?? ' | wc -l | tr -d ' ') || 0
+      >&2 echo -e "${RED}Module $module_name is dirty - |M$modified_count|D$deleted_count|U$untracked_count|{NC}"
       ;;
     *ahead*)
       >&2 echo -e "${PURPLE}Module $module_name is clean but is ahead of origin by $count commits.${NC}"

@@ -26,9 +26,6 @@ if [ ! -d "$module_path" ]; then
   exit 1
 fi
 
-
-#git clone $module_url $module_path 2>&1 | grep -qi "fatal" && >&2 echo "An error occurred while cloning." && exit 1
-
 >&2 echo "publishing $module_dir at $module_path..."
 
 pushd $module_path >/dev/null
