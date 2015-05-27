@@ -6,4 +6,4 @@ set -e
 
 commit_message=${1-"Updates to tixinc-net module..."}
 
-publish-module tixinc-net "$commit_message" 2>&1
+publish-module tixinc-net "$commit_message" true 2>&1

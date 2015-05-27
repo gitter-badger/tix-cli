@@ -18,6 +18,7 @@ fi
 
 module_dir=$1
 commit_message=$2
+skip_npm=${3-false}
 module_path="$MODULE_ROOT/$module_dir"
 
 ### if module already cloned, throw an error
@@ -30,10 +31,12 @@ fi
 
 pushd $module_path >/dev/null
 
-git add .  #| grep -qi "fatal" && >&2 echo "An error occurred while git adding." && exit 1
+git add -A  #| grep -qi "fatal" && >&2 echo "An error occurred while git adding." && exit 1
 git commit -am "$commit_message"  #| grep -qi "fatal" && >&2 echo "An error occurred while git committing." && exit 1
-npm version patch -m "$commit_message"   #| grep -qi "fatal" && >&2 echo "An error occurred while npm versioning." && exit 1
-npm publish  #| grep -qi "fatal" && >&2 echo "An error occurred while npm publishing." && exit 1
+if [ "$skip_npm" = false ]; then
+  npm version patch -m "$commit_message"   #| grep -qi "fatal" && >&2 echo "An error occurred while npm versioning." && exit 1
+  npm publish  #| grep -qi "fatal" && >&2 echo "An error occurred while npm publishing." && exit 1
+fi
 git push --follow-tags #| grep -qi "fatal" && >&2 echo "An error occurred while git pushing to master." && exit 1
 
 popd >/dev/null
