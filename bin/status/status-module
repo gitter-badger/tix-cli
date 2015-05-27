@@ -18,7 +18,7 @@ module_url="$GITHUB_URL_TIX/$module_name"
 
 ### if module not cloned, throw an error
 if [ ! -d $module_root ]; then
-  >&2 echo "${RED}--Module $module_name does not exist at $module_root...--${NC}"
+  >&2 echo -e "${RED}--Module $module_name does not exist at $module_root...--${NC}"
   exit 1
 fi
 

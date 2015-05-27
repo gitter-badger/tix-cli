@@ -6,7 +6,7 @@
 
 ### if no arguments, throw an error
 if [ $# -eq 0 ]; then
-  >&2 echo "Must specify a module to check revisions for..."
+  >&2 echo -e "${RED}--Must specify a module to check revisions for...--${NC}"
   exit 1
 fi
 
@@ -14,20 +14,20 @@ module_name=$1
 branch=${2-"master"}
 count=${3-20}
 
-module_root="$MODULE_ROOT/module_name"
+module_root="$MODULE_ROOT/$module_name"
 remote_branch="origin/$branch"
 
 ### if module already cloned, throw an error
-if [ ! -d $module_root ]; then
-  >&2 echo "${RED}Module $module_name does not exist at $module_root...${NC}"
+if [ ! -d "$module_root" ]; then
+  >&2 echo -e "${RED}Module $module_name does not exist at $module_root...${NC}"
   exit 1
 fi
 
 pushd $module_root >/dev/null
   git fetch >/dev/null
   git fetch --tags >/dev/null
-  >&2 echo "${YELLOW}--tags--${NC}"
+  >&2 echo -e "${YELLOW}--tags--${NC}"
   git tag --list
-  >&2 echo "${YELLOW}--recent commit hashes--${NC}"
+  >&2 echo -e "${YELLOW}--recent commit hashes--${NC}"
   git log "$remote_branch" --abbrev-commit --pretty=oneline --max-count="$count"
 popd >/dev/null
