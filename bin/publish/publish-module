@@ -37,6 +37,7 @@ git add .  #| grep -qi "fatal" && >&2 echo "An error occurred while git adding."
 git commit -am "$commit_message"  #| grep -qi "fatal" && >&2 echo "An error occurred while git committing." && exit 1
 npm version patch  #| grep -qi "fatal" && >&2 echo "An error occurred while npm versioning." && exit 1
 npm publish  #| grep -qi "fatal" && >&2 echo "An error occurred while npm publishing." && exit 1
+git push origin
 git push origin --tags #| grep -qi "fatal" && >&2 echo "An error occurred while git pushing to master." && exit 1
 
 popd >/dev/null
