@@ -30,9 +30,9 @@ pushd $module_root >/dev/null
   fi
   status_start="${ahead_str}${module_name}"
   name_length=${#module_name}
-  post_spacer="\t"
+  post_spacer="\t\t\t"
   if [ $name_length -lt 10 ] ; then
-    post_spacer="\t\t"
+    post_spacer="\t\t\t\t"
   fi
 
   case "$status" in
