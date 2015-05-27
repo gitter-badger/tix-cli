@@ -2,8 +2,9 @@
 #
 # This script switches npm's internal node-gyp reference to use a custom one
 
-echo "--Installing custom node-gyp to internal npm...--"
+echo "--Resetting node-gyp to internal npm...--"
 
-npm explore npm -g -- npm remove node-gyp && npm install node-gyp
+npm explore npm -g -- npm remove node-gyp
+npm explore npm -g -- npm install node-gyp
 
-echo "--Custom node-gyp installed successfully--"
+echo "--node-gyp installed successfully--"
