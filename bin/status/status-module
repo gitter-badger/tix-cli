@@ -24,9 +24,9 @@ fi
 
 pushd $module_root >/dev/null
   status=$(git status 2>&1)
-  ahead_str="\t\t"
+  ahead_str="\t"
   if [[ $status == *"ahead"* ]] ; then
-    ahead_str="|AHEAD$(echo $status | grep ahead | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' ' | sed 's/ /\n/g')|\t"
+    ahead_str="|A$(echo $status | grep ahead | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' ' | sed 's/ /\n/g')|\t"
   fi
   status_start="${ahead_str}${module_name}"
   name_length=${#module_name}
@@ -46,7 +46,7 @@ pushd $module_root >/dev/null
       >&2 echo -e "${RED}${status_start} dirty${post_spacer}|M$modified_count|D$deleted_count|U$untracked_count|${NC}"
       ;;
     *ahead*)
-      >&2 echo -e "${PURPLE}${status_start} clean${NC}"
+      >&2 echo -e "${PURPLE}${status_start} clean but ahead${NC}"
       ;;
     *)
       >&2 echo -e "${status_start} clean"
