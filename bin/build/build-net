@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Syncs an exact revision of tixinc-net module to the build directory.
+
+### if no arguments, throw an error
+if [ $# -lt 1 ]; then
+  >&2 echo "Must specify a revision to build..."
+  exit 1
+fi
+
+. $HOME/.tixrc
+
+build-module tixinc-net "$1"

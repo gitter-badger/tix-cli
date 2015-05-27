@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# Syncs an exact revision of a module to the build directory.
+
+set -e
+
+. $HOME/.tixrc
+
+### if no arguments, throw an error
+if [ $# -lt 2 ]; then
+  >&2 echo "Must specify module to clone and revision..."
+  exit 1
+fi
+
+module_name=$1
+revision=$2
+
+module_build_root="$BUILD_ROOT/$module_name"
+module_github_url="$GITHUB_URL_TIX/$module_name"
+
+
+if [ ! -d "$module_build_root" ] ; then
+  >&2 echo "--Module does not exist in build directory, cloning...--"
+  mkdirp "$BUILD_ROOT"
+  pushd $BUILD_ROOT >/dev/null
+    git clone "$module_github_url"
+  popd >/dev/null
+  >&2 echo "--Finished cloning module to build directory--"
+fi
+
+pushd $JS_BUILD_ROOT >/dev/null
+  >&2 echo "--Fetching and force revision checkout--"
+  git fetch --all
+  git checkout --force "${revision}"
+  >&2 echo "--Finished fetch and revision checkout--"
+popd >/dev/null

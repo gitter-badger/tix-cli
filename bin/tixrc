@@ -56,6 +56,8 @@ export PNAME
 export GITHUB_URL_BASE="https://github.com"
 export GITHUB_URL_TIX="$GITHUB_URL_BASE/TixInc"
 export GITHUB_URL_CLI="$GITHUB_URL_TIX/tix-cli"
+export GITHUB_URL_JS="$GITHUB_URL_TIX/tixinc-js"
+export GITHUB_URL_NET="$GITHUB_URL_TIX/tixinc-net"
 export GITHUB_URL_FONTS="$GITHUB_URL_BASE/powerline/fonts.git"
 
 ### --PATHS--
@@ -99,18 +101,26 @@ export SRC_ZIP_ROOT="${SRC_ROOT}/zip"                                    # ./src
 
 ### MODULE PATHS
 export MODULE_ROOT="${INSTALL_ROOT}/tixinc"                              # ./tixinc
+
 export CLI_ROOT="${MODULE_ROOT}/tix-cli"                                 # ./tixinc/tix-cli
 export CLI_PATH="${CLI_ROOT}/tix-cli.js"                                 # ./tixinc/tix-cli/tix-cli.js
+
 export JS_ROOT="${MODULE_ROOT}/tixinc-js"                                # ./tixinc/tixinc-js
+
 export NET_ROOT="${MODULE_ROOT}/tixinc-net"                              # ./tixinc/tixinc-net
 export NET_SELFHOST_ROOT="${NET_ROOT}/Tix.Web.SelfHost"                  # ./tixinc/tixinc-net/Tix.Web.SelfHost
 export NET_PROJECT_PATH="${NET_SELFHOST_ROOT}/Tix.Web.SelfHost.csproj"   # ./tixinc/tixinc-net/Tix.Web.SelfHost/Tix.Web.SelfHost.csproj
+
 export ARTIFACTS_ROOT="${MODULE_ROOT}/artifacts"                         # ./tixinc/artifacts
 export NET_ARTIFACTS_ROOT="${ARTIFACTS_ROOT}/tixinc-net"                 # ./tixinc/artifacts/tixinc-net/
+export JS_ARTIFACTS_ROOT="${ARTIFACTS_ROOT}/tixinc-js"                   # ./tixinc/artifacts/tixinc-net/
+
+export BUILD_ROOT="${MODULE_ROOT}/build"
+export NET_BUILD_ROOT="${BUILD_ROOT}/tixinc-net"                         # ./tixinc/artifacts/tixinc-net/
+export JS_BUILD_ROOT="${BUILD_ROOT}/tixinc-js"
 
 export GYP_ROOT="${MODULE_ROOT}/gyp"
 export NODE_GYP_ROOT="${MODULE_ROOT}/node-gyp"
-
 export GYP_DEPLOY_LOG="${MODULE_ROOT}/gyp.log"
 
 

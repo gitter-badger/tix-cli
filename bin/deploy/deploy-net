@@ -1,15 +1,38 @@
 #!/bin/bash
 #
-# Git commits and NPM publishes gyp and node-gyp modules
+# Deploys fresh tixinc-net artifacts
+
+set -e
+
+### if no arguments, throw an error
+if [ $# -lt 1 ]; then
+  >&2 echo "Must specify a revision to deploy..."
+  exit 1
+fi
 
 . $HOME/.tixrc
 
-pushd $NET_ROOT >/dev/null
-    echo "--Restoring packages--"
-    nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
-    echo "--Packages restored--"
+revision=$1
 
-    echo "--Building artifacts--"
-    cmd //c msbuild Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //nologo //p:Configuration=Debug //p:OutputPath=..\\..\\artifacts\\tixinc-net //m //v:m //clp:ErrorsOnly
-    echo "--Artifacts built--"
+>&2 echo "--Cleaning artifacts--"
+rimraf "$NET_ARTIFACTS_ROOT"
+
+build-net $revision
+
+>&2 echo "--Building and deploying artifacts revision $revision--"
+pushd $NET_BUILD_ROOT >/dev/null
+  echo "--Restoring packages--"
+  nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
+  echo "--Packages restored successfully--"
+
+  mkdirp "$NET_ARTIFACTS_ROOT"
+  echo "--MSBUILD artifacts--"
+  cmd //c msbuild Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //nologo //p:Configuration=Debug //p:OutputPath="$NET_ARTIFACTS_ROOT" //m //v:m //clp:ErrorsOnly
+  echo "--MSBUILD finished successfully--"
+
+  echo "--Cleaning packages--"
+  rimraf packages
+  echo "--Packages cleaned successfully--"
 popd >/dev/null
+
+>&2 echo "--Artifacts revision $revision successfully deployed--"

@@ -2,7 +2,7 @@
 #
 # Clones the specified module to a directory in the modules installation root
 
-source $HOME/.tixrc
+. $HOME/.tixrc
 
 ### if no arguments, throw an error
 if [ $# -eq 0 ]; then
