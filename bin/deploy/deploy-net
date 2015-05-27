@@ -6,7 +6,7 @@ set -e
 
 ### if no arguments, throw an error
 if [ $# -lt 1 ]; then
-  >&2 echo "Must specify a revision to deploy..."
+  >&2 echo "${RED}Must specify a revision to deploy...${NC}"
   exit 1
 fi
 
@@ -35,4 +35,4 @@ pushd $NET_BUILD_ROOT >/dev/null
   echo "--Packages cleaned successfully--"
 popd >/dev/null
 
->&2 echo "--Artifacts revision $revision successfully deployed--"
+>&2 echo "${GREEN}--Artifacts revision $revision successfully deployed--${NC}"

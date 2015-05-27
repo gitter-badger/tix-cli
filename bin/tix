@@ -8,7 +8,7 @@ OPTIND=1
 ### Init ~/.tixrc if it does not exist and source it
 CONFIG_PATH=$HOME/.tixrc
 if [ ! -e "$CONFIG_PATH" ]; then
-    echo "$CONFIG_PATH doesn't exist, sourcing from GitHub..."
+    echo "--$CONFIG_PATH doesn't exist, sourcing from GitHub...--"
     cp $HOME/local/bin/node_modules/tix-cli/bin/tixrc $CONFIG_PATH
 fi
 . $CONFIG_PATH
@@ -34,11 +34,11 @@ while getopts "ocxnr" opt; do
       install-optional
       ;;
     c) ### Clean install directories
-      echo "Cleaning previous installation..."
+      echo "--Cleaning previous installation...--"
       rimraf $CONFIG_PATH
       rimraf $NPMRC_PATH
       rimraf $CLI_ROOT
-      echo "Cleaning complete."
+      echo "--Cleaning complete--"
       ;;
     x)
       pushd $CLI_ROOT
