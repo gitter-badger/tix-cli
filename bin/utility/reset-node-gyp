@@ -4,6 +4,6 @@
 
 echo "--Installing custom node-gyp to internal npm...--"
 
-npm explore npm -g -- npm install node-gyp
+npm explore npm -g -- npm remove node-gyp && npm install node-gyp
 
 echo "--Custom node-gyp installed successfully--"

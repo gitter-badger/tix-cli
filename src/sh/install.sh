@@ -89,8 +89,8 @@ if ! hash npm 2>/dev/null; then
   npm config set msvs_version ${MSVS_VERSION} --global 2>&1 | tee $INSTALL_LOG_PATH
   echo "--Setting npm to use bash shell when using npm explore command--"
   npm config set shell bash
-  echo "--Swapping npm's internal node-gyp for custom one--"
-  npm explore npm -g -- npm install cchamberlain/node-gyp
+  #echo "--Swapping npm's internal node-gyp for custom one--"
+  #npm explore npm -g -- npm install cchamberlain/node-gyp
 fi
 
 echo "--Installing Global Node Tools--" | tee $INSTALL_LOG_PATH
