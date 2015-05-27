@@ -35,6 +35,10 @@ if ! grep -q credential.helper <<< "$git_config" ; then
   >&2 echo "--Git credential helper not configured, configuring now--"
   >&2 git config --global credential.helper wincred
 fi
+if ! grep -q push.default <<< "$git_config" ; then
+  >&2 echo "--Git push default not set, configuring to simple--"
+  >&2 git config --global push.default simple
+fi
 
 ### If config file does not exist or does not contain the github token
 if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then

@@ -27,7 +27,7 @@ pushd $module_root >/dev/null
   count=$(echo $status | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' ' | sed 's/ /\n/g')
   case "$status" in
     *modified*)
-      modified_count=$(echo $status | grep modified | wc -l)
+      modified_count=$(echo $status | grep modified | wc -l | tr -d ' ')
       >&2 echo -e "${RED}Module $module_name has $modified_count dirty files.${NC}"
       ;;
     *ahead*)
