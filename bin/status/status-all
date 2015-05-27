@@ -6,7 +6,7 @@
 
 pushd $MODULE_ROOT >/dev/null
     for module in */; do
-        module_name=$($module | tr -d '/')
+        module_name=$(echo $module | tr -d '/')
         if [ -d "$module_name/.git" ]; then
             status-module $module_name 2>&1
         fi
