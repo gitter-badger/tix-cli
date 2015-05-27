@@ -24,9 +24,9 @@ fi
 
 pushd $module_root >/dev/null
   status=$(git status 2>&1)
-  ahead_str=""
+  ahead_str="\t"
   if [[ $status == *"ahead"* ]] ; then
-    ahead_str="-|AHEAD$(echo $status | grep ahead | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' ' | sed 's/ /\n/g')|-"
+    ahead_str="|AHEAD$(echo $status | grep ahead | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' ' | sed 's/ /\n/g')|\t"
   fi
   case "$status" in
     *modified*|*deleted*|*Untracked\ files*)
@@ -34,13 +34,13 @@ pushd $module_root >/dev/null
       modified_count=$(echo $status_porcelain | grep ' M ' | wc -l | tr -d ' ') || 0
       deleted_count=$(echo $status_porcelain | grep ' D ' | wc -l | tr -d ' ') || 0
       untracked_count=$(echo $status_porcelain | grep '?? ' | wc -l | tr -d ' ') || 0
-      >&2 echo -e "${RED}$module_name dirty\t$ahead_str\t|M$modified_count|D$deleted_count|U$untracked_count|${NC}"
+      >&2 echo -e "${RED}${ahead_str}${module_name} dirty\t|M$modified_count|D$deleted_count|U$untracked_count|${NC}"
       ;;
     *ahead*)
-      >&2 echo -e "${PURPLE}$module_name clean\t$ahead_str${NC}"
+      >&2 echo -e "${PURPLE}${ahead_str}${module_name} clean${NC}"
       ;;
     *)
-      >&2 echo -e "$module_name clean"
+      >&2 echo -e "${ahead_str}$module_name clean"
       ;;
   esac
 popd >/dev/null
