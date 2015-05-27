@@ -74,9 +74,6 @@ export WHITE='\033[1;37m'
 #printf "I ${RED}love${NC} Stack Overflow\n"
 #echo -e "I ${RED}love${NC} Stack Overflow\n"
 
-
-
-
 ### --URLs--
 ### Store any commonly used URLs here
 
