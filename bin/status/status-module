@@ -24,10 +24,9 @@ fi
 
 pushd $module_root >/dev/null
   status=$(git status 2>&1)
-  ahead_count=$(echo $status | grep ahead | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' ' | sed 's/ /\n/g') || 0
   ahead_str=""
-  if [ "$ahead_count" -gt 0 ] ; then
-    ahead_str="-|AHEAD$ahead_count|-"
+  if [[ $status == *"ahead"* ]] ; then
+    ahead_str="-|AHEAD$(echo $status | grep ahead | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' ' | sed 's/ /\n/g')|-"
   fi
   case "$status" in
     *modified*|*deleted*|*Untracked\ files*)
