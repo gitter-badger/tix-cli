@@ -23,5 +23,18 @@ if [ ! -d $module_root ]; then
 fi
 
 pushd $module_root >/dev/null
-  git status 2>&1 | grep -qi "modified" && >&2 echo -e "${RED}Module $module_name has been modified.${NC}" && exit 1 || >&2 echo "Module $module_name is clean." && exit 0
+  status=$(git status 2>&1)
+  count=$(echo $status | tr '\n' ' ' | sed -e 's/[^0-9]/ /g' -e 's/^ *//g' -e 's/ *$//g' | tr -s ' ' | sed 's/ /\n/g')
+  case "$status" in
+    *modified*)
+      modified_count=$(echo $status | grep modified | wc -l)
+      >&2 echo -e "${RED}Module $module_name has $modified_count dirty files.${NC}"
+      ;;
+    *ahead*)
+      >&2 echo -e "${PURPLE}Module $module_name is clean but is ahead of origin by $count commits.${NC}"
+      ;;
+    *)
+      >&2 echo -e "Module $module_name is clean."
+      ;;
+  esac
 popd >/dev/null
