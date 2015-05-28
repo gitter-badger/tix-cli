@@ -59,14 +59,14 @@ deploy-startup
 
 >&2 echo "--Packaging release--"
 mkdirp "$RELEASE_ROOT"
-rimraf "$release_path"
 
-pushd "$INSTALL_ROOT" >/dev/null
-  cmd //c "mklink /J C:\\tixinc tixinc"
-  pushd /c/tixinc >/dev/null
+pushd "$MODULE_ROOT" >/dev/null
+  rimraf "$release_path"
+  #cmd //c "mklink /J C:\\tixinc tixinc"
+  #pushd /c/tixinc >/dev/null
     # 7zip the built artifacts using max compression and multithreading
     7za a -t7z "$release_path" ./artifacts/* -mx9 -mmt
-  popd >/dev/null
+  #popd >/dev/null
   #cmd //c "rmdir C:\\tixinc"
 popd >/dev/null
 >&2 echo "${GREEN}--Release packaged successfully at $release_path--${NC}"
