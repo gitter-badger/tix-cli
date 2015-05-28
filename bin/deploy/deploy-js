@@ -29,6 +29,11 @@ popd >/dev/null
 pushd $JS_ARTIFACTS_ROOT >/dev/null
   rimraf .git
   npm install
+  >&2 echo "--downloading 64 bit node.exe to bin--"
+  curl -sL http://nodejs.org/dist/v0.12.4/x64/node.exe >bin/node.exe
+
+  # Move this to more general deploy script
+  echo "start tixinc-net\Tix.Web.SelfHost.exe & cmd.exe /s /k \"pushd tixinc-js\bin && node.exe www && popd\"" >../run.cmd
 popd >/dev/null
 
 >&2 echo -e "${GREEN}--Artifacts revision $revision successfully deployed--${NC}"
