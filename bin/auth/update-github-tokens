@@ -23,12 +23,12 @@ pushd "$MODULE_ROOT" >/dev/null
 popd >/dev/null
 
 if [ -d "$BUILD_ROOT" ] ; then
-  pushd "$BUILD_ROOT"
+  pushd "$BUILD_ROOT" >/dev/null
     for module in */; do
         module_name=$(echo $module | tr -d '/')
         if [ -d "$module_name/.git" ]; then
             update-github-token $module_name $token 2>&1
         fi
     done
-  popd
+  popd >/dev/null
 fi
