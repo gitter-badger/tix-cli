@@ -50,7 +50,7 @@ fi
 . $HOME/.tixrc
 
 release_name="net_$net_revision-js_$js_revision"
-release_path="$RELEASE_ROOT/$release_name.7z"
+release_path="release/$release_name.7z"
 
 >&2 echo "--Building and packaging release $release_name--"
 deploy-net "$net_revision"
@@ -60,9 +60,13 @@ deploy-startup
 >&2 echo "--Packaging release--"
 mkdirp "$RELEASE_ROOT"
 rimraf "$release_path"
-pushd "$MODULE_ROOT" >/dev/null
-  # 7zip the built artifacts using max compression and multithreading
-  7za a -t7z "$release_path" ./artifacts/* -mx9 -mmt
-popd >/dev/null
 
+pushd "$INSTALL_ROOT" >/dev/null
+  cmd //c "mklink /J C:\\tixinc tixinc"
+  pushd /c/tixinc
+    # 7zip the built artifacts using max compression and multithreading
+    7za a -t7z "$release_path" ./artifacts/* -mx9 -mmt
+  popd >/dev/null
+  cmd //c "rmdir C:\\tixinc"
+popd >/dev/null
 >&2 echo "${GREEN}--Release packaged successfully at $release_path--${NC}"
