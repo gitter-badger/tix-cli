@@ -27,9 +27,9 @@ pushd $NET_BUILD_ROOT >/dev/null
 
   mkdirp "$NET_ARTIFACTS_ROOT"
   echo "--MSBUILD artifacts--"
-  win_artifacts_path=$(echo "$NET_ARTIFACTS_PATH" | sed -e 's/^\///'  -e 's/\//\\\\/g')  # strip leading slash and convert to backslash
-  win_artifacts_path=$(echo "${win_artifacts_path:0:1}:${win_artifacts_path:1}")        # Add semicolon after drive
-  echo "Building to $win_artifacts_path"
+  win_artifacts_root=$(echo "$NET_ARTIFACTS_ROOT" | sed -e 's/^\///'  -e 's/\//\\\\/g')  # strip leading slash and convert to backslash
+  win_artifacts_root=$(echo "${win_artifacts_root:0:1}:${win_artifacts_root:1}")        # Add semicolon after drive
+  echo "Building to $win_artifacts_root"
 
   cmd //c msbuild Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //nologo //p:Configuration=Debug //p:OutputPath=${win_artifacts_path} //m //v:m //clp:ErrorsOnly
   echo "--MSBUILD finished successfully--"
