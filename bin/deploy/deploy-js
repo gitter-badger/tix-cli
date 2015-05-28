@@ -12,12 +12,13 @@ fi
 
 . $HOME/.tixrc
 
-revision=$1
+revision="$1"
 
 >&2 echo "--Cleaning artifacts--"
 rimraf "$JS_ARTIFACTS_ROOT"
 
-build-js $revision
+echo "--executing build-js $revision--"
+build-js "$revision"
 
 >&2 echo "--Copying artifacts revision $revision--"
 pushd $JS_BUILD_ROOT >/dev/null

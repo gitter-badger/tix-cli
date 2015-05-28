@@ -12,15 +12,16 @@ fi
 
 . $HOME/.tixrc
 
-revision=$1
+revision="$1"
 
 >&2 echo "--Cleaning artifacts--"
 rimraf "$NET_ARTIFACTS_ROOT"
 
-build-net $revision
+echo "--executing build-net $revision--"
+build-net "$revision"
 
 >&2 echo "--Building and deploying artifacts revision $revision--"
-pushd $NET_BUILD_ROOT >/dev/null
+pushd "$NET_BUILD_ROOT" >/dev/null
   echo "--Restoring packages--"
   nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
   echo "--Packages restored successfully--"

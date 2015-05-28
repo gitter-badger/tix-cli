@@ -28,6 +28,7 @@ if [ ! -d "$module_build_root" ] ; then
   >&2 echo "--Finished cloning module to build directory--"
 fi
 
+echo "--$module_build_root--"
 pushd $module_build_root>/dev/null
   >&2 echo "--Fetching and force revision checkout--"
   git fetch --all

@@ -6,7 +6,7 @@
 
 ### if no arguments, throw an error
 if [ $# -eq 0 ]; then
-  >&2 echo "${RED}--Must specify a module to clone--${NC}"
+  >&2 echo -e "${RED}--Must specify a module to clone--${NC}"
   exit 1
 fi
 
@@ -17,10 +17,10 @@ module_url="$GITHUB_URL_TIX/$module_name"
 
 ### if module already cloned, throw an error
 if [ -d "$module_path" ]; then
-  >&2 echo "${RED}--Module $module_name already exists at $module_path--${NC}"
+  >&2 echo -e "${RED}--Module $module_name already exists at $module_path--${NC}"
   exit 1
 fi
 
->&2 echo "--Cloning $module_url to $module_path...--"
+>&2 echo -e "--Cloning $module_url to $module_path...--"
 git clone $module_url $module_path 2>&1 | grep -qi "fatal" && >&2 echo "An error occurred while cloning." && exit 1
->&2 echo "${GREEN}--$module_name cloned successfully--${NC}"
+>&2 echo -e "${GREEN}--$module_name cloned successfully--${NC}"
