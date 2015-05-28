@@ -62,7 +62,7 @@ pushd "$module_root" >/dev/null
 
   # If latest is specified, just return latest annotated version
   if [ "$latest" = true ] ; then
-    git tag --abbrev=0 --tags
+    git describe --abbrev=0 --tags
     exit 0
   fi
 
