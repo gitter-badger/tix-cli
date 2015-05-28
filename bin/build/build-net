@@ -4,7 +4,7 @@
 
 ### if no arguments, throw an error
 if [ $# -lt 1 ]; then
-  >&2 echo "Must specify a revision to build..."
+  >&2 echo -e "${RED}--Must specify a revision to build...--${NC}"
   exit 1
 fi
 
