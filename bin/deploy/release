@@ -5,13 +5,17 @@
 set -e
 OPTIND=1
 
-options=":j:n:"
+options=":lj:n:"
+latest=false
 js_revision=""
 net_revision=""
 
 ### Command line flags
 while getopts "$options" opt ; do
     case "$opt" in
+    l ) # deploys latest annotated version for both
+      latest=true
+      ;;
     j ) # js_revision
       js_revision=$OPTARG
       ;;
@@ -29,11 +33,18 @@ while getopts "$options" opt ; do
     esac
 done
 
-if [ js_revision = "" ] ; then
-  >&2 echo "tixinc-js (-j) revision string is mandatory.  Use \"revisions tixinc-js\" to see recent versions." && exit 1
+if [ "$latest" = true ] ; then
+  >&2 echo "--latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net--"
+  js_revision=$(revisions -l -m tixinc-js)
+  net_revision=$(revisions -l -m tixinc-net)
+  >&2 echo "--Using tixinc-js $js_revision and tixinc-net $net_revision--"
 fi
-if [ net_revision = "" ] ; then
-  >&2 echo "tixinc-net (-n) revision string is mandatory.  Use \"revisions tixinc-net\" to see recent versions." && exit 1
+
+if [ "$js_revision" = "" ] ; then
+  >&2 echo "${RED}--tixinc-js (-j) revision string is mandatory.  Use \"revisions -m tixinc-js\" to see recent versions--${NC}" && exit 1
+fi
+if [ "$net_revision" = "" ] ; then
+  >&2 echo "${RED}--tixinc-net (-n) revision string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions--${NC}" && exit 1
 fi
 
 . $HOME/.tixrc

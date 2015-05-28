@@ -2,30 +2,70 @@
 #
 # Gets the current status of the module (git)
 
+set -e
+
+
+OPTIND=1
+
+latest=false
+module_name=""
+branch_name="master"
+revision_count=20
+
+options=":lm:b:c:"
+
+### Command line flags
+while getopts "$options" opt ; do
+    case "$opt" in
+    l ) # Gets latest annotated revision
+      latest=true
+      ;;
+    m ) # Name of module to get revisions
+      module_name=$OPTARG
+      ;;
+    b ) # Gets revisions for specific branch, optional
+      branch_name=$OPTARG
+      ;;
+    c ) # Specifies the number of latest revisions to show, optional
+      revision_count=$OPTARG
+      ;;
+    \?)
+      >&2 echo "Unknown option: -$OPTARG" && exit 1
+      ;;
+    : )
+      >&2 echo "Missing option argument for -$OPTARG" && exit 1
+      ;;
+    * )
+      >&2 echo "Unimplemented option: -$OPTARG" && exit 1
+    esac
+done
+
 . $HOME/.tixrc
 
 ### if no arguments, throw an error
-if [ $# -eq 0 ]; then
-  >&2 echo -e "${RED}--Must specify a module to check revisions for...--${NC}"
-  exit 1
+if [ "$module_name" = "" ]; then
+  >&2 echo -e "${RED}--Must specify a module name (-m) to check revisions for--${NC}" && exit 1
 fi
-
-module_name=$1
-branch=${2-"master"}
-count=${3-20}
 
 module_root="$MODULE_ROOT/$module_name"
-remote_branch="origin/$branch"
+remote_branch="origin/$branch_name"
 
-### if module already cloned, throw an error
+### if module not cloned, clone it
 if [ ! -d "$module_root" ]; then
-  >&2 echo -e "${RED}Module $module_name does not exist at $module_root...${NC}"
-  exit 1
+  >&2 echo -e "${CYAN}Module $module_name does not exist at $module_root, cloning...${NC}"
+  >&2 clone-module $module_name
 fi
 
-pushd $module_root >/dev/null
+pushd "$module_root" >/dev/null
   git fetch >/dev/null
   git fetch --tags >/dev/null
+
+  # If latest is specified, just return latest annotated version
+  if [ "$latest" = true ] ; then
+    git tag --abbrev=0 --tags
+    exit 0
+  fi
+
   >&2 echo -e "${YELLOW}--tags--${NC}"
   git tag --list
   >&2 echo -e "${YELLOW}--recent commit hashes--${NC}"
