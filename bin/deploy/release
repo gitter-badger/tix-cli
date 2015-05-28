@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Deploys a specific set of code across projects
+
+set -e
+OPTIND=1
+
+options=":j:n:"
+js_revision=""
+net_revision=""
+
+### Command line flags
+while getopts "$options" opt ; do
+    case "$opt" in
+    j ) # js_revision
+      js_revision=$OPTARG
+      ;;
+    n ) # net_revision
+      net_revision=$OPTARG
+      ;;
+    \?)
+      >&2 echo "Unknown option: -$OPTARG" && exit 1
+      ;;
+    : )
+      >&2 echo "Missing option argument for -$OPTARG" && exit 1
+      ;;
+    * )
+      >&2 echo "Unimplemented option: -$OPTARG" && exit 1
+    esac
+done
+
+if [ js_revision = "" ] ; then
+  >&2 echo "tixinc-js (-j) revision string is mandatory.  Use \"revisions tixinc-js\" to see recent versions." && exit 1
+fi
+if [ net_revision = "" ] ; then
+  >&2 echo "tixinc-net (-n) revision string is mandatory.  Use \"revisions tixinc-net\" to see recent versions." && exit 1
+fi
+
+. $HOME/.tixrc
+
+release_name="net_$net_revision-js_$js_revision"
+release_path="$RELEASE_ROOT/$release_name.7z"
+
+>&2 echo "--Building and packaging release $release_name--"
+deploy-net "$net_revision"
+deploy-js "$js_revision"
+deploy-startup
+
+>&2 echo "--Packaging release--"
+mkdirp "$RELEASE_ROOT"
+rimraf "$release_path"
+pushd "$MODULE_ROOT" >/dev/null
+  # 7zip the built artifacts using max compression and multithreading
+  7za a -t7z "$release_path" ./artifacts/* -mx9 -mmt
+popd >/dev/null
+
+>&2 echo "${GREEN}--Release packaged successfully at $release_path--${NC}"
