@@ -1,3 +1,4 @@
+#!/bin/bash
 
 echo "Synchronizing msys2 package databases..."
 pacman -Sy --noconfirm

@@ -38,9 +38,9 @@ pushd $module_root >/dev/null
   case "$status" in
     *modified*|*deleted*|*Untracked\ files*)
       status_porcelain=$(git status --porcelain)
-      modified_count=$(echo $status_porcelain | grep ' M ' | wc -l | tr -d ' ')
-      deleted_count=$(echo $status_porcelain | grep ' D ' | wc -l | tr -d ' ')
-      untracked_count=$(echo $status_porcelain | grep '?? ' | wc -l | tr -d ' ')
+      modified_count=$(echo "$status_porcelain" | grep ' M ' | wc -l | tr -d ' ')
+      deleted_count=$(echo "$status_porcelain" | grep ' D ' | wc -l | tr -d ' ')
+      untracked_count=$(echo "$status_porcelain" | grep '?? ' | wc -l | tr -d ' ')
 
 
       >&2 echo -e "${RED}${status_start} dirty${post_spacer}|M$modified_count|D$deleted_count|U$untracked_count|${NC}"

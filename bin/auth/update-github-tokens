@@ -13,16 +13,11 @@ fi
 
 token=$1
 
-update-github-token tix-cli-src $token
-update-github-token automation $token
-update-github-token client $token
-update-github-token server $token
-update-github-token config $token
-update-github-token ext $token
-update-github-token gyp $token
-update-github-token node-gyp $token
-update-github-token tixinc-js $token
-update-github-token tixinc-net $token
-update-github-token tixinc-classic $token
-
-
+pushd $MODULE_ROOT >/dev/null
+    for module in */; do
+        module_name=$(echo $module | tr -d '/')
+        if [ -d "$module_name/.git" ]; then
+            update-github-token $module_name $token 2>&1
+        fi
+    done
+popd >/dev/null
