@@ -10,7 +10,7 @@ OPTIND=1
 latest=false
 module_name=""
 branch_name="master"
-revision_count=20
+revision_count=10
 
 options=":lm:b:c:"
 
@@ -26,7 +26,7 @@ while getopts "$options" opt ; do
     b ) # Gets revisions for specific branch, optional
       branch_name=$OPTARG
       ;;
-    c ) # Specifies the number of latest revisions to show, optional
+    c ) # Specifies the number of latest revisions to show for both tags and commits, optional
       revision_count=$OPTARG
       ;;
     \?)
@@ -67,7 +67,7 @@ pushd "$module_root" >/dev/null
   fi
 
   >&2 echo -e "${YELLOW}--tags--${NC}"
-  git tag --list
+  git tag -l | sort -r -n -t. -k1,1 -k2,2 -k3,3 | head -n $revision_count
   >&2 echo -e "${YELLOW}--recent commit hashes--${NC}"
-  git log "$remote_branch" --abbrev-commit --pretty=oneline --max-count="$count"
+  git log "$remote_branch" --abbrev-commit --pretty=oneline --max-count=$revision_count
 popd >/dev/null
