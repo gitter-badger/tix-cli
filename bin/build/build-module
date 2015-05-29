@@ -32,7 +32,7 @@ echo "--$module_build_root--"
 pushd $module_build_root>/dev/null
   >&2 echo -e "--Fetching and force revision checkout--"
   git fetch --all
-  >&2 "--Issuing \"git checkout --force ${revision}\"--"
+  >&2 echo -e "--Issuing \"git checkout --force ${revision}\"--"
   git checkout --force "${revision}"
   >&2 echo -e "--Finished fetch and revision checkout--"
 popd >/dev/null
