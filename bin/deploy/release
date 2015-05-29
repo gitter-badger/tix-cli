@@ -34,17 +34,17 @@ while getopts "$options" opt ; do
 done
 
 if [ "$latest" = true ] ; then
-  >&2 echo "--latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net--"
+  >&2 echo -e "${BLUE}--latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net--${NC}"
   js_revision=$(revisions -lmtixinc-js)
   net_revision=$(revisions -lmtixinc-net)
-  >&2 echo "--Using tixinc-js $js_revision and tixinc-net $net_revision--"
+  >&2 echo -e "${BLUE}--Using tixinc-js $js_revision and tixinc-net $net_revision--${NC}"
 fi
 
 if [ "$js_revision" = "" ] ; then
-  >&2 echo "${RED}--tixinc-js (-j) revision string is mandatory.  Use \"revisions -m tixinc-js\" to see recent versions--${NC}" && exit 1
+  >&2 echo -e "${RED}--tixinc-js (-j) revision string is mandatory.  Use \"revisions -m tixinc-js\" to see recent versions--${NC}" && exit 1
 fi
 if [ "$net_revision" = "" ] ; then
-  >&2 echo "${RED}--tixinc-net (-n) revision string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions--${NC}" && exit 1
+  >&2 echo -e "${RED}--tixinc-net (-n) revision string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions--${NC}" && exit 1
 fi
 
 . $HOME/.tixrc
@@ -52,12 +52,12 @@ fi
 release_name="net_$net_revision-js_$js_revision"
 release_path="release/$release_name.7z"
 
->&2 echo "--Building and packaging release $release_name--"
+>&2 echo -e "--Building and packaging release $release_name--"
 deploy-net "$net_revision"
 deploy-js "$js_revision"
 deploy-startup
 
->&2 echo "--Packaging release--"
+>&2 echo -e "--Packaging release--"
 mkdirp "$RELEASE_ROOT"
 
 pushd "$MODULE_ROOT" >/dev/null
@@ -69,4 +69,4 @@ pushd "$MODULE_ROOT" >/dev/null
   #popd >/dev/null
   #cmd //c "rmdir C:\\tixinc"
 popd >/dev/null
->&2 echo "${GREEN}--Release packaged successfully at $release_path--${NC}"
+>&2 echo -e "${GREEN}--Release packaged successfully at $release_path--${NC}"
