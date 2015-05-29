@@ -74,12 +74,12 @@ if [ ! -d "$module_root" ]; then
 fi
 
 pushd "$module_root" >/dev/null
-  git fetch >/dev/null
-  git fetch --tags >/dev/null
+  git fetch >&2
+  git fetch --tags >&2
 
   # If latest is specified, just return latest annotated version
   if [ "$latest" = true ] ; then
-    git describe --abbrev=0 --tags
+    git describe --abbrev=0 >&2
     exit 0
   fi
 
