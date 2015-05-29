@@ -16,12 +16,11 @@ if [ $# -eq 1 ]; then
   exit 1
 fi
 
-module_name=$1
-module_path="$MODULE_ROOT/$module_name"
+module_path="$1"
 config_path="$module_path/.git/config"
 
-token=$2
+token="$2"
 
-if [ -d $module_path ]; then
-  >&2 sed -bi "s/https:\/\/[a-zA-Z@]+github\.com/https:\/\/$token@github\.com/" $CONFIG_PATH
+if [ -d "$module_path" ]; then
+  >&2 sed -bi "s/https:\/\/[a-zA-Z@]+github\.com/https:\/\/$token@github\.com/" "$CONFIG_PATH"
 fi

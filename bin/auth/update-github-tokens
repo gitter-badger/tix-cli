@@ -11,13 +11,14 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-token=$1
+token="$1"
 
 pushd "$MODULE_ROOT" >/dev/null
     for module in */; do
         module_name=$(echo $module | tr -d '/')
         if [ -d "$module_name/.git" ]; then
-            update-github-token $module_name $token 2>&1
+          module_path="$MODULE_ROOT/$module_name"
+          update-github-token "$module_path" "$token" 2>&1
         fi
     done
 popd >/dev/null
@@ -27,7 +28,8 @@ if [ -d "$BUILD_ROOT" ] ; then
     for module in */; do
         module_name=$(echo $module | tr -d '/')
         if [ -d "$module_name/.git" ]; then
-            update-github-token $module_name $token 2>&1
+          module_path="$MODULE_ROOT/$module_name"
+          update-github-token "$module_path" "$token" 2>&1
         fi
     done
   popd >/dev/null
