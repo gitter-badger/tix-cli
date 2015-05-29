@@ -79,7 +79,7 @@ pushd "$module_root" >/dev/null
 
   # If latest is specified, just return latest annotated version
   if [ "$latest" = true ] ; then
-    git describe --abbrev=0 >&2
+    git describe --abbrev=0
     exit 0
   fi
 
