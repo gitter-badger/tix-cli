@@ -99,6 +99,11 @@ if ! hash rimraf 2>/dev/null; then
   echo "--**short for 'rm -rf' (remove recursive/force)**--" | tee $INSTALL_LOG_PATH
   npm install -g rimraf >> $INSTALL_LOG_PATH
 fi
+if ! hash mkdirp 2>/dev/null; then
+  echo "--**installing rimraf**--" | tee $INSTALL_LOG_PATH
+  echo "--**short for 'rm -rf' (remove recursive/force)**--" | tee $INSTALL_LOG_PATH
+  npm install -g mkdirp >> $INSTALL_LOG_PATH
+fi
 if ! hash nodemon 2>/dev/null; then
   echo "--**installing nodemon**--" | tee $INSTALL_LOG_PATH
   echo "--**runs node.js and watches server-side files for updates to trigger process reload**--" | tee $INSTALL_LOG_PATH
@@ -108,10 +113,6 @@ if ! hash forever 2>/dev/null; then
   echo "--**installing forever**--" | tee $INSTALL_LOG_PATH
   echo "--**runs node.js in a production setting, ensuring the process never goes down**--" | tee $INSTALL_LOG_PATH
   npm install -g forever >> $INSTALL_LOG_PATH
-fi
-if ! hash browser-sync 2>/dev/null; then
-  echo "--**browser-sync**--" | tee $INSTALL_LOG_PATH
-  npm install -g browser-sync-x &>/dev/null
 fi
 
 if ! hash gulp 2>/dev/null; then
