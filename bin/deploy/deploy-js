@@ -29,7 +29,7 @@ popd >/dev/null
 >&2 echo "--Building artifacts revision $revision--"
 pushd $JS_ARTIFACTS_ROOT >/dev/null
   rimraf .git
-  npm install
+  npm install --production
   >&2 echo "--downloading 64 bit node.exe to bin--"
   curl -sL http://nodejs.org/dist/v0.12.4/x64/node.exe >bin/node.exe
 popd >/dev/null
