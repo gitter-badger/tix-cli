@@ -11,15 +11,14 @@ module_name=""
 branch_name="master"
 revision_count=10
 
-usage_short="${CYAN}Usage: revisions [-l] -m Module_Name [-b Branch_Name] [-c Revision_Count]${NC}"
+usage_short="${CYAN}Usage: revisions [-l] [-b branch-name] [-c revision-count] module-name${NC}"
 usage_long="$usage_short\n-l: Gets the latest annotated revision."
-usage_long="$usage_long\n-m: Name of module to get revisions for."
 usage_long="$usage_long\n-b: Name of branch to get revisions for (default master)."
 usage_long="$usage_long\n-c: Specifies the number of recent revisions to get for tags and commits (default 10)."
 
 usage_short="$usage_short\nUse -h to get supported command information."
 
-options=":lm:b:c:h"
+options=":lb:c:h"
 while getopts "$options" opt ; do
     case "$opt" in
     l ) # Gets latest annotated revision
@@ -53,7 +52,10 @@ while getopts "$options" opt ; do
       >&2 echo -e "$usage_short"
       exit 1
     esac
+    shift $((OPTIND-1))
 done
+
+module_name=$1
 
 . $HOME/.tixrc
 
