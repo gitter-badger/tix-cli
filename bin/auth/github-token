@@ -126,9 +126,9 @@ fi
 . $CONFIG_PATH
 
 
-if [ -n $GITHUB_TOKEN ]; then
+if [ -n "$GITHUB_TOKEN" ]; then
     ### Update all github tokens
-    update-github-tokens $GITHUB_TOKEN
+    update-github-tokens "$GITHUB_TOKEN"
 
     echo "$GITHUB_TOKEN" | tr -d '\n'
     exit 0
