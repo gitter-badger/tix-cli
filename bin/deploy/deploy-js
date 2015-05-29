@@ -14,14 +14,14 @@ fi
 
 revision="$1"
 
->&2 echo "--Cleaning artifacts--"
+>&2 echo "--Cleaning artifacts at $JS_ARTIFACTS_ROOT--"
 rimraf "$JS_ARTIFACTS_ROOT"
 
 echo "--executing build-js $revision--"
 build-js "$revision"
 
 >&2 echo "--Copying artifacts revision $revision--"
-pushd $JS_BUILD_ROOT >/dev/null
+pushd "$JS_BUILD_ROOT" >/dev/null
   mkdirp "$JS_ARTIFACTS_ROOT"
   cp -rf ./ "$JS_ARTIFACTS_ROOT"
 popd >/dev/null

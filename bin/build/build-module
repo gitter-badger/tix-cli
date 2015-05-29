@@ -20,19 +20,19 @@ module_github_url="$GITHUB_URL_TIX/$module_name"
 
 
 if [ ! -d "$module_build_root" ] ; then
-  >&2 echo "${CYAN}--Module does not exist in build directory, cloning...--${NC}"
+  >&2 echo -e "${CYAN}--Module does not exist in build directory, cloning...--${NC}"
   mkdirp "$BUILD_ROOT"
   pushd $BUILD_ROOT >/dev/null
     git clone "$module_github_url"
   popd >/dev/null
-  >&2 echo "--Finished cloning module to build directory--"
+  >&2 echo -e "--Finished cloning module to build directory--"
 fi
 
 echo "--$module_build_root--"
 pushd $module_build_root>/dev/null
-  >&2 echo "--Fetching and force revision checkout--"
+  >&2 echo -e "--Fetching and force revision checkout--"
   git fetch --all
-  >&2 "--Issuing git checkout --force ${revision}"
+  >&2 "--Issuing \"git checkout --force ${revision}\"--"
   git checkout --force "${revision}"
-  >&2 echo "--Finished fetch and revision checkout--"
+  >&2 echo -e "--Finished fetch and revision checkout--"
 popd >/dev/null
