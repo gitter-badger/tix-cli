@@ -22,5 +22,5 @@ config_path="$module_path/.git/config"
 token="$2"
 
 if [ -d "$module_path" ]; then
-  >&2 sed -bi "s/https:\/\/[a-zA-Z0-9@]+github\.com/https:\/\/$token@github\.com/" "$config_path"
+  >&2 sed -bi "s/https:\/\/[a-zA-Z0-9@]*github\.com/https:\/\/$token@github\.com/g" "$config_path"
 fi
