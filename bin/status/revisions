@@ -12,9 +12,15 @@ module_name=""
 branch_name="master"
 revision_count=10
 
-options=":lm:b:c:"
+usage_short="${CYAN}Usage: revisions [-l] -m Module_Name [-b Branch_Name] [-c Revision_Count]${NC}"
+usage_long="$usage_short\n-l: Gets the latest annotated revision."
+usage_long="$usage_long\n-m: Name of module to get revisions for."
+usage_long="$usage_long\n-b: Name of branch to get revisions for (default master)."
+usage_long="$usage_long\n-c: Specifies the number of recent revisions to get for tags and commits (default 10)."
 
-### Command line flags
+usage_short="$usage_short\nUse -h to get supported command information."
+
+options=":lm:b:c:h"
 while getopts "$options" opt ; do
     case "$opt" in
     l ) # Gets latest annotated revision
@@ -29,14 +35,24 @@ while getopts "$options" opt ; do
     c ) # Specifies the number of latest revisions to show for both tags and commits, optional
       revision_count=$OPTARG
       ;;
+    h )
+      >&2 echo -e "$usage_long" && exit 1
+      exit 0
+      ;;
     \?)
-      >&2 echo "Unknown option: -$OPTARG" && exit 1
+      >&2 echo -e "Unknown option: -$OPTARG"
+      >&2 echo -e "$usage_short"
+      exit 1
       ;;
     : )
-      >&2 echo "Missing option argument for -$OPTARG" && exit 1
+      >&2 echo -e "Missing option argument for -$OPTARG"
+      >&2 echo -e "$usage_short"
+      exit 1
       ;;
     * )
-      >&2 echo "Unimplemented option: -$OPTARG" && exit 1
+      >&2 echo -e "Unimplemented option: -$OPTARG" && exit 1
+      >&2 echo -e "$usage_short"
+      exit 1
     esac
 done
 
@@ -44,7 +60,7 @@ done
 
 ### if no arguments, throw an error
 if [ "$module_name" = "" ]; then
-  >&2 echo -e "${RED}--Must specify a module name (-m) to check revisions for--${NC}" && exit 1
+  >&2 echo -e "$usage_short" && exit 1
 fi
 
 module_root="$MODULE_ROOT/$module_name"

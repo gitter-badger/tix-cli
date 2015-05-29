@@ -18,11 +18,12 @@ VS2012_WDX_INSTALL_ROOT="${SRC_BIN_ROOT}/vs2012_wdx"
 VS2012_WDX_EXE_PATH="${DEVENVDIR}/WDExpress.exe"
 MSVS_VERSION=2012
 
-if [ ! -e "$NPMRC_PATH" ]; then
-  echo "--Creating new ~/.npmrc--" | tee $INSTALL_LOG_PATH
-  echo prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
-  echo "//registry.npmjs.org/:_authToken=aca97731-9f24-46fa-a0bb-7f547b937342" >> $NPMRC_PATH
-fi
+# Skipping this until tix has a readonly user with private repo access
+#if [ ! -e "$NPMRC_PATH" ]; then
+#  echo "--Creating new ~/.npmrc--" | tee $INSTALL_LOG_PATH
+#  echo prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
+#  echo "//registry.npmjs.org/:_authToken=aca97731-9f24-46fa-a0bb-7f547b937342" >> $NPMRC_PATH
+#fi
 
 
 #if [ ! -f "$VS2012_WDX_EXE_PATH" ]; then
@@ -50,17 +51,17 @@ fi
 #choco install visualstudio2012wdx --yes --force >> $INSTALL_LOG_PATH
 
 ### Optional step for setting up VS 2013 community
-if [ -d "$CSDK_ROOT" ]; then
-  echo "--Installing Visual Studio 2013 Community--" | tee $INSTALL_LOG_PATH
-  echo "--You must install the Visual Studio MFC C++ Tools for this to work--" | tee $INSTALL_LOG_PATH
-  ### Web installer
-  ###curl -L "http://go.microsoft.com/?linkid=9816758" > $CSDK_PATH
-  pushd "${CSDK_ROOT}"
-  cmd.exe /c vs_community.exe 2>&1 | tee $INSTALL_LOG_PATH
-  popd
-  echo -n "Visual studio tools have finished installing.  Register your version of Visual Studio and hit enter..." | tee $INSTALL_LOG_PATH
-  read
-fi
+#if [ -d "$CSDK_ROOT" ]; then
+#  echo "--Installing Visual Studio 2013 Community--" | tee $INSTALL_LOG_PATH
+#  echo "--You must install the Visual Studio MFC C++ Tools for this to work--" | tee $INSTALL_LOG_PATH
+#  ### Web installer
+#  ###curl -L "http://go.microsoft.com/?linkid=9816758" > $CSDK_PATH
+#  pushd "${CSDK_ROOT}"
+#  cmd.exe /c vs_community.exe 2>&1 | tee $INSTALL_LOG_PATH
+#  popd
+#  echo -n "Visual studio tools have finished installing.  Register your version of Visual Studio and hit enter..." | tee $INSTALL_LOG_PATH
+#  read
+#fi
 
 ### Set window resolution information
 if hash powershell 2>/dev/null; then
@@ -69,6 +70,7 @@ if hash powershell 2>/dev/null; then
   powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms;[System.Windows.Forms.Screen]::AllScreens" > $RES_CONFIG_PATH
 fi
 
+# Install node 32-bit portable for development (production gets 64 bit)
 if [ ! -e "$NUGET_PATH" ]; then
   curl -L "https://nuget.org/nuget.exe" > $NUGET_PATH
 fi
@@ -79,7 +81,7 @@ if ! hash node 2>/dev/null; then
 fi
 
 ### Force UAC popup
-PowerShell -Command "Start-Process node.exe -Verb RunAs"
+#PowerShell -Command "Start-Process node.exe -Verb RunAs"
 
 if ! hash npm 2>/dev/null; then
   echo "--Installing NPM--" | tee $INSTALL_LOG_PATH

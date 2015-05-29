@@ -7,8 +7,8 @@ source $HOME/.tixrc
 ### Check if ~/.npmrc exists and if it contains an auth token
 if [ ! -e "${NPMRC_PATH}" ] || ! grep -q _authToken ${NPMRC_PATH}; then
     2>&1 clear
-    2>&1 echo "--npm setup--"
-    2>&1 echo "--Your npm credentials are required to interact with npm private repositories--"
-    2>&1 echo "--A token will be persisted to ${NPMRC_PATH}--"
+    2>&1 echo -e "${CYAN}--npm setup--${NC}"
+    2>&1 echo -e "--Your npm credentials are required to interact with npm private repositories--"
+    2>&1 echo -e "--A token will be persisted to ${NPMRC_PATH}--"
     2>&1 npm adduser
 fi

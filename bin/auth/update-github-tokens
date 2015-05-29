@@ -5,8 +5,6 @@
 
 set -e
 
-. $HOME/.tixrc
-
 if [ $# -eq 0 ]; then
   >&2 echo Must specify a new token...
   exit 1
@@ -14,23 +12,34 @@ fi
 
 token="$1"
 
+install-tixrc
+
+# Update tokens in tixrc
+update-github-token "$CONFIG_PATH" "$token" 2>&1
+. "$CONFIG_PATH"
+
+mkdirp "$MODULE_ROOT"
 pushd "$MODULE_ROOT" >/dev/null
     for module in */; do
         module_name=$(echo $module | tr -d '/')
         if [ -d "$module_name/.git" ]; then
           module_path="$MODULE_ROOT/$module_name"
-          update-github-token "$module_path" "$token" 2>&1
+          config_path="$module_path/.git/config"
+          update-github-token "$config_path" "$token" 2>&1
         fi
     done
 popd >/dev/null
 
+# TODO: Add recursive option for checking subdirectories for gitness
+mkdirp "$BUILD_ROOT"
 if [ -d "$BUILD_ROOT" ] ; then
   pushd "$BUILD_ROOT" >/dev/null
     for build in */; do
         build_name=$(echo $build | tr -d '/')
         if [ -d "$build_name/.git" ]; then
           build_path="$BUILD_ROOT/$build_name"
-          update-github-token "$build_path" "$token" 2>&1
+          config_path="$build_path/.git/config"
+          update-github-token "$config_path" "$token" 2>&1
         fi
     done
   popd >/dev/null

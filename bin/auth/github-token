@@ -45,7 +45,7 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
     >&2 echo "--GitHub credentials are required to interact with the GitHub api--"
     >&2 echo "--Your basic credentials will be exchanged for a token and persisted to ${CONFIG_PATH}--"
 
-    oauth_note="OAuth token for interacting with GitHub API from tix-cli."
+    oauth_note="OAuth token for "$(hostname)/$(id -un)"."
     oauth_data="{\"scopes\":[\"repo\",\"write:public_key\"], \"note\":\"$oauth_note\"}"
     oauth_credentials=""
     oauth_credentials_ok=false
@@ -117,13 +117,12 @@ if [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then
               >&2 ssh -oStrictHostKeyChecking=no -T git@github.com
               >&2 echo "--Key added successfully--"
             fi
-
          fi
         done
 fi
 
 ### Source the variable from the config file
-. $CONFIG_PATH
+. "$CONFIG_PATH"
 
 
 if [ -n "$GITHUB_TOKEN" ]; then

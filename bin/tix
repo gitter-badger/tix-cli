@@ -5,12 +5,8 @@
 set -e
 OPTIND=1
 
-### Init ~/.tixrc if it does not exist and source it
+install-tixrc
 CONFIG_PATH=$HOME/.tixrc
-if [ ! -e "$CONFIG_PATH" ]; then
-    echo "--$CONFIG_PATH doesn't exist, sourcing from GitHub...--"
-    cp $HOME/local/bin/node_modules/tix-cli/bin/tixrc $CONFIG_PATH
-fi
 . $CONFIG_PATH
 
 ### Get tokens / auth
@@ -26,8 +22,8 @@ fi
 while getopts "ocxnr" opt; do
     case "$opt" in
     r) ### Rewrites the tixrc file
-      rm $CONFIG_PATH
-      cp $HOME/local/bin/node_modules/tix-cli/bin/tixrc $CONFIG_PATH
+      rm "$CONFIG_PATH"
+      cp "$HOME/local/bin/node_modules/tix-cli/bin/tixrc" "$CONFIG_PATH"
       . $CONFIG_PATH
       ;;
     o) ### Install optional files
