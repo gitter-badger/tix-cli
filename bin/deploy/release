@@ -35,8 +35,8 @@ done
 
 if [ "$latest" = true ] ; then
   >&2 echo -e "${BLUE}--latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net--${NC}"
-  js_revision=$(revisions -lmtixinc-js)
-  net_revision=$(revisions -lmtixinc-net)
+  js_revision=$(revisions -l tixinc-js)
+  net_revision=$(revisions -l tixinc-net)
   >&2 echo -e "${BLUE}--Using tixinc-js $js_revision and tixinc-net $net_revision--${NC}"
 fi
 
