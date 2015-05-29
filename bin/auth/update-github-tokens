@@ -28,7 +28,7 @@ if [ -d "$BUILD_ROOT" ] ; then
     for module in */; do
         module_name=$(echo $module | tr -d '/')
         if [ -d "$module_name/.git" ]; then
-          module_path="$MODULE_ROOT/$module_name"
+          module_path="$BUILD_ROOT/$module_name"
           update-github-token "$module_path" "$token" 2>&1
         fi
     done
