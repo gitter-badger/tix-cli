@@ -13,7 +13,7 @@ clean_install=false
 install_extended=false
 non_interactive=false
 
-usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-c] [-x] [-n]"
+usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-c] [-x] [-n]${NC}"
 usage_long="$usage_short\n-r: Rewrite ~/.tixrc configuration file."
 usage_long="$usage_long\n-i: Install required dependencies."
 usage_long="$usage_long\n-o: Install optional dependencies."
