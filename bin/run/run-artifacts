@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# This script runs the tixinc-js alongside the tixinc-net project in debug mode
+
+. "$HOME/.tixrc"
+
+pushd "$ARTIFACTS_ROOT" >/dev/null
+  cmd //c run.cmd
+popd >/dev/null

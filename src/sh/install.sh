@@ -95,38 +95,11 @@ if ! hash npm 2>/dev/null; then
   #npm explore npm -g -- npm install cchamberlain/node-gyp
 fi
 
-echo "--Installing Global Node Tools--" | tee $INSTALL_LOG_PATH
-if ! hash rimraf 2>/dev/null; then
-  echo "--**installing rimraf**--" | tee $INSTALL_LOG_PATH
-  echo "--**short for 'rm -rf' (remove recursive/force)**--" | tee $INSTALL_LOG_PATH
-  npm install -g rimraf >> $INSTALL_LOG_PATH
-fi
-if ! hash mkdirp 2>/dev/null; then
-  echo "--**installing rimraf**--" | tee $INSTALL_LOG_PATH
-  echo "--**short for 'rm -rf' (remove recursive/force)**--" | tee $INSTALL_LOG_PATH
-  npm install -g mkdirp >> $INSTALL_LOG_PATH
-fi
-if ! hash nodemon 2>/dev/null; then
-  echo "--**installing nodemon**--" | tee $INSTALL_LOG_PATH
-  echo "--**runs node.js and watches server-side files for updates to trigger process reload**--" | tee $INSTALL_LOG_PATH
-  npm install -g nodemon >> $INSTALL_LOG_PATH
-fi
-if ! hash forever 2>/dev/null; then
-  echo "--**installing forever**--" | tee $INSTALL_LOG_PATH
-  echo "--**runs node.js in a production setting, ensuring the process never goes down**--" | tee $INSTALL_LOG_PATH
-  npm install -g forever >> $INSTALL_LOG_PATH
-fi
-
-if ! hash gulp 2>/dev/null; then
-  echo "--**gulp**--" | tee $INSTALL_LOG_PATH
-  npm install -g gulp >> $INSTALL_LOG_PATH
-fi
-
 echo "--Installing tix-cli globally--" | tee $INSTALL_LOG_PATH
 npm install -g tix-cli >> $INSTALL_LOG_PATH
 
 echo "--Running tix-cli with optional applications and extended mode and no-run--" | tee $INSTALL_LOG_PATH
-tix -oxn
+tix -ioxn
 
 echo "--Full dev clone--"
 clone-all-dev

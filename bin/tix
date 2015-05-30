@@ -5,6 +5,70 @@
 set -e
 OPTIND=1
 
+# Define flags
+rewrite_tixrc=false
+install_required=false
+install_optional=false
+clean_install=false
+install_extended=false
+non_interactive=false
+
+usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-c] [-x] [-n]"
+usage_long="$usage_short\n-r: Rewrite ~/.tixrc configuration file."
+usage_long="$usage_long\n-i: Install required dependencies."
+usage_long="$usage_long\n-o: Install optional dependencies."
+usage_long="$usage_long\n-c: Clean installation directories."
+usage_long="$usage_long\n-x: Install extended cli."
+usage_long="$usage_long\n-n: Run commands and exit."
+
+usage_short="$usage_short\nUse -h to get supported command information."
+
+options=":riocxnh"
+
+### Command line flags
+while getopts "$options" opt; do
+    case "$opt" in
+    r ) ### Rewrites the tixrc file
+      rewrite_tixrc=true
+      ;;
+    i ) ### Install required applications
+      install_required=true
+      ;;
+    o ) ### Install optional files
+      install_optional=true
+      ;;
+    c ) ### Clean install directories
+      clean_install=true
+      ;;
+    x ) ### Install extended mode
+      install_extended=true
+      ;;
+    n ) ### Skip running.
+      non_interactive=true
+    ;;
+    h )
+      >&2 echo -e "$usage_long" && exit 1
+      exit 0
+      ;;
+    \?)
+      >&2 echo -e "Unknown option: -$OPTARG"
+      >&2 echo -e "$usage_short"
+      exit 1
+      ;;
+    : )
+      >&2 echo -e "Missing option argument for -$OPTARG"
+      >&2 echo -e "$usage_short"
+      exit 1
+      ;;
+    * )
+      >&2 echo -e "Unimplemented option: -$OPTARG" && exit 1
+      >&2 echo -e "$usage_short"
+      exit 1
+    esac
+    shift $((OPTIND-1))
+done
+
+
 install-tixrc
 CONFIG_PATH=$HOME/.tixrc
 . $CONFIG_PATH
@@ -18,39 +82,34 @@ if [ ! -e "$CLI_PATH" ]; then
   install-cli
 fi
 
-### Command line flags
-while getopts "ocxnr" opt; do
-    case "$opt" in
-    r) ### Rewrites the tixrc file
-      rm "$CONFIG_PATH"
-      cp "$HOME/local/bin/node_modules/tix-cli/bin/tixrc" "$CONFIG_PATH"
-      . $CONFIG_PATH
-      ;;
-    o) ### Install optional files
-      install-optional
-      ;;
-    c) ### Clean install directories
-      echo "--Cleaning previous installation...--"
-      rimraf $CONFIG_PATH
-      rimraf $NPMRC_PATH
-      rimraf $CLI_ROOT
-      echo "--Cleaning complete--"
-      ;;
-    x)
-      pushd $CLI_ROOT
-        npm install @tixinc/automation --save
-      popd
-      ;;
-    n)
-      echo "-- -n norun flag specified, skipping cli execution...--"
-      exit 0
-    ;;
-    \?)
-      exit 1
-      ;;
-    esac
-done
 
+if [ "$rewrite_tixrc" = true ] ; then
+  rm "$CONFIG_PATH"
+  install-tixrc
+  . "$CONFIG_PATH"
+fi
+if [ "$install_required" = true ] ; then
+  install-required
+fi
+if [ "$install_optional" = true ] ; then
+  install-optional
+fi
+if [ "$clean_install" = true ] ; then
+  >&2 echo "--Cleaning previous installation...--"
+  rimraf $CONFIG_PATH
+  rimraf $NPMRC_PATH
+  rimraf $CLI_ROOT
+  >&2 echo "--Cleaning complete--"
+fi
+if [ "$install_extended" = true ] ; then
+  pushd "$CLI_ROOT" >/dev/null
+    npm install @tixinc/automation --save
+  popd >/dev/null
+fi
+if [ "$non_interactive" = true ] ; then
+  echo "-- -n norun flag specified, skipping cli execution...--"
+  exit 0
+fi
 
-echo "Executing CLI at $CLI_PATH..."
+echo "--Executing CLI at $CLI_PATH...--"
 node "${CLI_PATH}"

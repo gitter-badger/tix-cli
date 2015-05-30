@@ -18,7 +18,7 @@ install-tixrc
 update-github-token "$CONFIG_PATH" "$token" 2>&1
 . "$CONFIG_PATH"
 
-mkdirp "$MODULE_ROOT"
+mkdirp "$MODULE_ROOT" >/dev/null
 pushd "$MODULE_ROOT" >/dev/null
     for module in */; do
         module_name=$(echo $module | tr -d '/')
@@ -30,8 +30,7 @@ pushd "$MODULE_ROOT" >/dev/null
     done
 popd >/dev/null
 
-# TODO: Add recursive option for checking subdirectories for gitness
-mkdirp "$BUILD_ROOT"
+mkdirp "$BUILD_ROOT" >/dev/null
 if [ -d "$BUILD_ROOT" ] ; then
   pushd "$BUILD_ROOT" >/dev/null
     for build in */; do
