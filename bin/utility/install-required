@@ -29,3 +29,9 @@ if ! hash gulp 2>/dev/null; then
   >&2 echo "--Installing gulp--"
   npm install -g gulp >/dev/null
 fi
+if ! hash chrome 2>/dev/null; then
+  >&2 echo "--Installing chrome--"
+  if [ "$PNAME" = "windows" ]; then
+    choco install google-chrome-x64
+  fi
+fi
