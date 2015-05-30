@@ -69,6 +69,10 @@ while getopts "$options" opt; do
 done
 
 
+if [ "$install_required" = true ] ; then
+  install-required
+fi
+
 install-tixrc
 CONFIG_PATH=$HOME/.tixrc
 . $CONFIG_PATH
@@ -82,17 +86,13 @@ if [ ! -e "$CLI_PATH" ]; then
   install-cli
 fi
 
-
+if [ "$install_optional" = true ] ; then
+  install-optional
+fi
 if [ "$rewrite_tixrc" = true ] ; then
   rm "$CONFIG_PATH"
   install-tixrc
   . "$CONFIG_PATH"
-fi
-if [ "$install_required" = true ] ; then
-  install-required
-fi
-if [ "$install_optional" = true ] ; then
-  install-optional
 fi
 if [ "$clean_install" = true ] ; then
   >&2 echo "--Cleaning previous installation...--"
