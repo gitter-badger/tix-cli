@@ -4,17 +4,17 @@
 
 set -e
 
-. $HOME/.tixrc
+. "$HOME/.tixrc"
 
 echo "--Installing CLI to $CLI_ROOT...--"
-mkdir -p "$MODULE_ROOT"
-pushd "$MODULE_ROOT" >/dev/null
+mkdirp "$LOCAL_ROOT"
+pushd "$LOCAL_ROOT" >/dev/null
   if [ -d "$CLI_ROOT" ];then
     rimraf "$CLI_ROOT"
   fi
 
   >&2 echo "--Cloning $GITHUB_URL_CLI--"
-  git clone --depth 1 $GITHUB_URL_CLI >/dev/null
+  git clone --depth 1 "$GITHUB_URL_CLI" >/dev/null
   pushd "$CLI_ROOT" >/dev/null
     >&2 echo "--Cleaning up unnecessary stuff--"
     rimraf .git

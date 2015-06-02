@@ -126,7 +126,7 @@ export SRC_ZIP_ROOT="${SRC_ROOT}/zip"                                    # ./src
 ### MODULE PATHS
 export MODULE_ROOT="${INSTALL_ROOT}/tixinc"                              # ./tixinc
 
-export CLI_ROOT="${MODULE_ROOT}/tix-cli"                                 # ./tixinc/tix-cli
+export CLI_ROOT="${LOCAL_ROOT}/tix-cli"                                 # ./tixinc/tix-cli
 export CLI_PATH="${CLI_ROOT}/tix-cli.js"                                 # ./tixinc/tix-cli/tix-cli.js
 
 export JS_ROOT="${MODULE_ROOT}/tixinc-js"                                # ./tixinc/tixinc-js

@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Git commits and NPM publishes the ~/tixinc/tix-cli-src module
+# Git commits and NPM publishes the ~/tixinc/tix-cli module
 
 set -e
 
 commit_message=${1-"Updates to tix-cli module..."}
 
-publish-module tix-cli-src "$commit_message" 2>&1
+publish-module tix-cli "$commit_message" 2>&1

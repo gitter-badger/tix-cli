@@ -297,7 +297,7 @@ function Cli(config, token) {
       "desc": "Clones all TixInc modern libraries (npm, TixInc.js, and TixInc.Net) into <%= installRoot %>.",
       "category": "clone"
     },
-    "clone-cli-src": {
+    "clone-cli": {
       "desc": "Clones the TixCli source code to <% toAbsPath('TixCliSrc') %>.",
       "category": "clone"
     },
@@ -328,7 +328,7 @@ function Cli(config, token) {
       "desc": "Git adds, commits, and pushes config module.",
       "category": "acpush"
     },
-    "acpush-cli-src": {
+    "acpush-cli": {
       "desc": "Git adds, commits, and pushes TixCli source.",
       "category": "acpush"
     },
@@ -339,7 +339,7 @@ function Cli(config, token) {
         "acpush-commands": {
           "alias": "p",
           "desc": "Array of acpush-commands to run.",
-          "default": ["acpush-automation", "acpush-config", "acpush-cli-src"]
+          "default": ["acpush-automation", "acpush-config", "acpush-cli"]
         }
       }
     },
@@ -366,7 +366,7 @@ function Cli(config, token) {
       "desc": "Git pulls config module.",
       "category": "pull"
     },
-    "pull-cli-src": {
+    "pull-cli": {
       "desc": "Git pulls TixCli source module.",
       "category": "pull"
     },
@@ -377,7 +377,7 @@ function Cli(config, token) {
         "pull-commands": {
           "alias": "c",
           "desc": "The array of pull commands to issue.",
-          "default": ["pull-automation", "pull-config", "pull-cli-src"]
+          "default": ["pull-automation", "pull-config", "pull-cli"]
         }
       }
     },
@@ -607,10 +607,9 @@ function Cli(config, token) {
     "clone-modern": function () {
       that.execCommands(['clone-npm', 'clone-js', 'clone-net']);
     },
-    "clone-cli-src": function () {
+    "clone-cli": function () {
       that.execCommand('clone-repo', {
-        'github-path': 'tixinc/tix-cli',
-        'local-path': 'tix-cli-src'
+        'github-path': 'tixinc/tix-cli'
       });
     },
     "clone-npm": function () {
@@ -649,8 +648,8 @@ function Cli(config, token) {
       argv.repo = 'config';
       that.execCommand('acpush-repo', argv);
     },
-    "acpush-cli-src": function (argv) {
-      argv.repo = 'tix-cli-src';
+    "acpush-cli": function (argv) {
+      argv.repo = 'tix-cli';
       that.execCommand('acpush-repo', argv);
       executeAt(toAbsPath(argv.repo), function () {
         exec('npm version patch', 'Error patching version.', true);
@@ -679,10 +678,10 @@ function Cli(config, token) {
         'branch': argv.branch
       });
     },
-    "pull-cli-src": function (argv) {
-      argv.repo = 'tix-cli-src';
+    "pull-cli": function (argv) {
+      argv.repo = 'tix-cli';
       that.execCommand('pull-repo', {
-        'repo': 'tix-cli-src',
+        'repo': 'tix-cli',
         'branch': argv.branch
       });
     },
