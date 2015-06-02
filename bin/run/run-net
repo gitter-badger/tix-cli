@@ -5,7 +5,7 @@
 . $HOME/.tixrc
 
 clean-net
-deploy-net
+deploy-net -l
 
 pushd $NET_ARTIFACTS_ROOT >/dev/null
   cmd //c Tix.Web.SelfHost.exe

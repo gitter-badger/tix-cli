@@ -65,5 +65,8 @@ tix -ioxn
 >&2 echo "--Full dev clone--"
 clone-all-dev
 
->&2 echo "--Run JS project in debug mode--"
-debug-js
+>&2 echo "--Building latest release artifacts--"
+release -l
+
+>&2 echo "--Running artifacts--"
+run-artifacts

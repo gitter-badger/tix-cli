@@ -2,7 +2,7 @@
 #
 # This script deletes all user settings (git, github, npm, ssh)
 
-pushd $HOME/src >/dev/null
+pushd "$HOME/src" >/dev/null
   rimraf cmd
   rimraf ps1
   rimraf sh
