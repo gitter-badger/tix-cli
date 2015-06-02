@@ -37,14 +37,13 @@ if hash powershell 2>/dev/null; then
   powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms;[System.Windows.Forms.Screen]::AllScreens" > $RES_CONFIG_PATH
 fi
 
-# Install node 32-bit portable for development (production gets 64 bit)
 if [ ! -f "$NUGET_PATH" ] ; then
   >&2 echo "--Installing Nuget--"
   curl -L "https://nuget.org/nuget.exe" >"$NUGET_PATH"
 fi
 
 if [ ! -f "$NODE_PATH" ] ; then
-  >&2 echo "--Installing 32-bit node.exe--"
+  >&2 echo "--Installing 32-bit node.exe (less problems in development)--"
   curl -L http://nodejs.org/dist/latest/node.exe >"$NODE_PATH"
 fi
 

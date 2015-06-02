@@ -10,7 +10,7 @@ if [ $# -lt 1 ]; then
   exit 1
 fi
 
-. $HOME/.tixrc
+. "$HOME/.tixrc"
 
 revision="$1"
 
@@ -27,11 +27,11 @@ pushd "$JS_BUILD_ROOT" >/dev/null
 popd >/dev/null
 
 >&2 echo "--Building artifacts revision $revision--"
-pushd $JS_ARTIFACTS_ROOT >/dev/null
+pushd "$JS_ARTIFACTS_ROOT" >/dev/null
   rimraf .git
   npm install --production
   >&2 echo "--downloading 64 bit node.exe to bin--"
-  curl -sL http://nodejs.org/dist/v0.12.4/x64/node.exe >bin/node.exe
+  curl -sL http://nodejs.org/dist/latest/x64/node.exe >bin/node.exe
 popd >/dev/null
 
 >&2 echo -e "${GREEN}--Artifacts revision $revision successfully deployed--${NC}"

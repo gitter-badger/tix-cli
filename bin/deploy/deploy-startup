@@ -4,7 +4,7 @@
 
 set -e
 
-. $HOME/.tixrc
+. "$HOME/.tixrc"
 
 run_file_path="$ARTIFACTS_ROOT/run.cmd"
 
