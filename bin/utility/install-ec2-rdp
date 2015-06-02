@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# This script installs a rdp file to ec2 build machine
+
+set -e
+
+
+. "$HOME/.tixrc"
+
+IP="52.24.54.190"
+
+echo -e "auto connect:i:1\r\nfull address:s:$IP\r\nusername:s:Administrator\r\npassword:s:t1x5Ell3n7" >"$HOME/Desktop/ec2-build-machine.rdp"
