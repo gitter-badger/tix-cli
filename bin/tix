@@ -74,6 +74,7 @@ while getopts "$options" opt; do
 done
 
 
+# Install these first
 if [ "$install_required" = true ] ; then
   install-required
 fi
