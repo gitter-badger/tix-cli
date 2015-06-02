@@ -39,13 +39,13 @@ fi
 
 # Install node 32-bit portable for development (production gets 64 bit)
 if [ ! -f "$NUGET_PATH" ] ; then
-  >&2 "--Installing Nuget--"
+  >&2 echo "--Installing Nuget--"
   curl -L "https://nuget.org/nuget.exe" >"$NUGET_PATH"
 fi
 
 if [ ! -f "$NODE_PATH" ] ; then
   >&2 echo "--Installing 32-bit node.exe--"
-  curl -L http://nodejs.org/dist/v0.12.3/node.exe >"$NODE_PATH"
+  curl -L http://nodejs.org/dist/latest/node.exe >"$NODE_PATH"
 fi
 
 if [ ! -f "$NPM_PATH" ] ; then

@@ -54,16 +54,6 @@ $binFiles = @(
     title='cmder full - Portable console emulator for windows'
     src='https://s3-us-west-2.amazonaws.com/tixinc/cmder/cmder.7z'
     dest=Join-Path $binPath cmder.7z
-  },
-  @{
-    title='latest nodejs executable'
-    src='http://nodejs.org/dist/latest/node.exe'
-    dest=Join-Path $binPath node.exe
-  },
-  @{
-    title='MSYS2Base 20150202 Linux Virtualization Layer'
-    src='http://downloads.sourceforge.net/project/msys2/Base/x86_64/msys2-base-x86_64-20150202.tar.xz'
-    dest=Join-Path $binPath msys2-base.tar.xz
   }
 )
 
