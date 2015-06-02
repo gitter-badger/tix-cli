@@ -29,6 +29,10 @@ if ! hash gulp 2>/dev/null; then
   >&2 echo "--Installing gulp--"
   npm install -g gulp >/dev/null
 fi
+if ! hash browser-sync; then
+  >&2 echo "--Installing browser-sync--"
+  npm install -g browser-sync >/dev/null
+fi
 if ! hash chrome 2>/dev/null; then
   >&2 echo "--Installing chrome--"
   if [ "$PNAME" = "windows" ]; then
