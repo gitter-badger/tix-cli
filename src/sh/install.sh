@@ -59,8 +59,8 @@ fi
 >&2 echo "--Installing tix-cli globally--"
 npm install -g tix-cli >/dev/null
 
->&2 echo "--Running tix-cli with optional applications and extended mode and no-run--"
-tix -ioxn
+>&2 echo "--Running tix-cli with required and optional applications and no-run--"
+tix -ion
 
 >&2 echo "--Full dev clone--"
 clone-all-dev
@@ -70,3 +70,5 @@ release -l
 
 >&2 echo "--Running artifacts--"
 run-artifacts
+
+cmd //c cmder & exit
