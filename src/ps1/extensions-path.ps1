@@ -25,6 +25,7 @@ $local=@{
 }
 
 
+
 Write-Host '--Creating src and local directories--'
 $src.Values|Ensure-Directory -PassThru
 $local.Values|Ensure-Directory -PassThru
@@ -54,6 +55,8 @@ Function Add-Path ($path) {
 }
 
 ### Init with LOCAL_PATH variable
+#$VCTargetsPath="C:\Program Files (x86)\MSBuild\12.0\Bin"
+#Add-Variable "VCTargetsPath" "$VCTargetsPath"
 Add-Variable "LOCAL_PATH" $local.bin
 
 Write-Host '--extensions-path.ps1 sourced--'

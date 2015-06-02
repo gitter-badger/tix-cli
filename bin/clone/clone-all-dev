@@ -3,7 +3,7 @@
 # Clones all modules being used for current development
 
 clone-automation
-clone-cli-src
+clone-cli
 clone-client
 clone-config
 clone-ext

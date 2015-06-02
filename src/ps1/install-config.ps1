@@ -23,13 +23,11 @@ $installs.Add('sevenZ', @(
     title='Python Portable 2.7.6.1 Core'
     src=Join-Path $src.bin python_2761_core.7z
     dest=Join-Path $base.local python
-    #link=Join-Path $base.local python\App\python.exe
   },
   @{
     title='cmder - Portable console emulator for windows'
     src=Join-Path $src.bin cmder.7z
     dest=Join-Path $base.local cmder
-    #link=Join-Path $base.local cmder\Cmder.exe
   }
 ))
 

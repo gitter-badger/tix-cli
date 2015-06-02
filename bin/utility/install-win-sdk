@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# This script installs required applications
+
+set -e
+OPTIND=1
+
+install=false
+upgrade=false
+
+usage_short="${CYAN}Usage: install-win-sdk [-i] [-u]"
+usage_long="$usage_short\n-i: Installs win sdk components."
+usage_long="$usage_long\n-u: Upgrades win sdk components."
+
+usage_short="$usage_short\nUse -h to get supported command information."
+
+options=":iuh"
+while getopts "$options" opt ; do
+    case "$opt" in
+    i )
+      install=true
+      ;;
+    u )
+      upgrade=true
+      ;;
+    h )
+      >&2 echo -e "$usage_long" && exit 1
+      exit 0
+      ;;
+    \?)
+      >&2 echo -e "Unknown option: -$OPTARG"
+      >&2 echo -e "$usage_short"
+      exit 1
+      ;;
+    : )
+      >&2 echo -e "Missing option argument for -$OPTARG"
+      >&2 echo -e "$usage_short"
+      exit 1
+      ;;
+    * )
+      >&2 echo -e "Unimplemented option: -$OPTARG" && exit 1
+      >&2 echo -e "$usage_short"
+      exit 1
+    esac
+    shift $((OPTIND-1))
+done
+
+. "$HOME/.tixrc"
+
+if [ "$install" = true ] ; then
+  cmd //c choco install windows-sdk-7.1
+  cmd //c choco install visualstudioexpress2013windowsdesktop
+fi
+
+if [ "$upgrade" = true ] ; then
+  cmd //c choco upgrade windows-sdk-7.1
+  cmd //c choco upgrade visualstudioexpress2013windowsdesktop
+fi
