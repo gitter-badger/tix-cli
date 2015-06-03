@@ -70,5 +70,3 @@ release -l
 
 >&2 echo "--Running artifacts--"
 run-artifacts
-
-cmd //c cmder & exit
