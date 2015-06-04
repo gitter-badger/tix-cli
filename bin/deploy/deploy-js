@@ -3,6 +3,7 @@
 # Deploys fresh tixinc-js artifacts
 
 set -e
+. "$HOME/.tixrc"
 
 ### if no arguments, throw an error
 if [ $# -lt 1 ]; then
@@ -10,18 +11,15 @@ if [ $# -lt 1 ]; then
   exit 1
 fi
 
-. "$HOME/.tixrc"
-
 revision="$1"
-
->&2 echo "--Cleaning artifacts at $JS_ARTIFACTS_ROOT--"
-rimraf "$JS_ARTIFACTS_ROOT"
 
 echo "--executing build-js $revision--"
 build-js "$revision"
 
->&2 echo "--Copying artifacts revision $revision--"
+>&2 echo "--Cleaning and copying artifacts revision $revision--"
 pushd "$JS_BUILD_ROOT" >/dev/null
+  >&2 echo "--Cleaning $JS_ARTIFACTS_ROOT--"
+  rimraf "$JS_ARTIFACTS_ROOT"
   mkdirp "$JS_ARTIFACTS_ROOT"
   cp -rf ./ "$JS_ARTIFACTS_ROOT"
 popd >/dev/null

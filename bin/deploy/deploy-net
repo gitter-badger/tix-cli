@@ -3,14 +3,13 @@
 # Deploys fresh tixinc-net artifacts
 
 set -e
+. "$HOME/.tixrc"
 
 ### if no arguments, throw an error
 if [ $# -lt 1 ]; then
   >&2 echo -e "${RED}--Must specify a revision to deploy...--${NC}"
   exit 1
 fi
-
-. "$HOME/.tixrc"
 
 revision="$1"
 
@@ -34,32 +33,31 @@ if [ ! -f "$msbuild_path" ] ; then
   win_msbuild_path="msbuild"
 fi
 
->&2 echo "--Cleaning artifacts--"
-rimraf "$NET_ARTIFACTS_ROOT"
 
 echo "--executing build-net $revision--"
 build-net "$revision"
 
 >&2 echo "--Building and deploying artifacts revision $revision--"
 pushd "$NET_BUILD_ROOT" >/dev/null
-  echo "--Restoring packages--"
+  >&2 echo "--Restoring packages--"
   nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
-  echo "--Packages restored successfully--"
+  >&2 echo "--Packages restored successfully--"
 
+  >&2 echo "--Cleaning $NET_ARTIFACTS_ROOT--"
+  rimraf "$NET_ARTIFACTS_ROOT"
   mkdirp "$NET_ARTIFACTS_ROOT"
-  echo "--MSBUILD artifacts--"
+  >&2 echo "--MSBUILD artifacts--"
   win_artifacts_root=$(echo "$NET_ARTIFACTS_ROOT" | sed -e 's/^\///'  -e 's/\//\\\\/g')  # strip leading slash and convert to backslash
   win_artifacts_root=$(echo "${win_artifacts_root:0:1}:${win_artifacts_root:1}")        # Add semicolon after drive
-  echo "Building to $win_artifacts_root"
+  >&2 echo "Building to $win_artifacts_root"
 
+  >&2 echo "Executing... -> cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //nologo //p:Configuration=Debug //p:OutputPath=\"${win_artifacts_root}\" //m //v:m //clp:ErrorsOnly"
+  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //nologo //p:Configuration=Debug //p:OutputPath="${win_artifacts_root}" //m //v:m //clp:ErrorsOnly
+  >&2 echo "--MSBUILD finished successfully--"
 
-
-  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //nologo //p:Configuration=Debug //p:OutputPath=${win_artifacts_root} //m //v:m //clp:ErrorsOnly
-  echo "--MSBUILD finished successfully--"
-
-  echo "--Cleaning packages--"
+  >&2 echo "--Cleaning packages--"
   rimraf packages
-  echo "--Packages cleaned successfully--"
+  >&2 echo "--Packages cleaned successfully--"
 popd >/dev/null
 
 >&2 echo -e "${GREEN}--Artifacts revision $revision successfully deployed--${NC}"
