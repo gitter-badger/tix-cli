@@ -151,16 +151,17 @@ if [ "$delete_all" = true ] ; then
 
   rimraf "$TEMP_ROOT"
   mkdirp "$TEMP_ROOT"
+
   temp_script="$TEMP_ROOT/delete.cmd"
-  echo -en "echo \"${CYAN}--Deleting local in 4...--\"${NC}"
-  echo -en "timeout /t 4\r\n" >"$temp_script"
+  echo -en "echo \"${CYAN}--Deleting local in 4...--\"${NC}" >"$temp_script"
+  echo -en "timeout /t 4\r\n" >>"$temp_script"
   echo -en "rmdir /s /q %USERPROFILE%\local\r\n" >>"$temp_script"
-  if [ "reinstall_all" = true ] ; then
-    echo -en "echo \"${CYAN}--Reinstalling in 4...--\"${NC}"
+  if [ "$reinstall_all" = true ] ; then
+    echo -en "echo \"${CYAN}--Reinstalling now...--\"${NC}" >>"$temp_script"
     echo -e "@PowerShell -NoProfile -ExecutionPolicy unrestricted -Command \"If(Test-Path %TEMP%\t.ps1){rm %TEMP%\t.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File %TEMP%\t.ps1;%TEMP%\t.ps1 -Install -CleanSource -CleanLocal;rm %TEMP%\t.ps1\" & exit" >>"$temp_script"
   fi
-  cmd //c "$temp_script" & disown
   >&2 echo -e "${GREEN}--GOODBYE--${NC}"
+  cmd //c "$temp_script" & disown
   exit 0
 fi
 
