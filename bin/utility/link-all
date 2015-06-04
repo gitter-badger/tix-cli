@@ -22,8 +22,6 @@ if [ -d "$JS_ROOT" ] ; then
     npm link ../config
     npm link ../ext
     npm link ../automation
-    npm link ../client
-    npm link ../server
   popd >/dev/null
 fi
 

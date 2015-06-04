@@ -1,7 +1,0 @@
-#!/bin/bash
-#
-# Clones the server module
-
-set -e
-
-$(clone-module server)
