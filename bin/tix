@@ -17,43 +17,53 @@ install_optional=false
 clone_all=false
 link_all=false
 pull_all=false
+delete_all=false
+reinstall_all=false
 non_interactive=false
 
-usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-c] [-x] [-n]${NC}"
+usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-c] [-l] [-p] [-D] [-R] [-n]${NC}"
 usage_long="$usage_short\n-r: Rewrite ~/.tixrc configuration file."
 usage_long="$usage_long\n-i: Install required dependencies."
 usage_long="$usage_long\n-o: Install optional dependencies."
 usage_long="$usage_long\n-c: Clone all tixinc modules."
 usage_long="$usage_long\n-l: Link all tixinc modules."
 usage_long="$usage_long\n-p: Pull all tixinc modules."
+usage_long="$usage_long\n-D: Delete all configuration files, local directory, src directory, and tixinc directory."
+usage_long="$usage_long\n-R: Full reinstall, this should be used with -D flag."
 usage_long="$usage_long\n-n: Run commands and exit."
 
 usage_short="$usage_short\nUse -h to get supported command information."
 
-options=":rioclpnh"
+options=":rioclpnDRh"
 
 ### Command line flags
 while getopts "$options" opt; do
     case "$opt" in
-    r ) ### Rewrites the tixrc file
+    r )
       rewrite_tixrc=true
       ;;
-    i ) ### Install required applications
+    i )
       install_required=true
       ;;
-    o ) ### Install optional files
+    o )
       install_optional=true
       ;;
-    c ) ### Clone all
+    c )
       clone_all=true
       ;;
-    l ) ### Link all
+    l )
       link_all=true
       ;;
-    p ) ### Pull all
+    p )
       pull_all=true
       ;;
-    n ) ### Skip running.
+    D )
+      delete_all=true
+      ;;
+    R )
+      reinstall_all=true
+      ;;
+    n )
       non_interactive=true
     ;;
     h )
@@ -81,11 +91,20 @@ done
 
 # Install these first
 if [ "$install_required" = true ] ; then
+  >&2 echo -e "--Installing required...--"
   install-required
+  >&2 echo -e "${GREEN}--Required install complete--${NC}"
 fi
 
-install-tixrc
 CONFIG_PATH="$HOME/.tixrc"
+if [ "$rewrite_tixrc" = true ] ; then
+  >&2 echo -e "--Rewriting .tixrc...--"
+  rimraf "$CONFIG_PATH"
+fi
+if [ ! -f "$CONFIG_PATH" ] ; then
+  install-tixrc
+  >&2 echo -e "--.tixrc file initialized--"
+fi
 . "$CONFIG_PATH"
 
 ### Get tokens / auth
@@ -93,23 +112,24 @@ GITHUB_TOKEN=$(github-token)
 npm-token
 . "$CONFIG_PATH"
 
-if [ ! -e "$CLI_PATH" ]; then
+if [ ! -f "$CLI_PATH" ]; then
+  >&2 echo -e "--Installing cli locally...--"
   install-cli
+  >&2 echo -e "${GREEN}--Local install complete--${NC}"
 fi
 
 if [ "$install_optional" = true ] ; then
+  >&2 echo -e "--Installing optional...--"
   install-optional
+  >&2 echo -e "${GREEN}--Optional install complete--${NC}"
 fi
-if [ "$rewrite_tixrc" = true ] ; then
-  rm "$CONFIG_PATH"
-  install-tixrc
-  . "$CONFIG_PATH"
-fi
+
 if [ "$clone_all" = true ] ; then
   >&2 echo -e "--Cloning everything...--"
   clone-all-dev
   >&2 echo -e "${GREEN}--Cloning complete--${NC}"
 fi
+
 if [ "$link_all" = true ] ; then
   >&2 echo -e "--Linking everything...--"
   link-all
@@ -120,6 +140,30 @@ if [ "$pull_all" = true ] ; then
   pull-all
   >&2 echo -e "${GREEN}--Pulling complete--${NC}"
 fi
+if [ "$delete_all" = true ] ; then
+  >&2 echo -e "${RED}--DELETING EVERYTHING...--${NC}"
+  rimraf "$MODULE_ROOT"
+  rimraf "$SRC_ROOT"
+  rimraf "$SSH_ROOT"
+  rimraf "$NPMRC_PATH"
+  rimraf "$LOG_PATH"
+  rimraf "$CONFIG_PATH"
+
+  rimraf "$TEMP_ROOT"
+  mkdirp "$TEMP_ROOT"
+  temp_script="$TEMP_ROOT/delete.cmd"
+  echo -en "echo \"${CYAN}--Deleting local in 4...--\"${NC}"
+  echo -en "timeout /t 4\r\n" >"$temp_script"
+  echo -en "rmdir /s /q %USERPROFILE%\local\r\n" >>"$temp_script"
+  if [ "reinstall_all" = true ] ; then
+    echo -en "echo \"${CYAN}--Reinstalling in 4...--\"${NC}"
+    echo -e "@PowerShell -NoProfile -ExecutionPolicy unrestricted -Command \"If(Test-Path %TEMP%\t.ps1){rm %TEMP%\t.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File %TEMP%\t.ps1;%TEMP%\t.ps1 -Install -CleanSource -CleanLocal;rm %TEMP%\t.ps1\" & exit" >>"$temp_script"
+  fi
+  cmd //c "$temp_script" & disown
+  >&2 echo -e "${GREEN}--GOODBYE--${NC}"
+  exit 0
+fi
+
 if [ "$non_interactive" = true ] ; then
   echo "-- -n norun flag specified, skipping cli execution...--"
   exit 0

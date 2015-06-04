@@ -98,37 +98,42 @@ elif [ "$PLATFORM" = "osx" ]; then
 fi
 export CHROME_PATH
 
+export TEMP_ROOT="$TMP/tix_temp"
 
 ### LOCAL PATHS
-export INSTALL_ROOT="${HOME}"                                            # ./
-export NPMRC_PATH="${HOME}/.npmrc"                                       # ~/.npmrc
-export CONFIG_PATH="${INSTALL_ROOT}/.tixrc"                              # ./.tixrc
-export LOCAL_ROOT="${INSTALL_ROOT}/local"                                # ./local
-export LOG_PATH="${LOCAL_ROOT}/tix.log"                                  # ./local/tix.log
-export LOCAL_CONFIG_ROOT="${LOCAL_ROOT}/config"                          # ./local/config
-export RES_CONFIG_PATH="${LOCAL_CONFIG_ROOT}/res.config"                 # ./local/config/res.config
-export LOCAL_BIN_ROOT="${LOCAL_ROOT}/bin"                                # ./local/bin
-export LOCAL_CHROME_ROOT="${LOCAL_ROOT}/chrome"                          # ./local/chrome
-export LOCAL_FONTS_ROOT="${LOCAL_ROOT}/fonts"                          # ./local/chrome
+export INSTALL_ROOT="${HOME}"
+export SSH_ROOT="${HOME}/.ssh"
+export NPMRC_PATH="${HOME}/.npmrc"
+export CONFIG_PATH="${INSTALL_ROOT}/.tixrc"
+export LOCAL_ROOT="${INSTALL_ROOT}/local"
+export LOG_PATH="${LOCAL_ROOT}/tix.log"
+export LOCAL_CONFIG_ROOT="${LOCAL_ROOT}/config"
+export RES_CONFIG_PATH="${LOCAL_CONFIG_ROOT}/res.config"
+export LOCAL_BIN_ROOT="${LOCAL_ROOT}/bin"
+export LOCAL_CHROME_ROOT="${LOCAL_ROOT}/chrome"
+export LOCAL_FONTS_ROOT="${LOCAL_ROOT}/fonts"
 
 ### Prepend path with ./local/bin
 if ! grep -q "${LOCAL_BIN_ROOT}" <<< "$PATH" ; then
   export PATH="$LOCAL_BIN_ROOT:$PATH"
 fi
 
+### TOOL PATHS
+export NODE_MODULES_ROOT="${LOCAL_BIN_ROOT}/node_modules"
+export RIMRAF_PATH="${NODE_MODULES_ROOT}/rimraf/rimraf.js"
+export NODE_EXE_PATH="${LOCAL_BIN_ROOT}/node.exe"
 
 ### SRC PATHS
-export SRC_ROOT="${INSTALL_ROOT}/src"                                    # ./src
-export SRC_BIN_ROOT="${SRC_ROOT}/bin"                                    # ./src/bin
-export SRC_ZIP_ROOT="${SRC_ROOT}/zip"                                    # ./src/zip
+export SRC_ROOT="${INSTALL_ROOT}/src"
+export SRC_BIN_ROOT="${SRC_ROOT}/bin"
+export SRC_ZIP_ROOT="${SRC_ROOT}/zip"
 
 
 ### MODULE PATHS
-export MODULE_ROOT="${INSTALL_ROOT}/tixinc"                              # ./tixinc
+export MODULE_ROOT="${INSTALL_ROOT}/tixinc"
 
-export CLI_ROOT="${LOCAL_ROOT}/tix-cli"                                 # ./tixinc/tix-cli
-export CLI_PATH="${CLI_ROOT}/tix-cli.js"                                 # ./tixinc/tix-cli/tix-cli.js
-
+export CLI_ROOT="${LOCAL_ROOT}/tix-cli"
+export CLI_PATH="${CLI_ROOT}/tix-cli.js"
 
 export AUTOMATION_ROOT="${MODULE_ROOT}/automation"
 export EXT_ROOT="${MODULE_ROOT}/automation"
@@ -136,19 +141,19 @@ export CONFIG_ROOT="${MODULE_ROOT}/automation"
 export CLIENT_ROOT="${MODULE_ROOT}/automation"
 export SERVER_ROOT="${MODULE_ROOT}/automation"
 export CLASSIC_ROOT="${MODULE_ROOT}/automation"
-export JS_ROOT="${MODULE_ROOT}/tixinc-js"                                # ./tixinc/tixinc-js
-export NET_ROOT="${MODULE_ROOT}/tixinc-net"                              # ./tixinc/tixinc-net
+export JS_ROOT="${MODULE_ROOT}/tixinc-js"
+export NET_ROOT="${MODULE_ROOT}/tixinc-net"
 
-export NET_SELFHOST_ROOT="${NET_ROOT}/Tix.Web.SelfHost"                  # ./tixinc/tixinc-net/Tix.Web.SelfHost
-export NET_PROJECT_PATH="${NET_SELFHOST_ROOT}/Tix.Web.SelfHost.csproj"   # ./tixinc/tixinc-net/Tix.Web.SelfHost/Tix.Web.SelfHost.csproj
+export NET_SELFHOST_ROOT="${NET_ROOT}/Tix.Web.SelfHost"
+export NET_PROJECT_PATH="${NET_SELFHOST_ROOT}/Tix.Web.SelfHost.csproj"
 
 export BUILD_ROOT="${MODULE_ROOT}/build"
-export NET_BUILD_ROOT="${BUILD_ROOT}/tixinc-net"                         # ./tixinc/artifacts/tixinc-net/
+export NET_BUILD_ROOT="${BUILD_ROOT}/tixinc-net"
 export JS_BUILD_ROOT="${BUILD_ROOT}/tixinc-js"
 
-export ARTIFACTS_ROOT="${MODULE_ROOT}/artifacts"                         # ./tixinc/artifacts
-export NET_ARTIFACTS_ROOT="${ARTIFACTS_ROOT}/tixinc-net"                 # ./tixinc/artifacts/tixinc-net/
-export JS_ARTIFACTS_ROOT="${ARTIFACTS_ROOT}/tixinc-js"                   # ./tixinc/artifacts/tixinc-net/
+export ARTIFACTS_ROOT="${MODULE_ROOT}/artifacts"
+export NET_ARTIFACTS_ROOT="${ARTIFACTS_ROOT}/tixinc-net"
+export JS_ARTIFACTS_ROOT="${ARTIFACTS_ROOT}/tixinc-js"
 
 export RELEASE_ROOT="${MODULE_ROOT}/release"
 

@@ -9,7 +9,8 @@ pushd "$MODULE_ROOT" >/dev/null
         module_name=$(echo "$module" | tr -d '/')
         if [ -d "$module_name/.git" ]; then
           pushd "$module_name" >/dev/null
-            git pull --follow-tags
+            git pull
+            git pull --tags
           popd >/dev/null
         fi
     done
