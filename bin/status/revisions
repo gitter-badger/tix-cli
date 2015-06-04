@@ -74,9 +74,9 @@ if [ ! -d "$module_root" ]; then
 fi
 
 pushd "$module_root" >/dev/null
-  git fetch >&2
-  git fetch --tags >&2
-  git checkout --force origin/master
+  >&2 git fetch
+  >&2 git fetch --tags
+  >&2 git checkout --force origin/master
 
   # If latest is specified, just return latest annotated version
   if [ "$latest" = true ] ; then
