@@ -47,7 +47,7 @@ if [ "$net_revision" = "" ] ; then
   >&2 echo -e "${RED}--tixinc-net (-n) revision string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions--${NC}" && exit 1
 fi
 
-. $HOME/.tixrc
+. "$HOME/.tixrc"
 
 release_name="net_$net_revision-js_$js_revision"
 release_path="release/$release_name.7z"
