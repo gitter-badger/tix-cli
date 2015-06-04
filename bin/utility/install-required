@@ -2,7 +2,7 @@
 #
 # This script installs required applications
 
-. $HOME/.tixrc
+. "$HOME/.tixrc"
 
 >&2 echo "--Installing Required Applications--"
 if ! hash rimraf 2>/dev/null; then

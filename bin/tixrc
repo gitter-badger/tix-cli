@@ -129,9 +129,16 @@ export MODULE_ROOT="${INSTALL_ROOT}/tixinc"                              # ./tix
 export CLI_ROOT="${LOCAL_ROOT}/tix-cli"                                 # ./tixinc/tix-cli
 export CLI_PATH="${CLI_ROOT}/tix-cli.js"                                 # ./tixinc/tix-cli/tix-cli.js
 
-export JS_ROOT="${MODULE_ROOT}/tixinc-js"                                # ./tixinc/tixinc-js
 
+export AUTOMATION_ROOT="${MODULE_ROOT}/automation"
+export EXT_ROOT="${MODULE_ROOT}/automation"
+export CONFIG_ROOT="${MODULE_ROOT}/automation"
+export CLIENT_ROOT="${MODULE_ROOT}/automation"
+export SERVER_ROOT="${MODULE_ROOT}/automation"
+export CLASSIC_ROOT="${MODULE_ROOT}/automation"
+export JS_ROOT="${MODULE_ROOT}/tixinc-js"                                # ./tixinc/tixinc-js
 export NET_ROOT="${MODULE_ROOT}/tixinc-net"                              # ./tixinc/tixinc-net
+
 export NET_SELFHOST_ROOT="${NET_ROOT}/Tix.Web.SelfHost"                  # ./tixinc/tixinc-net/Tix.Web.SelfHost
 export NET_PROJECT_PATH="${NET_SELFHOST_ROOT}/Tix.Web.SelfHost.csproj"   # ./tixinc/tixinc-net/Tix.Web.SelfHost/Tix.Web.SelfHost.csproj
 

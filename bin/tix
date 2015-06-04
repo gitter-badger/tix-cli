@@ -14,21 +14,23 @@ fi
 rewrite_tixrc=false
 install_required=false
 install_optional=false
-clean_install=false
-install_extended=false
+clone_all=false
+link_all=false
+pull_all=false
 non_interactive=false
 
 usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-c] [-x] [-n]${NC}"
 usage_long="$usage_short\n-r: Rewrite ~/.tixrc configuration file."
 usage_long="$usage_long\n-i: Install required dependencies."
 usage_long="$usage_long\n-o: Install optional dependencies."
-usage_long="$usage_long\n-c: Clean installation directories."
-usage_long="$usage_long\n-x: Install extended cli."
+usage_long="$usage_long\n-c: Clone all tixinc modules."
+usage_long="$usage_long\n-l: Link all tixinc modules."
+usage_long="$usage_long\n-p: Pull all tixinc modules."
 usage_long="$usage_long\n-n: Run commands and exit."
 
 usage_short="$usage_short\nUse -h to get supported command information."
 
-options=":riocxnh"
+options=":rioclpnh"
 
 ### Command line flags
 while getopts "$options" opt; do
@@ -42,11 +44,14 @@ while getopts "$options" opt; do
     o ) ### Install optional files
       install_optional=true
       ;;
-    c ) ### Clean install directories
-      clean_install=true
+    c ) ### Clone all
+      clone_all=true
       ;;
-    x ) ### Install extended mode
-      install_extended=true
+    l ) ### Link all
+      link_all=true
+      ;;
+    p ) ### Pull all
+      pull_all=true
       ;;
     n ) ### Skip running.
       non_interactive=true
@@ -80,13 +85,13 @@ if [ "$install_required" = true ] ; then
 fi
 
 install-tixrc
-CONFIG_PATH=$HOME/.tixrc
-. $CONFIG_PATH
+CONFIG_PATH="$HOME/.tixrc"
+. "$CONFIG_PATH"
 
 ### Get tokens / auth
 GITHUB_TOKEN=$(github-token)
 npm-token
-. $CONFIG_PATH
+. "$CONFIG_PATH"
 
 if [ ! -e "$CLI_PATH" ]; then
   install-cli
@@ -100,17 +105,20 @@ if [ "$rewrite_tixrc" = true ] ; then
   install-tixrc
   . "$CONFIG_PATH"
 fi
-if [ "$clean_install" = true ] ; then
-  >&2 echo "--Cleaning previous installation...--"
-  rimraf $CONFIG_PATH
-  rimraf $NPMRC_PATH
-  rimraf $CLI_ROOT
-  >&2 echo "--Cleaning complete--"
+if [ "$clone_all" = true ] ; then
+  >&2 echo -e "--Cloning everything...--"
+  clone-all-dev
+  >&2 echo -e "${GREEN}--Cloning complete--${NC}"
 fi
-if [ "$install_extended" = true ] ; then
-  pushd "$CLI_ROOT" >/dev/null
-    npm install @tixinc/automation --save
-  popd >/dev/null
+if [ "$link_all" = true ] ; then
+  >&2 echo -e "--Linking everything...--"
+  link-all
+  >&2 echo -e "${GREEN}--Linking complete--${NC}"
+fi
+if [ "$pull_all" = true ] ; then
+  >&2 echo -e "--Pulling everything...--"
+  pull-all
+  >&2 echo -e "${GREEN}--Pulling complete--${NC}"
 fi
 if [ "$non_interactive" = true ] ; then
   echo "-- -n norun flag specified, skipping cli execution...--"

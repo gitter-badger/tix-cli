@@ -8,7 +8,9 @@ pushd "$MODULE_ROOT" >/dev/null
     for module in */; do
         module_name=$(echo "$module" | tr -d '/')
         if [ -d "$module_name/.git" ]; then
-            status-module "$module_name" 2>&1
+          pushd "$module_name" >/dev/null
+            git pull --follow-tags
+          popd >/dev/null
         fi
     done
 popd >/dev/null

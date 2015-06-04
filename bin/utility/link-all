@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# This script installs required applications
+
+. "$HOME/.tixrc"
+
+if [ -d "$AUTOMATION_ROOT" ] ; then
+  pushd "$AUTOMATION_ROOT" >/dev/null
+    npm link ../config
+    npm link ../ext
+  popd >/dev/null
+fi
+
+if [ -d "$EXT_ROOT" ] ; then
+  pushd "$EXT_ROOT" >/dev/null
+    npm link ../config
+  popd >/dev/null
+fi
+
+if [ -d "$JS_ROOT" ] ; then
+  pushd "$JS_ROOT" >/dev/null
+    npm link ../config
+    npm link ../ext
+    npm link ../automation
+    npm link ../client
+    npm link ../server
+  popd >/dev/null
+fi
+
