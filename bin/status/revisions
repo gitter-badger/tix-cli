@@ -70,13 +70,13 @@ remote_branch="origin/$branch_name"
 ### if module not cloned, clone it
 if [ ! -d "$module_root" ]; then
   >&2 echo -e "${CYAN}Module $module_name does not exist at $module_root, cloning...${NC}"
-  >&2 clone-module -b $module_name
+  clone-module -b $module_name >/dev/null
 fi
 
 pushd "$module_root" >/dev/null
-  git fetch >/dev/null
-  git fetch --tags >/dev/null
-  git checkout --force origin/master >/dev/null
+  $(git fetch) >/dev/null
+  $(git fetch --tags) >/dev/null
+  $(git checkout --force origin/master) >/dev/null
 
   # If latest is specified, just return latest annotated version
   if [ "$latest" = true ] ; then
