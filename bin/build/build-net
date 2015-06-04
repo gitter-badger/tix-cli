@@ -2,12 +2,15 @@
 #
 # Syncs an exact revision of tixinc-net module to the build directory.
 
+set -e
+
+. "$HOME/.tixrc"
+
 ### if no arguments, throw an error
 if [ $# -lt 1 ]; then
   >&2 echo -e "${RED}--Must specify a revision to build...--${NC}"
   exit 1
 fi
 
-. "$HOME/.tixrc"
 
 build-module tixinc-net "$1"
