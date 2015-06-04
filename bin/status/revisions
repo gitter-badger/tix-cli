@@ -76,7 +76,7 @@ fi
 pushd "$module_root" >/dev/null
   git fetch >/dev/null
   git fetch --tags >/dev/null
-  git checkout --force origin/master &>/dev/null
+  git checkout -q --force origin/master &>/dev/null
 
   # If latest is specified, just return latest annotated version
   if [ "$latest" = true ] ; then
