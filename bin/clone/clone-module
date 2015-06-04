@@ -2,7 +2,49 @@
 #
 # Clones the specified module to a directory in the modules installation root
 
-. $HOME/.tixrc
+set -e
+OPTIND=1
+
+. "$HOME/.tixrc"
+
+# Define flags
+build_flag=false
+
+usage_short="${CYAN}Usage: clone-module [-b] module-name [relative-path]${NC}"
+usage_long="$usage_short\n-b: Clone the module to the build root instead of module root."
+
+usage_short="$usage_short\nUse -h to get supported command information."
+
+options=":bh"
+
+### Command line flags
+while getopts "$options" opt; do
+    case "$opt" in
+    b )
+      build_flag=true
+      ;;
+    h )
+      >&2 echo -e "$usage_long" && exit 1
+      exit 0
+      ;;
+    \?)
+      >&2 echo -e "Unknown option: -$OPTARG"
+      >&2 echo -e "$usage_short"
+      exit 1
+      ;;
+    : )
+      >&2 echo -e "Missing option argument for -$OPTARG"
+      >&2 echo -e "$usage_short"
+      exit 1
+      ;;
+    * )
+      >&2 echo -e "Unimplemented option: -$OPTARG" && exit 1
+      >&2 echo -e "$usage_short"
+      exit 1
+    esac
+    shift $((OPTIND-1))
+done
+
 
 ### if no arguments, throw an error
 if [ $# -eq 0 ]; then
@@ -12,8 +54,14 @@ fi
 
 module_name=$1
 module_dir=${2-$module_name}
-module_path="$MODULE_ROOT/$module_dir"
+module_root="$MODULE_ROOT"
+
+if [ "$build_flag" = true ] ; then
+  module_root="$BUILD_ROOT"
+fi
+
 module_url="$GITHUB_URL_TIX/$module_name"
+module_path="$module_root/$module_dir"
 
 ### if module already cloned, throw an error
 if [ -d "$module_path" ]; then
@@ -22,5 +70,5 @@ if [ -d "$module_path" ]; then
 fi
 
 >&2 echo -e "--Cloning $module_url to $module_path...--"
-git clone $module_url $module_path 2>&1 | grep -qi "fatal" && >&2 echo "An error occurred while cloning." && exit 1
+git clone "$module_url" "$module_path" 2>&1 | grep -qi "fatal" && >&2 echo "An error occurred while cloning." && exit 1
 >&2 echo -e "${GREEN}--$module_name cloned successfully--${NC}"

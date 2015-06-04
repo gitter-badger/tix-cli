@@ -57,7 +57,7 @@ done
 
 module_name=$1
 
-. $HOME/.tixrc
+. "$HOME/.tixrc"
 
 ### if no arguments, throw an error
 if [ "$module_name" = "" ]; then
