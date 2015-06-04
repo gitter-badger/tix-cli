@@ -60,10 +60,7 @@ fi
 npm install -g tix-cli >/dev/null
 
 >&2 echo "--Running tix-cli with required and optional applications and no-run--"
-tix -ion
-
->&2 echo "--Full dev clone--"
-clone-all-dev
+tix -ioclpn
 
 >&2 echo "--Building latest release artifacts--"
 release -l
