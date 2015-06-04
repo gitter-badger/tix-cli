@@ -5,9 +5,9 @@
 set -e
 OPTIND=1
 
-CONFIG_PATH=$HOME/.tixrc
+CONFIG_PATH="$HOME/.tixrc"
 if [ -f "$CONFIG_PATH" ] ; then
-  . $CONFIG_PATH
+  . "$CONFIG_PATH"
 fi
 
 # Define flags
@@ -28,13 +28,13 @@ usage_long="$usage_long\n-o: Install optional dependencies."
 usage_long="$usage_long\n-c: Clone all tixinc modules."
 usage_long="$usage_long\n-l: Link all tixinc modules."
 usage_long="$usage_long\n-p: Pull all tixinc modules."
-usage_long="$usage_long\n-D: Delete all configuration files, local directory, src directory, and tixinc directory."
-usage_long="$usage_long\n-R: Full reinstall, this should be used with -D flag."
+usage_long="$usage_long\n-d: Delete all configuration files, local directory, src directory, and tixinc directory."
+usage_long="$usage_long\n-f: Full reinstall, this should be used with -D flag."
 usage_long="$usage_long\n-n: Run commands and exit."
 
 usage_short="$usage_short\nUse -h to get supported command information."
 
-options=":rioclpnDRh"
+options=":rioclpndfh"
 
 ### Command line flags
 while getopts "$options" opt; do
@@ -57,10 +57,10 @@ while getopts "$options" opt; do
     p )
       pull_all=true
       ;;
-    D )
+    d )
       delete_all=true
       ;;
-    R )
+    f )
       reinstall_all=true
       ;;
     n )
@@ -96,7 +96,6 @@ if [ "$install_required" = true ] ; then
   >&2 echo -e "${GREEN}--Required install complete--${NC}"
 fi
 
-CONFIG_PATH="$HOME/.tixrc"
 if [ "$rewrite_tixrc" = true ] ; then
   >&2 echo -e "--Rewriting .tixrc...--"
   rimraf "$CONFIG_PATH"
@@ -135,11 +134,13 @@ if [ "$link_all" = true ] ; then
   link-all
   >&2 echo -e "${GREEN}--Linking complete--${NC}"
 fi
+
 if [ "$pull_all" = true ] ; then
   >&2 echo -e "--Pulling everything...--"
   pull-all
   >&2 echo -e "${GREEN}--Pulling complete--${NC}"
 fi
+
 if [ "$delete_all" = true ] ; then
   >&2 echo -e "${RED}--DELETING EVERYTHING...--${NC}"
   rimraf "$MODULE_ROOT"
