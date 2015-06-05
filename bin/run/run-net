@@ -2,11 +2,11 @@
 #
 # This script runs the tixinc-js project in debug mode
 
-. $HOME/.tixrc
+. "$HOME/.tixrc"
 
 clean-net
-deploy-net -l
+deploy-net -l -V 12.0 -e
 
-pushd $NET_ARTIFACTS_ROOT >/dev/null
+pushd "$NET_ARTIFACTS_ROOT" >/dev/null
   cmd //c Tix.Web.SelfHost.exe
 popd >/dev/null
