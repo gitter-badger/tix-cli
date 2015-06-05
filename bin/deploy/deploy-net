@@ -7,13 +7,15 @@ set -e
 
 latest=false
 version=""
+tools_version="12.0"
 configuration=Debug
 encrypt=false
 output_path="$NET_ARTIFACTS_ROOT"
 
-usage_short="${CYAN}Usage: deploy-net -l|-v version [-c Configuration] [-e] [-o OutputPath]"
+usage_short="${CYAN}Usage: deploy-net -l|-v version [-t ToolsVersion] [-c Configuration] [-e] [-o OutputPath]"
 usage_long="$usage_short\n-l: Deploy latest version of tixinc-net."
 usage_long="$usage_long\n-v: Deploy specific version (tag or hash)."
+usage_long="$usage_long\n-t: MSBuild ToolsVersion to use."
 usage_long="$usage_long\n-c: Configuration to deploy (default=Debug)."
 usage_long="$usage_long\n-e: Encrypt configuration section."
 usage_long="$usage_long\n-o: Output path (default=$output_path)."
@@ -21,7 +23,7 @@ usage_long="$usage_long\n-o: Output path (default=$output_path)."
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
 
-options=":lv:c:eo:h"
+options=":lv:t:c:eo:h"
 OPTIND=1
 while getopts "$options" opt ; do
     case "$opt" in
@@ -30,6 +32,9 @@ while getopts "$options" opt ; do
       ;;
     v )
       version="$OPTARG"
+      ;;
+    t )
+      tools_version="$OPTARG"
       ;;
     c )
       configuration="$OPTARG"
@@ -71,26 +76,6 @@ if [ "$version" = "" ] ; then
   exit 1
 fi
 
-# msbuild might exist and be in path, might exist and not be in path or might not exist... thankfully MS makes this easy to install.. not
-# setup default paths an test to see if its there
-msbuild_path="/c/Program Files (x86)/MSBuild/12.0/Bin/MSBuild.exe"
-win_msbuild_path=$(echo "$msbuild_path" | sed -e 's/^\///' -e 's/\//\\\\/g')  # strip leading slash, convert to backslash.. windows...
-win_msbuild_path=$(echo "${win_msbuild_path:0:1}:${win_msbuild_path:1}")      # Add semicolon after drive
-if [ ! -f "$msbuild_path" ] ; then
-  # Not there, lets install
-  >&2 echo -e "${BLUE}--MSBUILD not found, installing...--${NC}"
-  choco install microsoft-build-tools
-
-  # These downloads might help at some point
-  #http://download.microsoft.com/download/9/B/B/9BB1309E-1A8F-4A47-A6C5-ECF76672A3B3/BuildTools_Full.exe
-  #choco install netfx-4.5.2-devpack
-fi
-if [ ! -f "$msbuild_path" ] ; then
-  >&2 echo -e "${RED}--MSBUILD still not found... hail mary to see if it is in default path--${NC}"
-  msbuild_path="msbuild"
-  win_msbuild_path="msbuild"
-fi
-
 to_win_path() {
   if [ "$1" ] ; then
     # handle absolute
@@ -107,6 +92,25 @@ to_win_path() {
     fi
   fi
 }
+
+# msbuild might exist and be in path, might exist and not be in path or might not exist... thankfully MS makes this easy to install.. not
+# setup default paths an test to see if its there
+msbuild_path="/c/Program Files (x86)/MSBuild/${tools_version}/Bin/MSBuild.exe"
+win_msbuild_path="$(to_win_path "$msbuild_path")"
+if [ ! -f "$msbuild_path" ] ; then
+  # Not there, lets install
+  >&2 echo -e "${BLUE}--MSBUILD not found, installing...--${NC}"
+  choco install microsoft-build-tools
+
+  # These downloads might help at some point
+  #http://download.microsoft.com/download/9/B/B/9BB1309E-1A8F-4A47-A6C5-ECF76672A3B3/BuildTools_Full.exe
+  #choco install netfx-4.5.2-devpack
+fi
+if [ ! -f "$msbuild_path" ] ; then
+  >&2 echo -e "${RED}--MSBUILD still not found... hail mary to see if it is in default path--${NC}"
+  msbuild_path="msbuild"
+  win_msbuild_path="msbuild"
+fi
 
 
 echo "--executing build-net $version--"
@@ -126,8 +130,8 @@ pushd "$NET_BUILD_ROOT" >/dev/null
   win_artifacts_root="$(to_win_path "$output_path")"
   >&2 echo "Building to $win_artifacts_root"
 
-  >&2 echo "Executing... -> cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //nologo //p:Configuration=${configuration} //p:OutputPath=\"${win_artifacts_root}\" //m //v:m //clp:ErrorsOnly"
-  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //nologo //p:Configuration=${configuration} //p:OutputPath="${win_artifacts_root}" //m //v:m //clp:ErrorsOnly
+  >&2 echo "Executing... -> cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:Configuration=${configuration} //p:OutputPath=\"${win_artifacts_root}\" //m //v:m //clp:ErrorsOnly"
+  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:Configuration=${configuration} //p:OutputPath="${win_artifacts_root}" //m //v:m //clp:ErrorsOnly
   >&2 echo "--MSBUILD finished successfully--"
 
   >&2 echo "--Cleaning packages--"
