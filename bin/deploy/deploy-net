@@ -8,22 +8,24 @@ set -e
 latest=false
 version=""
 tools_version="12.0"
+visual_studio_version="12.0"
 configuration=Debug
 encrypt=false
 output_path="$NET_ARTIFACTS_ROOT"
 
-usage_short="${CYAN}Usage: deploy-net -l|-v version [-t ToolsVersion] [-c Configuration] [-e] [-o OutputPath]"
+usage_short="${CYAN}Usage: deploy-net -l|-v version [-t ToolsVersion] [-V VisualStudioVersion] [-c Configuration] [-e] [-o OutputPath]"
 usage_long="$usage_short\n-l: Deploy latest version of tixinc-net."
 usage_long="$usage_long\n-v: Deploy specific version (tag or hash)."
-usage_long="$usage_long\n-t: MSBuild ToolsVersion to use."
-usage_long="$usage_long\n-c: Configuration to deploy (default=Debug)."
+usage_long="$usage_long\n-t: MSBuild ToolsVersion to use (default=${tools_version})."
+usage_long="$usage_long\n-V: MSBuild VisualStudioVersion to use (default=${visual_studio_version})."
+usage_long="$usage_long\n-c: Configuration to deploy (default=${configuration})."
 usage_long="$usage_long\n-e: Encrypt configuration section."
 usage_long="$usage_long\n-o: Output path (default=$output_path)."
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
 
-options=":lv:t:c:eo:h"
+options=":lv:t:V:c:eo:h"
 OPTIND=1
 while getopts "$options" opt ; do
     case "$opt" in
@@ -35,6 +37,9 @@ while getopts "$options" opt ; do
       ;;
     t )
       tools_version="$OPTARG"
+      ;;
+    V )
+      visual_studio_version="$OPTARG"
       ;;
     c )
       configuration="$OPTARG"
@@ -130,8 +135,8 @@ pushd "$NET_BUILD_ROOT" >/dev/null
   win_artifacts_root="$(to_win_path "$output_path")"
   >&2 echo "Building to $win_artifacts_root"
 
-  >&2 echo "Executing... -> cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:Configuration=${configuration} //p:OutputPath=\"${win_artifacts_root}\" //m //v:m //clp:ErrorsOnly"
-  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:Configuration=${configuration} //p:OutputPath="${win_artifacts_root}" //m //v:m //clp:ErrorsOnly
+  >&2 echo "Executing... -> cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath=\"${win_artifacts_root}\" //m //v:m //clp:ErrorsOnly"
+  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_artifacts_root}" //m //v:m //clp:ErrorsOnly
   >&2 echo "--MSBUILD finished successfully--"
 
   >&2 echo "--Cleaning packages--"
