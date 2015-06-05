@@ -65,7 +65,7 @@ pushd "$MODULE_ROOT" >/dev/null
   #cmd //c "mklink /J C:\\tixinc tixinc"
   #pushd /c/tixinc >/dev/null
     # 7zip the built artifacts using max compression and multithreading
-    7za a -t7z "$release_path" ./artifacts/* -mx9 -mmt
+    7za a -t7z "$release_path" ./artifacts/* -m0=lzma2 -mx=9 -aoa -mfb=64 -md=32m -ms=on
   #popd >/dev/null
   #cmd //c "rmdir C:\\tixinc"
 popd >/dev/null
