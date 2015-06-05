@@ -21,7 +21,7 @@ delete_all=false
 reinstall_all=false
 non_interactive=false
 
-usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-c] [-l] [-p] [-D] [-R] [-n]${NC}"
+usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-c] [-l] [-p] [-d] [-f] [-n]"
 usage_long="$usage_short\n-r: Rewrite ~/.tixrc configuration file."
 usage_long="$usage_long\n-i: Install required dependencies."
 usage_long="$usage_long\n-o: Install optional dependencies."
@@ -30,9 +30,9 @@ usage_long="$usage_long\n-l: Link all tixinc modules."
 usage_long="$usage_long\n-p: Pull all tixinc modules."
 usage_long="$usage_long\n-d: Delete all configuration files, local directory, src directory, and tixinc directory."
 usage_long="$usage_long\n-f: Full reinstall, this should be used with -D flag."
-usage_long="$usage_long\n-n: Run commands and exit."
+usage_long="$usage_long\n-n: Run commands and exit.${NC}"
 
-usage_short="$usage_short\nUse -h to get supported command information."
+usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
 options=":rioclpndfh"
 

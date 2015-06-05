@@ -5,10 +5,22 @@
 set -e
 OPTIND=1
 
-options=":lj:n:"
+. "$HOME/.tixrc"
+
 latest=false
+destination_path="release"
 js_revision=""
 net_revision=""
+
+usage_short="${CYAN}Usage: release [-l] [-d destination-path] [-j js-revision] [-n net-revision]"
+usage_long="$usage_short\n-l: Deploy latest across all libraries."
+usage_long="$usage_long\n-d: Optional destination path (defaults to release)."
+usage_long="$usage_long\n-j: tixinc-js revision to deploy."
+usage_long="$usage_long\n-n: tixinc-net revision to deploy."
+
+usage_short="$usage_short\nUse -h to get supported command information.${NC}"
+
+options=":ld:j:n:"
 
 ### Command line flags
 while getopts "$options" opt ; do
@@ -16,21 +28,35 @@ while getopts "$options" opt ; do
     l ) # deploys latest annotated version for both
       latest=true
       ;;
+    d ) # destination path
+      destination_path="$OPTARG"
+      ;;
     j ) # js_revision
       js_revision=$OPTARG
       ;;
     n ) # net_revision
       net_revision=$OPTARG
       ;;
+    h )
+      >&2 echo -e "$usage_long" && exit 1
+      exit 0
+      ;;
     \?)
-      >&2 echo "Unknown option: -$OPTARG" && exit 1
+      >&2 echo -e "Unknown option: -$OPTARG"
+      >&2 echo -e "$usage_short"
+      exit 1
       ;;
     : )
-      >&2 echo "Missing option argument for -$OPTARG" && exit 1
+      >&2 echo -e "Missing option argument for -$OPTARG"
+      >&2 echo -e "$usage_short"
+      exit 1
       ;;
     * )
-      >&2 echo "Unimplemented option: -$OPTARG" && exit 1
+      >&2 echo -e "Unimplemented option: -$OPTARG" && exit 1
+      >&2 echo -e "$usage_short"
+      exit 1
     esac
+    shift $((OPTIND-1))
 done
 
 if [ "$latest" = true ] ; then
@@ -47,10 +73,9 @@ if [ "$net_revision" = "" ] ; then
   >&2 echo -e "${RED}--tixinc-net (-n) revision string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions--${NC}" && exit 1
 fi
 
-. "$HOME/.tixrc"
 
 release_name="net_$net_revision-js_$js_revision"
-release_path="release/$release_name.7z"
+release_path="$destination_path/$release_name.7z"
 
 >&2 echo -e "--Building and packaging release $release_name--"
 deploy-net "$net_revision"
