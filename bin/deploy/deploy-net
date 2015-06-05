@@ -5,20 +5,23 @@
 set -e
 . "$HOME/.tixrc"
 
-usage_short="${CYAN}Usage: deploy-net -l|-v version [-c] [-e]"
-usage_long="$usage_short\n-l: Deploy latest version of tixinc-net."
-usage_long="$usage_long\n-v: Deploy specific version (tag or hash)."
-usage_long="$usage_long\n-c: Configuration to deploy (default=Debug)."
-usage_long="$usage_long\n-e: Encrypt configuration section.${NC}"
-
-usage_short="$usage_short\nUse -h to get supported command information.${NC}"
-
 latest=false
 version=""
 configuration=Debug
 encrypt=false
+output_path="$NET_ARTIFACTS_ROOT"
 
-options=":lv:ceh"
+usage_short="${CYAN}Usage: deploy-net -l|-v version [-c Configuration] [-e] [-o OutputPath]"
+usage_long="$usage_short\n-l: Deploy latest version of tixinc-net."
+usage_long="$usage_long\n-v: Deploy specific version (tag or hash)."
+usage_long="$usage_long\n-c: Configuration to deploy (default=Debug)."
+usage_long="$usage_long\n-e: Encrypt configuration section."
+usage_long="$usage_long\n-o: Output path (default=$output_path)."
+
+usage_short="$usage_short\nUse -h to get supported command information.${NC}"
+
+
+options=":lv:c:eo:h"
 OPTIND=1
 while getopts "$options" opt ; do
     case "$opt" in
@@ -26,13 +29,16 @@ while getopts "$options" opt ; do
       latest=true
       ;;
     v )
-      version=$OPTARG
+      version="$OPTARG"
       ;;
     c )
-      configuration=$OPTARG
+      configuration="$OPTARG"
       ;;
     e )
       encrypt=true
+      ;;
+    o )
+      output_path="$OPTARG"
       ;;
     h )
       >&2 echo -e "$usage_long" && exit 1
@@ -85,6 +91,24 @@ if [ ! -f "$msbuild_path" ] ; then
   win_msbuild_path="msbuild"
 fi
 
+to_win_path() {
+  if [ "$1" ] ; then
+    # handle absolute
+    if [[ "$1" == /* ]] ; then
+      # strip leading slash and convert to backslash
+      win_path=$(echo "$1" | sed -e 's/^\///'  -e 's/\//\\\\/g')
+      # Add semicolon after drive
+      win_path=$(echo "${win_path:0:1}:${win_path:1}")
+      echo -en "$win_path"
+    else
+      # convert to backslash
+      win_path=$(echo "$1" | sed 's/\//\\\\/g')
+      echo -en "$win_path"
+    fi
+  fi
+}
+
+
 echo "--executing build-net $version--"
 build-net "$version"
 
@@ -98,8 +122,8 @@ pushd "$NET_BUILD_ROOT" >/dev/null
   rimraf "$NET_ARTIFACTS_ROOT"
   mkdirp "$NET_ARTIFACTS_ROOT"
   >&2 echo "--MSBUILD artifacts--"
-  win_artifacts_root=$(echo "$NET_ARTIFACTS_ROOT" | sed -e 's/^\///'  -e 's/\//\\\\/g')  # strip leading slash and convert to backslash
-  win_artifacts_root=$(echo "${win_artifacts_root:0:1}:${win_artifacts_root:1}")        # Add semicolon after drive
+
+  win_artifacts_root="$(to_win_path "$output_path")"
   >&2 echo "Building to $win_artifacts_root"
 
   >&2 echo "Executing... -> cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //nologo //p:Configuration=${configuration} //p:OutputPath=\"${win_artifacts_root}\" //m //v:m //clp:ErrorsOnly"
