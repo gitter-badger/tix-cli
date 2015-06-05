@@ -26,10 +26,24 @@ popd >/dev/null
 
 >&2 echo "--Building artifacts revision $revision--"
 pushd "$JS_ARTIFACTS_ROOT" >/dev/null
-  rimraf .git
   npm install --production
   >&2 echo "--downloading 64 bit node.exe to bin--"
   curl -sL http://nodejs.org/dist/latest/x64/node.exe >bin/node.exe
+
+  >&2 echo "--cleaning unecessary production files--"
+  rimraf .git
+  rimraf .gitignore
+  rimraf gulpfile.js
+  rimraf build
+  rimraf test
+  rimraf wwwroot/app
+  rimraf wwwroot/core
+  rimraf wwwroot/globals
+  rimraf wwwroot/assets/less
+  rimraf wwwroot/assets/maps
+  rimraf wwwroot/assets/styl
+  rimraf wwwroot/assets/stylus
+  rimraf wwwroot/assets/swatch
 popd >/dev/null
 
 >&2 echo -e "${GREEN}--Artifacts revision $revision successfully deployed--${NC}"
