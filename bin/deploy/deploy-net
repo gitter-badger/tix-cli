@@ -26,6 +26,7 @@ usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
 
 options=":lv:t:V:c:eo:h"
+shopt -u nocasematch
 OPTIND=1
 while getopts "$options" opt ; do
     case "$opt" in
