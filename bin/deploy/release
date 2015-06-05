@@ -3,7 +3,6 @@
 # Deploys a specific set of code across projects
 
 set -e
-OPTIND=1
 
 . "$HOME/.tixrc"
 
@@ -21,8 +20,7 @@ usage_long="$usage_long\n-n: tixinc-net revision to deploy.${NC}"
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
 options=":ld:j:n:"
-
-### Command line flags
+OPTIND=1
 while getopts "$options" opt ; do
     case "$opt" in
     l ) # deploys latest annotated version for both
@@ -56,8 +54,8 @@ while getopts "$options" opt ; do
       >&2 echo -e "$usage_short"
       exit 1
     esac
-    shift $((OPTIND-1))
 done
+shift $((OPTIND-1))
 
 if [ "$latest" = true ] ; then
   >&2 echo -e "${BLUE}--latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net--${NC}"

@@ -60,4 +60,11 @@ pushd "$NET_BUILD_ROOT" >/dev/null
   >&2 echo "--Packages cleaned successfully--"
 popd >/dev/null
 
+if ! hash cryptkeeper 2>/dev/null; then
+  npm install -g cryptkeeper &>/dev/null
+fi
+
+config_path="$NET_ARTIFACTS_ROOT/Tix.Web.SelfHost.exe.config"
+cryptkeeper -e -n -s "connectionStrings" "$config_path"
+
 >&2 echo -e "${GREEN}--Artifacts revision $revision successfully deployed--${NC}"

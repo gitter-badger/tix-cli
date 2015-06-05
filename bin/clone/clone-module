@@ -3,7 +3,6 @@
 # Clones the specified module to a directory in the modules installation root
 
 set -e
-OPTIND=1
 
 . "$HOME/.tixrc"
 
@@ -16,8 +15,7 @@ usage_long="$usage_short\n-b: Clone the module to the build root instead of modu
 usage_short="$usage_short\nUse -h to get supported command information."
 
 options=":bh"
-
-### Command line flags
+OPTIND=1
 while getopts "$options" opt; do
     case "$opt" in
     b )
@@ -42,8 +40,8 @@ while getopts "$options" opt; do
       >&2 echo -e "$usage_short"
       exit 1
     esac
-    shift $((OPTIND-1))
 done
+shift $((OPTIND-1))
 
 
 ### if no arguments, throw an error

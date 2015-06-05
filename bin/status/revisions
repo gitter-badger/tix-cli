@@ -4,8 +4,6 @@
 
 set -e
 
-OPTIND=1
-
 latest=false
 module_name=""
 branch_name="master"
@@ -19,6 +17,7 @@ usage_long="$usage_long\n-c: Specifies the number of recent revisions to get for
 usage_short="$usage_short\nUse -h to get supported command information."
 
 options=":lb:c:h"
+OPTIND=1
 while getopts "$options" opt ; do
     case "$opt" in
     l ) # Gets latest annotated revision
@@ -52,8 +51,8 @@ while getopts "$options" opt ; do
       >&2 echo -e "$usage_short"
       exit 1
     esac
-    shift $((OPTIND-1))
 done
+shift $((OPTIND-1))
 
 module_name=$1
 
