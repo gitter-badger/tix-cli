@@ -16,7 +16,7 @@ usage_short="${CYAN}Usage: release [-l] [-d destination-path] [-j js-revision] [
 usage_long="$usage_short\n-l: Deploy latest across all libraries."
 usage_long="$usage_long\n-d: Optional destination path (defaults to release)."
 usage_long="$usage_long\n-j: tixinc-js revision to deploy."
-usage_long="$usage_long\n-n: tixinc-net revision to deploy."
+usage_long="$usage_long\n-n: tixinc-net revision to deploy.${NC}"
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
