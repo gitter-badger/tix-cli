@@ -3,15 +3,16 @@
 # This script installs required applications
 
 set -e
-
-install=false
-upgrade=false
+. "$HOME/.tixrc"
 
 usage_short="${CYAN}Usage: install-win-sdk [-i] [-u]"
 usage_long="$usage_short\n-i: Installs win sdk components."
 usage_long="$usage_long\n-u: Upgrades win sdk components."
 
 usage_short="$usage_short\nUse -h to get supported command information."
+
+install=false
+upgrade=false
 
 options=":iuh"
 OPTIND=1
@@ -45,7 +46,6 @@ while getopts "$options" opt ; do
 done
 shift $((OPTIND-1))
 
-. "$HOME/.tixrc"
 
 if [ "$install" = true ] ; then
   cmd //c choco install windows-sdk-7.1
