@@ -135,7 +135,7 @@ pushd "$NET_BUILD_ROOT" >/dev/null
   win_artifacts_root="$(to_win_path "$output_path")"
   >&2 echo "Building to $win_artifacts_root"
 
-  >&2 echo "Executing... -> cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath=\"${win_artifacts_root}\" //m //v:m //clp:ErrorsOnly"
+  >&2 echo "Executing... -> cmd /c \"$win_msbuild_path\" Tix.Web.SelfHost\Tix.Web.SelfHost.csproj /tv:${tools_version} /nologo /p:VisualStudioVersion=${visual_studio_version} /p:Configuration=${configuration} /p:OutputPath=\"${win_artifacts_root}\" /m /v:m /clp:ErrorsOnly"
   cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_artifacts_root}" //m //v:m //clp:ErrorsOnly
   >&2 echo "--MSBUILD finished successfully--"
 
