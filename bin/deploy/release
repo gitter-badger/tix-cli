@@ -109,6 +109,7 @@ to_win_path() {
 }
 
 
+release_path="${release_root}/${release_name}.7z"
 j_artifacts_root="/c/art"
 j_release_root="/c/rel"
 j_release_path="${j_release_root}/${release_name}.7z"
