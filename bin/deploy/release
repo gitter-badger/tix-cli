@@ -113,12 +113,13 @@ to_win_path() {
 
 
 release_path="${release_root}/${release_name}.7z"
-j_artifacts_root="/c/artifacts"
-j_release_root="/c/release"
+j_artifacts_root="/c/art_junc"
+j_release_root="/c/rel_junc"
 j_release_path="${j_release_root}/${release_name}.7z"
 
 mkdirp "$release_root"
-rimraf "$release_path"
+rimraf "$j_artifacts_root"
+rimraf "$j_release_root"
 
 win_artifacts_root="$(to_win_path "$ARTIFACTS_ROOT")"
 win_j_artifacts_root="$(to_win_path "$j_artifacts_root")"
