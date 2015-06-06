@@ -7,13 +7,17 @@ set -e
 . "$HOME/.tixrc"
 
 latest=false
-destination_path="release"
+configuration=Release
+encrypt=true
+release_root="release"
 js_revision=""
 net_revision=""
 
-usage_short="${CYAN}Usage: release [-l] [-d destination-path] [-j js-revision] [-n net-revision]"
+usage_short="${CYAN}Usage: release [-l] [-c configuration] [-e] [-d destination-path] [-j js-revision] [-n net-revision]"
 usage_long="$usage_short\n-l: Deploy latest across all libraries."
-usage_long="$usage_long\n-d: Optional destination path (defaults to release)."
+usage_long="$usage_long\n-c: Configuration to deploy (default: $configuration)."
+usage_long="$usage_long\n-e: Encrypt connection strings configuration (default: $encrypt)."
+usage_long="$usage_long\n-d: Optional destination directory (default: $release_root)."
 usage_long="$usage_long\n-j: tixinc-js revision to deploy."
 usage_long="$usage_long\n-n: tixinc-net revision to deploy.${NC}"
 
@@ -24,16 +28,19 @@ shopt -u nocasematch
 OPTIND=1
 while getopts "$options" opt ; do
     case "$opt" in
-    l ) # deploys latest annotated version for both
+    l )
       latest=true
       ;;
-    d ) # destination path
-      destination_path="$OPTARG"
+    c )
+      configuration="$OPTARG"
       ;;
-    j ) # js_revision
+    d )
+      release_root="$OPTARG"
+      ;;
+    j )
       js_revision=$OPTARG
       ;;
-    n ) # net_revision
+    n )
       net_revision=$OPTARG
       ;;
     h )
@@ -73,24 +80,60 @@ if [ "$net_revision" = "" ] ; then
 fi
 
 
-release_name="net_$net_revision-js_$js_revision"
-release_path="$destination_path/$release_name.7z"
-
+release_name="net_${net_revision}-js_${js_revision}"
 >&2 echo -e "--Building and packaging release $release_name--"
-deploy-net -v "$net_revision" -c Release -V 12.0 -e
+if [ "$encrypt" = true ] ; then
+  deploy-net -v "$net_revision" -c "$configuration" -V 12.0 -e
+else
+  deploy-net -v "$net_revision" -c "$configuration" -V 12.0
+fi
 deploy-js "$js_revision"
 deploy-startup
 
->&2 echo -e "--Packaging release--"
-mkdirp "$RELEASE_ROOT"
 
-pushd "$MODULE_ROOT" >/dev/null
-  rimraf "$release_path"
-  #cmd //c "mklink /J C:\\tixinc tixinc"
-  #pushd /c/tixinc >/dev/null
-    # 7zip the built artifacts using max compression and multithreading
-    7za a -t7z "$release_path" ./artifacts/* -m0=lzma2 -mx=9 -aoa -mfb=64 -md=32m -ms=on
-  #popd >/dev/null
-  #cmd //c "rmdir C:\\tixinc"
+to_win_path() {
+  if [ "$1" ] ; then
+    # handle absolute
+    if [[ "$1" == /* ]] ; then
+      # strip leading slash and convert to backslash
+      win_path=$(echo "$1" | sed -e 's/^\///'  -e 's/\//\\\\/g')
+      # Add semicolon after drive
+      win_path=$(echo "${win_path:0:1}:${win_path:1}")
+      echo -en "$win_path"
+    else
+      # convert to backslash
+      win_path=$(echo "$1" | sed 's/\//\\\\/g')
+      echo -en "$win_path"
+    fi
+  fi
+}
+
+
+j_artifacts_root="/c/art"
+j_release_root="/c/rel"
+j_release_path="${j_release_root}/${release_name}.7z"
+
+mkdirp "$release_root"
+rimraf "$release_path"
+
+win_artifacts_root="$(to_win_path "$ARTIFACTS_ROOT")"
+win_j_artifacts_root="$(to_win_path "$j_artifacts_root")"
+>&2 echo -e "--Creating junction from $win_artifacts_root to $win_j_artifacts_root--"
+cmd //c mklink //J "$win_j_artifacts_root" "$win_artifacts_root"
+
+win_release_root="$(to_win_path "$release_root")"
+win_j_release_root="$(to_win_path "$j_release_root")"
+>&2 echo -e "--Creating junction from $win_release_root to $win_j_release_root--"
+cmd //c mklink //J "$win_j_release_root" "$win_release_root"
+
+
+>&2 echo -e "--Packaging release to $release_path--"
+pushd "$j_artifacts_root">/dev/null
+  # 7zip the built artifacts using max compression and multithreading
+  7za a -t7z "$j_release_path" ./* -m0=lzma2 -mx=9 -aoa -mfb=64 -md=32m -ms=on
 popd >/dev/null
+
+rimraf "$j_artifacts_root"
+rimraf "$j_release_root"
+
 >&2 echo -e "${GREEN}--Release packaged successfully at $release_path--${NC}"
