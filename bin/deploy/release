@@ -8,7 +8,7 @@ set -e
 
 latest=false
 configuration=Release
-encrypt=true
+encrypt=false
 release_root="release"
 js_revision=""
 net_revision=""
@@ -23,7 +23,7 @@ usage_long="$usage_long\n-n: tixinc-net revision to deploy.${NC}"
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
-options=":ld:j:n:"
+options=":lc:ed:j:n:"
 shopt -u nocasematch
 OPTIND=1
 while getopts "$options" opt ; do
@@ -33,6 +33,9 @@ while getopts "$options" opt ; do
       ;;
     c )
       configuration="$OPTARG"
+      ;;
+    e )
+      encrypt=true
       ;;
     d )
       release_root="$OPTARG"
@@ -110,8 +113,8 @@ to_win_path() {
 
 
 release_path="${release_root}/${release_name}.7z"
-j_artifacts_root="/c/art"
-j_release_root="/c/rel"
+j_artifacts_root="/c/artifacts"
+j_release_root="/c/release"
 j_release_path="${j_release_root}/${release_name}.7z"
 
 mkdirp "$release_root"
