@@ -13,15 +13,18 @@ var fs = require('fs');
 var join = require('path').join;
 
 //** Modify these args to control how the cli works. */
+
+var INSTALL_ROOT=process.env.INSTALL_ROOT || process.env.HOME || process.env.USERPROFILE;
+var LOCAL_ROOT = join(INSTALL_ROOT, 'local');
+var SRC_ROOT = join(INSTALL_ROOT, 'src');
+var MODULE_ROOT = join(INSTALL_ROOT, 'tixinc');
+
+var CLI_ROOT = join(LOCAL_ROOT, "tix-cli");
+var CONFIG_PATH = join(INSTALL_ROOT, ".tixrc");
+
 var config = {
   platform: getPlatform(),
-  basePath: {
-    windows: process.env['HOME'],
-    linux: process.env['HOME']
-  },
-  installPath: 'tixinc',
   path: {
-    cliDir: 'tix-cli',
     npmDir: 'npm',
     jsDir: 'tixinc-js',
     netDir: 'tixinc-net',
@@ -46,11 +49,6 @@ function clearScreen() {
   require('child_process').execSync('cls', {stdio:'inherit'});
 }
 
-
-//** Map install root to absolute path based at the platform specific base path. */
-config.installRoot = join(getPlatformBase(), config.installPath);
-config.configPath = join(getPlatformBase(), '.tixrc');
-
 function getPlatform() {
   var platform = require('os').platform();
   switch (platform) {
@@ -66,22 +64,10 @@ function getPlatform() {
   }
 }
 
-//** Gets the platform specific base path for current platform. */
-function getPlatformBase() {
-  switch (getPlatform()) {
-    case 'windows':
-      return config.basePath.windows;
-    case 'linux':
-      return config.basePath.linux;
-    default:
-      throw 'Unknown platform [' + platform + '], cannot set base path.';
-  }
-}
-
 
 //** Gets the absolute install root path or a path relative to it if supplied. */
 function toAbsPath(path) {
-  return join(config.installRoot, path);
+  return join(config.MODULE_ROOT, path);
 }
 
 var templateImports = {
@@ -119,11 +105,8 @@ function Cli(config, token) {
   var sh = require('shelljs');
   sh.config.silent = true;
 
-  var installRoot = config.installRoot;
-  var cliDir = toAbsPath(config.path.cliDir);
-  var tixincPath = join(cliDir, 'node_modules', '@tixinc');
+  var tixincPath = join(CLI_ROOT, 'node_modules', '@tixinc');
   var tokenUrl = 'https://' + token + '@github.com';
-
 
 
   var ascii = "                                                                           \r\n                                                          `.,:,,`          \r\n                                                  `::::::::::::::::::,     \r\n                                            ::::`          .::::::::::::   \r\n                                         .:,                 :::::::::::   \r\n                                       :`                     ::::::::::   \r\n                                     .                        ,:::::::::   \r\n                                                              :::::::::.   \r\n                                                              :::::::::    \r\n                                      --------:              .::::::::`    \r\n                       `@@@@@@@@      -------;               :::::::::     \r\n                       @@@@@@@@:                                           \r\n                       @@@@@@@@                                            \r\n                   #@@@@@@@@@@@@@@   @@@@@@@@   @@@@@@@#    @@@@@@@'       \r\n                   @@@@@@@@@@@@@@+  '@@@@@@@@    @@@@@@@: ;@@@@@@@         \r\n           +++        @@@@@@@@      @@@@@@@@      @@@@@@@@@@@@@@#    ,##'  \r\n          ''''+      #@@@@@@@'      @@@@@@@@      .@@@@@@@@@@@@`    :++++# \r\n         +''''''    .@@@@@@@@      @@@@@@@@         #@@@@@@@:       ++++++`\r\n         `'''''     @@@@@@@@      @@@@@@@@.       @@@@@@@@@@@       +++++# \r\n          :''+`    `@@@@@@@@      @@@@@@@@      ,@@@@@@@@@@@@@       #++#  \r\n                   `@@@@@@@@      @@@@@@@@'    @@@@@@@@'@@@@@@@            \r\n                    @@@@@@@@@#''' '@@@@@@@@@'@@@@@@@@:  @@@@@@@;           \r\n                      ...........   ................     .......           \r\n                                                                           \r\n                                                      ,,,,,,,,,            \r\n                                                  ::::::::::',             \r\n                   :`                        .::::::::::+:`                \r\n                   :,                     `::::::::::,+:`                  \r\n                  `:;`                 .::::::::::::',`                    \r\n                   :::`            `:::::::::::::+;.                       \r\n                   :::::,`   .::::::::::::::::'',`                         \r\n                    :::::::::::::::::::::::'':`                            \r\n                      `:::::::::::;+;:.`                                   \r\n                          `..,...`                                         \r\n                                                                           ";
@@ -238,7 +221,7 @@ function Cli(config, token) {
       "category": "utility"
     },
     "ls": {
-      "desc": "Prints contents of install directory (<%= installRoot %>).",
+      "desc": "Prints contents of install directory (<%= MODULE_ROOT %>).",
       "category": "utility"
     },
     "clone-repo": {
@@ -257,7 +240,7 @@ function Cli(config, token) {
         "working-dir": {
           "alias": "d",
           "desc": "The current working directory relative to install root to execute from.",
-          "default": "<%= installRoot %>"
+          "default": "<%= MODULE_ROOT %>"
         }
       }
     },
@@ -266,15 +249,15 @@ function Cli(config, token) {
       "category": "clone"
     },
     "clone-config": {
-      "desc": "Clones the TixInc npm config module to <%= installRoot %>.",
+      "desc": "Clones the TixInc npm config module to <%= MODULE_ROOT %>.",
       "category": "clone"
     },
     "clone-automation": {
-      "desc": "Clones the TixInc npm automation module to <%= installRoot %>.",
+      "desc": "Clones the TixInc npm automation module to <%= MODULE_ROOT %>.",
       "category": "clone"
     },
     "clone-ext": {
-      "desc": "Clones the TixInc npm ext module to <%= installRoot %>.",
+      "desc": "Clones the TixInc npm ext module to <%= MODULE_ROOT %>.",
       "category": "clone"
     },
     "clone-js": {
@@ -290,11 +273,11 @@ function Cli(config, token) {
       "category": "clone"
     },
     "clone-node": {
-      "desc": "Clones all TixInc modern node libraries (npm and TixInc.js) into <%= installRoot %>.",
+      "desc": "Clones all TixInc modern node libraries (npm and TixInc.js) into <%= MODULE_ROOT %>.",
       "category": "clone"
     },
     "clone-modern": {
-      "desc": "Clones all TixInc modern libraries (npm, TixInc.js, and TixInc.Net) into <%= installRoot %>.",
+      "desc": "Clones all TixInc modern libraries (npm, TixInc.js, and TixInc.Net) into <%= MODULE_ROOT %>.",
       "category": "clone"
     },
     "clone-cli": {
@@ -554,7 +537,7 @@ function Cli(config, token) {
       sh.config.silent = false;
     },
     "ls": function (argv, arg) {
-      executeAt(installRoot, function () {
+      executeAt(MODULE_ROOT, function () {
         if (arg) {
           exec('ls ' + arg, 'An error occurred during list directory.', true);
         } else {
@@ -613,7 +596,7 @@ function Cli(config, token) {
       });
     },
     "clone-npm": function () {
-      executeAt(installRoot, function () {
+      executeAt(MODULE_ROOT, function () {
         // clone submodules...
         clone('tixinc/npm');
         executeAt('npm', function () {
@@ -718,7 +701,7 @@ function Cli(config, token) {
     "uninstall-extended": function () {
       if (that.isExtendedMode) {
         var cliBasic = new CliBasic(config);
-        executeAt(cliDir, function () {
+        executeAt(CLI_ROOT, function () {
           cliBasic.rmDir('automation');
           cliBasic.rmDir('config');
           cliBasic.rmDir('ext');
@@ -883,7 +866,6 @@ function CliShell(config, mainArgs) {
 
   var argCommands = _.omit(mainArgv, '_');
   var isInteractive = mainArgs.length === 0 || mainArgv.i || mainArgv.interactive;
-  var cliDir = toAbsPath(config.path.cliDir);
 
   var token = null;
   try {
@@ -926,8 +908,8 @@ function CliShell(config, mainArgs) {
       }
     }).on('close', function () {
       console.log('exit');
-      if (__dirname !== cliDir) {
-        console.log('You can delete the current file at ' + __filename + ' and run the CLI in the future from ' + cliDir + ' with "node tix-cli".');
+      if (__dirname !== CLI_ROOT) {
+        console.log('You can delete the current file at ' + __filename + ' and run the CLI in the future from ' + CLI_ROOT + ' with "node tix-cli".');
       }
       console.log('Goodbye!');
       process.exit(0);
@@ -977,8 +959,7 @@ function createInterface() {
 
 /** Ensures CLI shell gets started in the cli directory so that npm dependencies will be loadable. */
 function startShell(config, args) {
-  var cliDir = toAbsPath(config.path.cliDir);
-  var cliPath = join(cliDir, config.path.cliFile);
+  var cliPath = join(CLI_ROOT, config.path.cliFile);
 
   if (cliPath === __filename) {
     console.log('Starting CLI shell...');

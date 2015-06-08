@@ -19,18 +19,13 @@ pushd "$LOCAL_ROOT" >/dev/null
     >&2 echo "--Cleaning up unnecessary stuff--"
     rimraf .git
     rimraf .gitignore
+    rimraf .gitattributes
     rimraf .settings
     rimraf img
     rimraf src
 
     >&2 echo "--Installing NPM Components...--"
-    npm install minimist --save &>/dev/null
-    npm install shelljs --save &>/dev/null
-    npm install lodash --save &>/dev/null
-    npm install colors --save &>/dev/null
-    npm install read --save &>/dev/null
-    npm install q --save &>/dev/null
-    npm install ftp --save &>/dev/null
+    npm install
     >&2 echo -e "${GREEN}--NPM Components installed successfully--${NC}"
   popd >/dev/null
 popd >/dev/null
