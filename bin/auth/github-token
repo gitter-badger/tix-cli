@@ -79,6 +79,15 @@ if ! grep -q push.default <<< "$git_config" ; then
   >&2 echo "--Git push default not set, configuring to simple--"
   >&2 git config --global push.default simple
 fi
+if ! grep -q core.autocrlf <<< "$git_config" ; then
+  >&2 echo "--Git global autocrlf not set, configuring to false--"
+  git config --global core.autocrlf false
+fi
+if ! grep -q core.eol <<< "$git_config" ; then
+  >&2 echo "--Git global eol not set, configuring to lf--"
+  git config --global core.eol lf
+fi
+
 
 ### If config file does not exist or does not contain the github token
 if [ "$renew" = true ] || [ ! -e "$CONFIG_PATH" ] || ! grep -q $GITHUB_TOKEN_KEY $CONFIG_PATH; then

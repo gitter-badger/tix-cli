@@ -83,7 +83,7 @@ if [ "$net_revision" = "" ] ; then
 fi
 
 
-release_name="net_${net_revision}-js_${js_revision}"
+release_name="net_${net_revision}-js_${js_revision}_$(echo $configuration | tr '[:upper:]' '[:lower:]')"
 >&2 echo -e "--Building and packaging release $release_name--"
 if [ "$encrypt" = true ] ; then
   deploy-net -v "$net_revision" -c "$configuration" -V 12.0 -e

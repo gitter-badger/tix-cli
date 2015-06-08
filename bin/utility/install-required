@@ -2,7 +2,8 @@
 #
 # This script installs required applications
 
-. "$HOME/.tixrc"
+RC_PATH="$HOME/.tixrc"
+. "$RC_PATH"
 
 >&2 echo "--Installing Required Applications--"
 if ! hash rimraf 2>/dev/null; then
@@ -29,9 +30,15 @@ if ! hash gulp 2>/dev/null; then
   >&2 echo "--Installing gulp--"
   npm install -g gulp >/dev/null
 fi
-if ! hash browser-sync; then
+if ! hash browser-sync 2>/dev/null; then
   >&2 echo "--Installing browser-sync--"
   npm install -g browser-sync >/dev/null
+fi
+if ! hash junc 2>/dev/null; then
+  >&2 echo "--Installing junc--"
+  npm install -g junc
+  junc-install "$RC_PATH"
+  . "$RC_PATH"
 fi
 if ! hash chrome 2>/dev/null; then
   >&2 echo "--Installing chrome--"
