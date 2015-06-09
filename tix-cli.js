@@ -19,8 +19,11 @@ var LOCAL_ROOT = join(INSTALL_ROOT, 'local');
 var SRC_ROOT = join(INSTALL_ROOT, 'src');
 var MODULE_ROOT = join(INSTALL_ROOT, 'tixinc');
 
-var CLI_ROOT = join(LOCAL_ROOT, "tix-cli");
-var CONFIG_PATH = join(INSTALL_ROOT, ".tixrc");
+var CLI_ROOT = join(LOCAL_ROOT, 'tix-cli');
+var CLI_PATH = join(CLI_ROOT, 'tix-cli.js');
+
+var CONFIG_PATH = join(INSTALL_ROOT, '.tixrc');
+
 
 var config = {
   platform: getPlatform(),
@@ -28,8 +31,7 @@ var config = {
     npmDir: 'npm',
     jsDir: 'tixinc-js',
     netDir: 'tixinc-net',
-    classicDir: 'tixinc.classic',
-    cliFile: 'tix-cli.js'
+    classicDir: 'tixinc.classic'
   },
   flags: {
     cleanIfNotCliWorkingDir: true,
@@ -959,14 +961,12 @@ function createInterface() {
 
 /** Ensures CLI shell gets started in the cli directory so that npm dependencies will be loadable. */
 function startShell(config, args) {
-  var cliPath = join(CLI_ROOT, config.path.cliFile);
-
-  if (cliPath === __filename) {
+  if (CLI_PATH === __filename) {
     console.log('Starting CLI shell...');
     new CliShell(config, args);
   }
   else {
-    console.log('Starting CLI shell in CLI directory...');
+    console.log('CLI_PATH: ' + CLI_PATH + ', CURRENT_FILE: ' + __filename + ', starting CLI shell in CLI directory...');
     var cli = require(cliPath);
     new cli.CliShell(config, args);
   }
