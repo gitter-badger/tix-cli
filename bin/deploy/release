@@ -73,23 +73,24 @@ done
 shift $((OPTIND-1))
 
 if [ "$latest" = true ] ; then
-  >&2 printf "%b- latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net -%b" "$CYAN" "$NC"
+  >&2 printf "%b- latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net -%b\n" "$CYAN" "$NC"
   js_revision=$(revisions -l tixinc-js)
   net_revision=$(revisions -l tixinc-net)
-  >&2 printf "%b- using tixinc-js $s and tixinc-net $s -%b" "$CYAN" "$js_revision" "$net_revision" "$NC"
+  >&2 printf "%b- using tixinc-js $s and tixinc-net $s -%b\n" "$CYAN" "$js_revision" "$net_revision" "$NC"
 fi
 
 if [ "$js_revision" = "" ] ; then
-  >&2 printf "%b- tixinc-js (-j) revision string is mandatory.  Use \"revisions -m tixinc-js\" to see recent versions -%b" "$RED" "$NC"
+  >&2 printf "%b- tixinc-js (-j) revision string is mandatory.  Use \"revisions -m tixinc-js\" to see recent versions -%b\n" "$RED" "$NC"
   exit 1
 fi
 if [ "$net_revision" = "" ] ; then
-  >&2 printf "%b- tixinc-net (-n) revision string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions -%b" "$RED" "$NC"
+  >&2 printf "%b- tixinc-net (-n) revision string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions -%b\n" "$RED" "$NC"
   exit 1
 fi
 
-release_name="net_${net_revision}-js_${js_revision}_$(echo $configuration | tr '[:upper:]' '[:lower:]')"
->&2 printf "- building and packaging release %s -" "$release_name"
+configuration_lower="$(printf "%s" "$configuration" | tr '[:upper:]' '[:lower:]')"
+release_name="$(printf "net_%s-js_%s-%s" "$net_revision" "$js_revision" "$configuration_lower")"
+>&2 printf "- building and packaging release %b -" "$release_name"
 if [ "$encrypt" = true ] ; then
   deploy-net -v "$net_revision" -c "$configuration" -V 12.0 -e
 else
