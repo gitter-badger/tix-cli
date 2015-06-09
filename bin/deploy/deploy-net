@@ -133,11 +133,11 @@ pushd "$NET_BUILD_ROOT" >/dev/null
   mkdirp "$NET_ARTIFACTS_ROOT"
   >&2 echo "--MSBUILD artifacts--"
 
-  win_artifacts_root="$(to_win_path "$output_path")"
-  >&2 echo "Building to $win_artifacts_root"
+  win_net_artifacts_root="$(to_win_path "$output_path")"
+  >&2 echo "Building to $win_net_artifacts_root"
 
-  >&2 echo "Executing... -> cmd /c \"$win_msbuild_path\" Tix.Web.SelfHost\Tix.Web.SelfHost.csproj /tv:${tools_version} /nologo /p:VisualStudioVersion=${visual_studio_version} /p:Configuration=${configuration} /p:OutputPath=\"${win_artifacts_root}\" /m /v:m /clp:ErrorsOnly"
-  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_artifacts_root}" //m //v:m //clp:ErrorsOnly
+  >&2 echo "Executing... -> cmd /c \"$win_msbuild_path\" Tix.Web.SelfHost\Tix.Web.SelfHost.csproj /tv:${tools_version} /nologo /p:VisualStudioVersion=${visual_studio_version} /p:Configuration=${configuration} /p:OutputPath=\"${win_net_artifacts_root}\" /m /v:m /clp:ErrorsOnly"
+  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_net_artifacts_root}" //m //v:m //clp:ErrorsOnly
   >&2 echo "--MSBUILD finished successfully--"
 
   >&2 echo "--Cleaning packages--"
@@ -148,7 +148,7 @@ popd >/dev/null
 if [ "$encrypt" = true ] ; then
   npm install -g cryptkeeper &>/dev/null
   config_path="$NET_ARTIFACTS_ROOT/Tix.Web.SelfHost.exe.config"
-  cryptkeeper -e -n -s connectionStrings "$config_path" -p "${configuration}Provider" -c "${configuration}Keys" -E
+  cryptkeeper -e -n -s connectionStrings "$config_path" -p "${configuration}Provider" -c "${configuration}Keys" -E "$ARTIFACTS_ROOT"
 fi
 
 >&2 echo -e "${GREEN}--Artifacts version $version successfully deployed--${NC}"
