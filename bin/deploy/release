@@ -6,6 +6,10 @@ set -e
 
 . "$HOME/.tixrc"
 
+if ! hash junc 2>/dev/null ; then
+  tix -i
+fi
+
 latest=false
 configuration=Release
 encrypt=false
@@ -14,12 +18,12 @@ js_revision=""
 net_revision=""
 
 usage_short="${CYAN}Usage: release [-l] [-c configuration] [-e] [-d destination-path] [-j js-revision] [-n net-revision]"
-usage_long="$usage_short\n-l: Deploy latest across all libraries."
-usage_long="$usage_long\n-c: Configuration to deploy (default: $configuration)."
-usage_long="$usage_long\n-e: Encrypt connection strings configuration (default: $encrypt)."
-usage_long="$usage_long\n-d: Optional destination directory (default: $release_root)."
-usage_long="$usage_long\n-j: tixinc-js revision to deploy."
-usage_long="$usage_long\n-n: tixinc-net revision to deploy.${NC}"
+usage_long="$usage_short\n-l: deploy latest across all libraries"
+usage_long="$usage_long\n-c: configuration to deploy (default: $configuration)"
+usage_long="$usage_long\n-e: encrypt connection strings configuration (default: $encrypt)"
+usage_long="$usage_long\n-d: optional destination directory (default: $release_root)"
+usage_long="$usage_long\n-j: tixinc-js revision to deploy"
+usage_long="$usage_long\n-n: tixinc-net revision to deploy${NC}"
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
@@ -47,44 +51,45 @@ while getopts "$options" opt ; do
       net_revision=$OPTARG
       ;;
     h )
-      >&2 echo -e "$usage_long" && exit 1
+      >&2 printf "%b" "$usage_long" && exit 1
       exit 0
       ;;
     \?)
-      >&2 echo -e "Unknown option: -$OPTARG"
-      >&2 echo -e "$usage_short"
+      >&2 printf "%b" "unknown option: -$OPTARG"
+      >&2 printf "%b" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 echo -e "Missing option argument for -$OPTARG"
-      >&2 echo -e "$usage_short"
+      >&2 printf "%b" "missing option argument for -$OPTARG"
+      >&2 printf "%b" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 echo -e "Unimplemented option: -$OPTARG" && exit 1
-      >&2 echo -e "$usage_short"
+      >&2 printf "%b" "unimplemented option: -$OPTARG"
+      >&2 printf "%b" "$usage_short"
       exit 1
     esac
 done
 shift $((OPTIND-1))
 
 if [ "$latest" = true ] ; then
-  >&2 echo -e "${BLUE}--latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net--${NC}"
+  >&2 printf "%b- latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net -%b" "$CYAN" "$NC"
   js_revision=$(revisions -l tixinc-js)
   net_revision=$(revisions -l tixinc-net)
-  >&2 echo -e "${BLUE}--Using tixinc-js $js_revision and tixinc-net $net_revision--${NC}"
+  >&2 printf "%b- using tixinc-js $s and tixinc-net $s -%b" "$CYAN" "$js_revision" "$net_revision" "$NC"
 fi
 
 if [ "$js_revision" = "" ] ; then
-  >&2 echo -e "${RED}--tixinc-js (-j) revision string is mandatory.  Use \"revisions -m tixinc-js\" to see recent versions--${NC}" && exit 1
+  >&2 printf "%b- tixinc-js (-j) revision string is mandatory.  Use \"revisions -m tixinc-js\" to see recent versions -%b" "$RED" "$NC"
+  exit 1
 fi
 if [ "$net_revision" = "" ] ; then
-  >&2 echo -e "${RED}--tixinc-net (-n) revision string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions--${NC}" && exit 1
+  >&2 printf "%b- tixinc-net (-n) revision string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions -%b" "$RED" "$NC"
+  exit 1
 fi
 
-
 release_name="net_${net_revision}-js_${js_revision}_$(echo $configuration | tr '[:upper:]' '[:lower:]')"
->&2 echo -e "--Building and packaging release $release_name--"
+>&2 printf "- building and packaging release %s -" "$release_name"
 if [ "$encrypt" = true ] ; then
   deploy-net -v "$net_revision" -c "$configuration" -V 12.0 -e
 else
@@ -94,52 +99,13 @@ deploy-js "$js_revision"
 deploy-startup
 #deploy-rsa "$configuration"
 
-
-to_win_path() {
-  if [ "$1" ] ; then
-    # handle absolute
-    if [[ "$1" == /* ]] ; then
-      # strip leading slash and convert to backslash
-      win_path=$(echo "$1" | sed -e 's/^\///'  -e 's/\//\\\\/g')
-      # Add semicolon after drive
-      win_path=$(echo "${win_path:0:1}:${win_path:1}")
-      echo -en "$win_path"
-    else
-      # convert to backslash
-      win_path=$(echo "$1" | sed 's/\//\\\\/g')
-      echo -en "$win_path"
-    fi
-  fi
-}
-
-
 release_path="${release_root}/${release_name}.7z"
-j_artifacts_root="/c/art_junc"
-j_release_root="/c/rel_junc"
-j_release_path="${j_release_root}/${release_name}.7z"
-
 mkdirp "$release_root"
-rimraf "$j_artifacts_root"
-rimraf "$j_release_root"
 
-win_artifacts_root="$(to_win_path "$ARTIFACTS_ROOT")"
-win_j_artifacts_root="$(to_win_path "$j_artifacts_root")"
->&2 echo -e "--Creating junction from $win_artifacts_root to $win_j_artifacts_root--"
-cmd //c mklink //J "$win_j_artifacts_root" "$win_artifacts_root"
-
-win_release_root="$(to_win_path "$release_root")"
-win_j_release_root="$(to_win_path "$j_release_root")"
->&2 echo -e "--Creating junction from $win_release_root to $win_j_release_root--"
-cmd //c mklink //J "$win_j_release_root" "$win_release_root"
-
-
->&2 echo -e "--Packaging release to $release_path--"
-pushd "$j_artifacts_root">/dev/null
+>&2 printf "- packaging release to %s -" "$release_path"
+pushj "$ARTIFACTS_ROOT" >/dev/null
   # 7zip the built artifacts using max compression and multithreading
-  7za a -t7z "$j_release_path" ./* -m0=lzma2 -mx=9 -aoa -mfb=64 -md=32m -ms=on
-popd >/dev/null
+  7za a -t7z "$release_path" ./* -m0=lzma2 -mx=9 -aoa -mfb=64 -md=32m -ms=on
+popj >/dev/null
 
-rimraf "$j_artifacts_root"
-rimraf "$j_release_root"
-
->&2 echo -e "${GREEN}--Release packaged successfully at $release_path--${NC}"
+>&2 printf "%b- release packaged successfully at %s -%b" "$GREEN" "$release_path" "$NC"
