@@ -148,7 +148,7 @@ popd >/dev/null
 if [ "$encrypt" = true ] ; then
   npm install -g cryptkeeper &>/dev/null
   config_path="$NET_ARTIFACTS_ROOT/Tix.Web.SelfHost.exe.config"
-  cryptkeeper -ens connectionStrings -p "${configuration}Provider" -c "${configuration}Keys" -E "$ARTIFACTS_ROOT" "$config_path"
+  cryptkeeper -ens connectionStrings -p "${configuration}Provider" -C "${configuration}Keys" -E "$ARTIFACTS_ROOT" "$config_path"
 fi
 
 >&2 echo -e "${GREEN}--Artifacts version $version successfully deployed--${NC}"
