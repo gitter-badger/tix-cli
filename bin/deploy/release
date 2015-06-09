@@ -9,7 +9,7 @@ set -e
 latest=false
 configuration=Release
 encrypt=false
-release_root="release"
+release_root="$RELEASE_ROOT"
 js_revision=""
 net_revision=""
 
