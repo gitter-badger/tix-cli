@@ -146,11 +146,9 @@ pushd "$NET_BUILD_ROOT" >/dev/null
 popd >/dev/null
 
 if [ "$encrypt" = true ] ; then
-  if ! hash cryptkeeper 2>/dev/null; then
-    npm install -g cryptkeeper &>/dev/null
-  fi
+  npm install -g cryptkeeper &>/dev/null
   config_path="$NET_ARTIFACTS_ROOT/Tix.Web.SelfHost.exe.config"
-  cryptkeeper -e -n -s connectionStrings "$config_path"
+  cryptkeeper -e -n -s connectionStrings "$config_path" -p "${configuration}Provider" -c "${configuration}Keys" -E
 fi
 
 >&2 echo -e "${GREEN}--Artifacts version $version successfully deployed--${NC}"

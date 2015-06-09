@@ -92,6 +92,7 @@ else
 fi
 deploy-js "$js_revision"
 deploy-startup
+deploy-rsa "$configuration"
 
 
 to_win_path() {
