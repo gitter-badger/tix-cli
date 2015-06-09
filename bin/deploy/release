@@ -76,7 +76,7 @@ if [ "$latest" = true ] ; then
   >&2 printf "%b- latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net -%b\n" "$CYAN" "$NC"
   js_revision=$(revisions -l tixinc-js)
   net_revision=$(revisions -l tixinc-net)
-  >&2 printf "%b- using tixinc-js $s and tixinc-net $s -%b\n" "$CYAN" "$js_revision" "$net_revision" "$NC"
+  >&2 printf -- "%b- using tixinc-js $s and tixinc-net $s -%b\n" "$CYAN" "$js_revision" "$net_revision" "$NC"
 fi
 
 if [ "$js_revision" = "" ] ; then
