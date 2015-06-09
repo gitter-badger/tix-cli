@@ -13,6 +13,7 @@ fi
 rewrite_tixrc=false
 install_required=false
 install_optional=false
+reinstall_cli=false
 clone_all=false
 link_all=false
 pull_all=false
@@ -20,10 +21,11 @@ delete_all=false
 reinstall_all=false
 non_interactive=false
 
-usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-c] [-l] [-p] [-d] [-f] [-n]"
+usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-R] [-c] [-l] [-p] [-d] [-f] [-n]"
 usage_long="$usage_short\n-r: Rewrite ~/.tixrc configuration file."
 usage_long="$usage_long\n-i: Install required dependencies."
 usage_long="$usage_long\n-o: Install optional dependencies."
+usage_long="$usage_long\n-R: Reinstall cli to ~/local."
 usage_long="$usage_long\n-c: Clone all tixinc modules."
 usage_long="$usage_long\n-l: Link all tixinc modules."
 usage_long="$usage_long\n-p: Pull all tixinc modules."
@@ -33,7 +35,7 @@ usage_long="$usage_long\n-n: Run commands and exit.${NC}"
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
-options=":rioclpndfh"
+options=":rioRclpndfh"
 shopt -u nocasematch
 OPTIND=1
 while getopts "$options" opt; do
@@ -46,6 +48,9 @@ while getopts "$options" opt; do
       ;;
     o )
       install_optional=true
+      ;;
+    R )
+      reinstall_cli=true
       ;;
     c )
       clone_all=true
@@ -136,8 +141,9 @@ GITHUB_TOKEN=$(github-token)
 npm-token
 . "$CONFIG_PATH"
 
-if [ ! -f "$CLI_PATH" ]; then
-  >&2 echo -e "--Installing cli locally...--"
+if [ ! -f "$CLI_PATH" ] || [ "$reinstall_cli" = true ] ; then
+  >&2 echo -e "--Installing cli to $CLI_PATH...--"
+  rimraf "$CLI_PATH"
   install-cli
   >&2 echo -e "${GREEN}--Local install complete--${NC}"
 fi
