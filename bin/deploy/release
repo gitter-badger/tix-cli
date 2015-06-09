@@ -90,7 +90,7 @@ fi
 
 configuration_lower="$(printf "%s" "$configuration" | tr '[:upper:]' '[:lower:]')"
 release_name="$(printf "net_%s-js_%s-%s" "$net_revision" "$js_revision" "$configuration_lower")"
->&2 printf "- building and packaging release %b -" "$release_name"
+>&2 printf -- "- building and packaging release %s -" "$release_name"
 if [ "$encrypt" = true ] ; then
   deploy-net -v "$net_revision" -c "$configuration" -V 12.0 -e
 else
@@ -103,7 +103,7 @@ deploy-startup
 release_path="${release_root}/${release_name}.7z"
 mkdirp "$release_root"
 
->&2 printf "- packaging release to %s -" "$release_path"
+>&2 printf -- "- packaging release to %s -" "$release_path"
 pushj "$ARTIFACTS_ROOT" >/dev/null
   # 7zip the built artifacts using max compression and multithreading
   7za a -t7z "$release_path" ./* -m0=lzma2 -mx=9 -aoa -mfb=64 -md=32m -ms=on
