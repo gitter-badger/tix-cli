@@ -26,44 +26,44 @@ mkdir -p "${LOCAL_CONFIG_ROOT}"
 
 # Skipping this until tix has a readonly user with private repo access
 #if [ ! -e "$NPMRC_PATH" ]; then
-#  echo "--Creating new ~/.npmrc--" | tee $INSTALL_LOG_PATH
-#  echo prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
-#  echo "//registry.npmjs.org/:_authToken=aca97731-9f24-46fa-a0bb-7f547b937342" >> $NPMRC_PATH
+#  printf "--Creating new ~/.npmrc--" | tee $INSTALL_LOG_PATH
+#  printf prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
+#  printf "//registry.npmjs.org/:_authToken=aca97731-9f24-46fa-a0bb-7f547b937342" >> $NPMRC_PATH
 #fi
 
 # Set window resolution information
 if hash powershell 2>/dev/null; then
-  >&2 echo "--Getting Resolution Info--"
-  powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms;[System.Windows.Forms.Screen]::AllScreens" > $RES_CONFIG_PATH
+  >&2 printf -- "- getting resolution info -"
+  powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms;[System.Windows.Forms.Screen]::AllScreens" >$RES_CONFIG_PATH
 fi
 
 if [ ! -f "$NUGET_PATH" ] ; then
-  >&2 echo "--Installing Nuget--"
+  >&2 printf -- "- installing nuget -"
   curl -L "https://nuget.org/nuget.exe" >"$NUGET_PATH"
 fi
 
 if [ ! -f "$NODE_PATH" ] ; then
-  >&2 echo "--Installing 32-bit node.exe (less problems in development)--"
+  >&2 printf -- "- installing 32-bit node.exe -"
   curl -L http://nodejs.org/dist/latest/node.exe >"$NODE_PATH"
 fi
 
 if [ ! -f "$NPM_PATH" ] ; then
-  >&2 echo "--Installing NPM--"
+  >&2 printf -- "- installing npm -"
   curl -L https://www.npmjs.org/install.sh | sh >/dev/null
-  >&2 echo "--Setting VS tools version to ${MSVS_VERSION}"
+  >&2 printf -- "- setting vs tools version to ${MSVS_VERSION} -"
   npm config set msvs_version "${MSVS_VERSION}" --global
-  >&2 echo "--Setting npm to use bash shell when using npm explore command--"
+  >&2 printf -- "- setting npm to use bash shell when using npm explore command -"
   npm config set shell bash
 fi
 
->&2 echo "--Installing tix-cli globally--"
+>&2 printf -- "- installing tix-cli globally -"
 npm install -g tix-cli >/dev/null
 
->&2 echo "--Running tix-cli with required and optional applications and no-run--"
-tix -ioclpn
+>&2 printf -- "- running tix-cli with required and optional applications and no-run -"
+tix -ioRclpdn
 
->&2 echo "--Building latest release artifacts--"
+>&2 printf -- "- building latest release artifacts -"
 release -l
 
->&2 echo "--Running artifacts--"
+>&2 printf -- "- running artifacts -"
 run-artifacts

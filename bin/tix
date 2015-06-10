@@ -14,87 +14,92 @@ rewrite_tixrc=false
 install_required=false
 install_optional=false
 reinstall_cli=false
-clone_all=false
-link_all=false
-pull_all=false
-delete_all=false
-reinstall_all=false
+uninstall_flag=false
+reinstall_flag=false
+clone_flag=false
+link_flag=false
+pull_flag=false
+deploy_flag=false
 non_interactive=false
 
-usage_short="${CYAN}Usage: tix [-r] [-i] [-o] [-R] [-c] [-l] [-p] [-d] [-f] [-n]"
-usage_long="$usage_short\n-r: Rewrite ~/.tixrc configuration file."
-usage_long="$usage_long\n-i: Install required dependencies."
-usage_long="$usage_long\n-o: Install optional dependencies."
-usage_long="$usage_long\n-R: Reinstall cli to ~/local."
-usage_long="$usage_long\n-c: Clone all tixinc modules."
-usage_long="$usage_long\n-l: Link all tixinc modules."
-usage_long="$usage_long\n-p: Pull all tixinc modules."
-usage_long="$usage_long\n-d: Delete all configuration files, local directory, src directory, and tixinc directory."
-usage_long="$usage_long\n-f: Full reinstall, this should be used with -D flag."
-usage_long="$usage_long\n-n: Run commands and exit.${NC}"
+usage_short="${CYAN}Usage: tix [-I] [-O] [-W] [-R] [-U] [-F] [-c] [-l] [-p] [-d] [-n]"
+usage_long="$usage_short\n-I: install required dependencies."
+usage_long="$usage_long\n-O: install optional dependencies."
+usage_long="$usage_long\n-W: rewrite ~/.tixrc configuration file."
+usage_long="$usage_long\n-R: reinstall cli to ~/local."
+usage_long="$usage_long\n-U: uninstall all configuration files, local directory, src directory, and tixinc directory."
+usage_long="$usage_long\n-F: full reinstall, this should be used with -D flag."
+usage_long="$usage_long\n-c: clone all tixinc modules."
+usage_long="$usage_long\n-l: link all tixinc modules."
+usage_long="$usage_long\n-p: pull all tixinc modules."
+usage_long="$usage_long\n-d: deploy all tixinc modules."
+usage_long="$usage_long\n-n: run commands and exit.${NC}"
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
-options=":rioRclpndfh"
+options=":IOWRUFclpdnh"
 shopt -u nocasematch
 OPTIND=1
 while getopts "$options" opt; do
     case "$opt" in
-    r )
+    W )
       rewrite_tixrc=true
       ;;
-    i )
+    I )
       install_required=true
       ;;
-    o )
+    O )
       install_optional=true
       ;;
     R )
       reinstall_cli=true
       ;;
+    U )
+      uninstall_flag=true
+      ;;
+    F )
+      reinstall_flag=true
+      ;;
     c )
-      clone_all=true
+      clone_flag=true
       ;;
     l )
-      link_all=true
+      link_flag=true
       ;;
     p )
-      pull_all=true
+      pull_flag=true
       ;;
     d )
-      delete_all=true
-      ;;
-    f )
-      reinstall_all=true
+      deploy_flag=true
       ;;
     n )
       non_interactive=true
     ;;
-    h )
-      >&2 echo -e "$usage_long" && exit 1
+   h )
+      >&2 printf "%b" "$usage_long" && exit 1
       exit 0
       ;;
     \?)
-      >&2 echo -e "Unknown option: -$OPTARG"
-      >&2 echo -e "$usage_short"
+      >&2 printf "%b" "unknown option: -$OPTARG"
+      >&2 printf "%b" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 echo -e "Missing option argument for -$OPTARG"
-      >&2 echo -e "$usage_short"
+      >&2 printf "%b" "missing option argument for -$OPTARG"
+      >&2 printf "%b" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 echo -e "Unimplemented option: -$OPTARG" && exit 1
-      >&2 echo -e "$usage_short"
+      >&2 printf "%b" "unimplemented option: -$OPTARG"
+      >&2 printf "%b" "$usage_short"
       exit 1
     esac
 done
 shift $((OPTIND-1))
 
 # Delete option comes first
-if [ "$delete_all" = true ] ; then
-  >&2 echo -e "${RED}--DELETING EVERYTHING...--${NC}"
+if [ "$uninstall_flag" = true ] ; then
+  >&2 printf -- "%b- deleting everything... -%b" "$RED" "$NC"
   rimraf "$MODULE_ROOT"
   rimraf "$SRC_ROOT"
   rimraf "$SSH_ROOT"
@@ -106,33 +111,31 @@ if [ "$delete_all" = true ] ; then
   mkdirp "$TEMP_ROOT"
 
   temp_script="$TEMP_ROOT/delete.cmd"
-  echo -en "echo \"${CYAN}--Deleting local in 4...--\"${NC}" >"$temp_script"
-  echo -en "timeout /t 4\r\n" >>"$temp_script"
-  echo -en "rmdir /s /q %USERPROFILE%\local\r\n" >>"$temp_script"
-  if [ "$reinstall_all" = true ] ; then
-    echo -en "echo \"${CYAN}--Reinstalling now...--\"${NC}" >>"$temp_script"
-    echo -e "@PowerShell -NoProfile -ExecutionPolicy unrestricted -Command \"If(Test-Path %TEMP%\t.ps1){rm %TEMP%\t.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File %TEMP%\t.ps1;%TEMP%\t.ps1 -Install -CleanSource -CleanLocal;rm %TEMP%\t.ps1\" & exit" >>"$temp_script"
+  printf -- "timeout /t 4\r\n" >"$temp_script"
+  printf -- "rmdir /s /q %%USERPROFILE%%\\local\r\n" >>"$temp_script"
+  if [ "$reinstall_flag" = true ] ; then
+    printf -- "@PowerShell -NoProfile -ExecutionPolicy unrestricted -Command \"If(Test-Path %%TEMP%%\\t.ps1){rm %%TEMP%%\\t.ps1};((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/TixInc/tix-cli/master/src/ps1/download-src.ps1?$(Get-Random)'))|Out-File %%TEMP%%\\t.ps1;%%TEMP%%\\t.ps1 -Install -CleanSource -CleanLocal;rm %%TEMP%%\\t.ps1\" & exit\r\n" >>"$temp_script"
   fi
-  >&2 echo -e "${GREEN}--GOODBYE--${NC}"
+  >&2 printf -- "%b- goodbye -%b" "$GREEN" "$NC"
   cmd //c "$temp_script" & disown
   exit 0
 fi
 
 # Install these first
 if [ "$install_required" = true ] ; then
-  >&2 echo -e "--Installing required...--"
+  >&2 printf "- installing required... -"
   install-required
-  >&2 echo -e "${GREEN}--Required install complete--${NC}"
+  >&2 printf -- "%b- required install complete -%b" "$GREEN" "$NC"
 fi
 
 
 if [ "$rewrite_tixrc" = true ] ; then
-  >&2 echo -e "--Rewriting .tixrc...--"
+  >&2 printf -- "- rewriting ~/.tixrc... -"
   rimraf "$CONFIG_PATH"
 fi
 if [ ! -f "$CONFIG_PATH" ] ; then
   install-tixrc
-  >&2 echo -e "--.tixrc file initialized--"
+  >&2 printf -- "- ~/.tixrc file initialized -"
 fi
 . "$CONFIG_PATH"
 
@@ -142,40 +145,36 @@ npm-token
 . "$CONFIG_PATH"
 
 if [ ! -f "$CLI_PATH" ] || [ "$reinstall_cli" = true ] ; then
-  >&2 echo -e "--Installing cli to $CLI_PATH...--"
+  >&2 printf -- "- installing cli to %b... -" "$CLI_PATH"
   rimraf "$CLI_PATH"
   install-cli
-  >&2 echo -e "${GREEN}--Local install complete--${NC}"
+  >&2 printf -- "%b- local install complete -%b" "$GREEN" "$NC"
 fi
 
 if [ "$install_optional" = true ] ; then
-  >&2 echo -e "--Installing optional...--"
   install-optional
-  >&2 echo -e "${GREEN}--Optional install complete--${NC}"
 fi
 
-if [ "$clone_all" = true ] ; then
-  >&2 echo -e "--Cloning everything...--"
+if [ "$clone_flag" = true ] ; then
   clone-all-dev
-  >&2 echo -e "${GREEN}--Cloning complete--${NC}"
 fi
 
-if [ "$link_all" = true ] ; then
-  >&2 echo -e "--Linking everything...--"
+if [ "$link_flag" = true ] ; then
   link-all
-  >&2 echo -e "${GREEN}--Linking complete--${NC}"
 fi
 
-if [ "$pull_all" = true ] ; then
-  >&2 echo -e "--Pulling everything...--"
+if [ "$pull_flag" = true ] ; then
   pull-all
-  >&2 echo -e "${GREEN}--Pulling complete--${NC}"
+fi
+
+if [ "$deploy_flag" = true ] ; then
+  release -l
 fi
 
 if [ "$non_interactive" = true ] ; then
-  echo "-- -n norun flag specified, skipping cli execution...--"
+  printf -- "- (-n) norun flag specified, skipping cli execution... -"
   exit 0
 fi
 
-echo "--Executing CLI at $CLI_PATH...--"
-node "${CLI_PATH}"
+printf "- executing cli at %b... -" "$CLI_PATH"
+node "$CLI_PATH"
