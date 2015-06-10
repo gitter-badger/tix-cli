@@ -77,34 +77,16 @@ popd >/dev/null
 
 >&2 printf -- "- building js version %s -" "$version"
 pushj "$JS_BUILD_ROOT" >/dev/null
-  >&2 printf -- "- configuring JS as %s -" "$configuration"
-  server_config_path="server.json"
-  server_target_config_path="etc/${configuration}.json"
-
-  client_config_path="client/client.json"
-  client_config_path="client/etc/${configuration}.json"
-
-  if [ ! -f "$server_target_config_path" ] ; then
-    >&2 printf "%b- no target configuration exists at %s -%b" "$RED" "$server_target_config_path" "$NC"
-    exit 1
-  fi
-
-  if [ ! -f "$client_target_config_path" ] ; then
-    >&2 printf "%b- no target configuration exists at %s -%b" "$RED" "$client_target_config_path" "$NC"
-    exit 1
-  fi
-
-  cp "$server_target_config_path" "$server_config_path"
-  cp "$client_target_config_path" "$client_config_path"
-
-
-
 
   >&2 printf -- "- installing npm build dependencies -"
   npm install
 
+  >&2 printf -- "- configuring JS as %s -" "$configuration"
+  npm run configure:env "$configuration"
+  npm run configure:transform
 
-
+  >&2 printf -- "- building js -"
+  npm run build
 
   >&2 printf -- "- downloading 64 bit node.exe to bin -"
   curl -sL http://nodejs.org/dist/latest/x64/node.exe >bin/node.exe
