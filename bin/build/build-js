@@ -31,22 +31,22 @@ while getopts "$options" opt ; do
       configuration="$OPTARG"
       ;;
     h )
-      >&2 printf "%b" "$usage_long" && exit 1
+      >&2 printf -- "%b" "$usage_long" && exit 1
       exit 0
       ;;
     \?)
-      >&2 printf "%b" "unknown option: -$OPTARG"
-      >&2 printf "%b" "$usage_short"
+      >&2 printf -- "%b" "unknown option: -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 printf "%b" "missing option argument for -$OPTARG"
-      >&2 printf "%b" "$usage_short"
+      >&2 printf -- "%b" "missing option argument for -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 printf "%b" "unimplemented option: -$OPTARG"
-      >&2 printf "%b" "$usage_short"
+      >&2 printf -- "%b" "unimplemented option: -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
     esac
 done
@@ -71,21 +71,13 @@ rimraf "$JS_ARTIFACTS_ROOT"
 
 
 mkdirp "$JS_BUILD_ROOT"
-pushd "$JS_SYNC_ROOT" >/dev/null
+pushj "$JS_SYNC_ROOT" >/dev/null
   cp -rf ./ "$JS_BUILD_ROOT"
-popd >/dev/null
+popj >/dev/null
 
 >&2 printf -- "- building js version %s -" "$version"
 pushj "$JS_BUILD_ROOT" >/dev/null
-
-  >&2 printf -- "- installing npm build dependencies -"
-  npm install
-
-  >&2 printf -- "- configuring JS as %s -" "$configuration"
-  npm run configure "$configuration"
-
-  >&2 printf -- "- building js -"
-  npm run build
+  npm run deploy -c "$configuration"
 
   >&2 printf -- "- downloading 64 bit node.exe to bin -"
   curl -sL http://nodejs.org/dist/latest/x64/node.exe >bin/node.exe

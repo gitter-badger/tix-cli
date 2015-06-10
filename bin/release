@@ -13,17 +13,17 @@ fi
 latest=false
 configuration=Release
 encrypt=false
-release_root="$RELEASE_ROOT"
-js_revision=""
-net_revision=""
+artifacts_root="$RELEASE_ROOT"
+js_version=""
+net_version=""
 
-usage_short="${CYAN}Usage: release [-l] [-c configuration] [-e] [-d destination-path] [-j js-revision] [-n net-revision]"
+usage_short="${CYAN}Usage: release [-l] [-c configuration] [-e] [-d destination-path] [-j js-version] [-n net-version]"
 usage_long="$usage_short\n-l: deploy latest across all libraries"
 usage_long="$usage_long\n-c: configuration to deploy (default: $configuration)"
 usage_long="$usage_long\n-e: encrypt connection strings configuration (default: $encrypt)"
-usage_long="$usage_long\n-d: optional destination directory (default: $release_root)"
-usage_long="$usage_long\n-j: tixinc-js revision to deploy"
-usage_long="$usage_long\n-n: tixinc-net revision to deploy${NC}"
+usage_long="$usage_long\n-d: optional destination directory (default: $artifacts_root)"
+usage_long="$usage_long\n-j: tixinc-js version to deploy"
+usage_long="$usage_long\n-n: tixinc-net version to deploy${NC}"
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
@@ -42,31 +42,31 @@ while getopts "$options" opt ; do
       encrypt=true
       ;;
     d )
-      release_root="$OPTARG"
+      artifacts_root="$OPTARG"
       ;;
     j )
-      js_revision=$OPTARG
+      js_version="$OPTARG"
       ;;
     n )
-      net_revision=$OPTARG
+      net_version="$OPTARG"
       ;;
     h )
-      >&2 printf "%b" "$usage_long" && exit 1
+      >&2 printf -- "%b" "$usage_long" && exit 1
       exit 0
       ;;
     \?)
-      >&2 printf "%b" "unknown option: -$OPTARG"
-      >&2 printf "%b" "$usage_short"
+      >&2 printf -- "%b" "unknown option: -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 printf "%b" "missing option argument for -$OPTARG"
-      >&2 printf "%b" "$usage_short"
+      >&2 printf -- "%b" "missing option argument for -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 printf "%b" "unimplemented option: -$OPTARG"
-      >&2 printf "%b" "$usage_short"
+      >&2 printf -- "%b" "unimplemented option: -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
     esac
 done
@@ -74,40 +74,40 @@ shift $((OPTIND-1))
 
 if [ "$latest" = true ] ; then
   >&2 printf "%b- latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net -%b\n" "$CYAN" "$NC"
-  js_revision=$(revisions -l tixinc-js)
-  >&2 printf -- "%b- using js version %s -%b\n" "$CYAN" "$js_revision" "$NC"
-  net_revision=$(revisions -l tixinc-net)
-  >&2 printf -- "%b- using net version %s -%b\n" "$CYAN" "$net_revision" "$NC"
+  js_version=$(revisions -l tixinc-js)
+  >&2 printf -- "%b- using js version %s -%b\n" "$CYAN" "$js_version" "$NC"
+  net_version=$(revisions -l tixinc-net)
+  >&2 printf -- "%b- using net version %s -%b\n" "$CYAN" "$net_version" "$NC"
 fi
 
-if [ "$js_revision" = "" ] ; then
-  >&2 printf "%b- tixinc-js (-j) revision string is mandatory.  Use \"revisions -m tixinc-js\" to see recent versions -%b\n" "$RED" "$NC"
+if [ "$js_version" = "" ] ; then
+  >&2 printf "%b- tixinc-js (-j) version string is mandatory.  Use \"revisions -m tixinc-js\" to see recent versions -%b\n" "$RED" "$NC"
   exit 1
 fi
-if [ "$net_revision" = "" ] ; then
-  >&2 printf "%b- tixinc-net (-n) revision string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions -%b\n" "$RED" "$NC"
+if [ "$net_version" = "" ] ; then
+  >&2 printf "%b- tixinc-net (-n) version string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions -%b\n" "$RED" "$NC"
   exit 1
 fi
 
 configuration_lower="$(printf "%s" "$configuration" | tr '[:upper:]' '[:lower:]')"
-release_name="$(printf "net_%s-js_%s-%s" "$net_revision" "$js_revision" "$configuration_lower")"
+release_name="$(printf "net_%s-js_%s-%s" "$net_version" "$js_version" "$configuration_lower")"
 >&2 printf -- "- building and packaging release %s -\n" "$release_name"
 if [ "$encrypt" = true ] ; then
-  build-net -v "$net_revision" -c "$configuration" -V 12.0 -e
+  build-net -v "$net_version" -c "$configuration" -V 12.0 -e
 else
-  build-net -v "$net_revision" -c "$configuration" -V 12.0
+  build-net -v "$net_version" -c "$configuration" -V 12.0
 fi
-build-js "$js_revision"
+build-js "$js_version"
 deploy-startup
-#deploy-rsa "$configuration"
 
-release_path="${release_root}/${release_name}.7z"
-mkdirp "$release_root"
+artifacts_path="${artifacts_root}/${release_name}.7z"
+rimraf "$artifacts_root"
+mkdirp "$artifacts_root"
 
 >&2 printf -- "- packaging release to %s -\n" "$release_path"
-pushj "$ARTIFACTS_ROOT" >/dev/null
-  # 7zip the built artifacts using max compression and multithreading
-  7za a -t7z "$release_path" ./* -m0=lzma2 -mx=9 -aoa -mfb=64 -md=32m -ms=on
+pushj "$BUILD_ROOT" >/dev/null
+  # 7zip the built artifacts using LZMA2 max compression and multithreading
+  7za a -t7z "$artifacts_path" ./* -m0=lzma2 -mx=9 -aoa -mfb=64 -md=32m -ms=on
 popj >/dev/null
 
->&2 printf "%b- release packaged successfully at %s -%b\n" "$GREEN" "$release_path" "$NC"
+>&2 printf -- "%b- release packaged successfully at %s -%b\n" "$GREEN" "$release_path" "$NC"

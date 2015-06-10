@@ -52,22 +52,22 @@ while getopts "$options" opt ; do
       output_path="$OPTARG"
       ;;
     h )
-      >&2 echo -e "$usage_long" && exit 1
+      >&2 printf -- "%b" "$usage_long" && exit 1
       exit 0
       ;;
     \?)
-      >&2 echo -e "Unknown option: -$OPTARG"
-      >&2 echo -e "$usage_short"
+      >&2 printf -- "%b" "unknown option: -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 echo -e "Missing option argument for -$OPTARG"
-      >&2 echo -e "$usage_short"
+      >&2 printf -- "%b" "missing option argument for -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 echo -e "Unimplemented option: -$OPTARG" && exit 1
-      >&2 echo -e "$usage_short"
+      >&2 printf -- "%b" "unimplemented option: -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
     esac
 done
@@ -78,7 +78,7 @@ if [ "$latest" = true ] ; then
 fi
 
 if [ "$version" = "" ] ; then
-  >&2 echo -e "${RED}--Must specify a version to build (-l or -v version)--${NC}"
+  >&2 printf -- "%b- must specify a version to build (-l or -v version) -%b" "$RED" "$NC"
   exit 1
 fi
 
@@ -88,7 +88,7 @@ msbuild_path="/c/Program Files (x86)/MSBuild/${tools_version}/Bin/MSBuild.exe"
 win_msbuild_path="$(cpath -w "$msbuild_path")"
 if [ ! -f "$msbuild_path" ] ; then
   # Not there, lets install
-  >&2 echo -e "${BLUE}--MSBUILD not found, installing...--${NC}"
+  >&2 printf -- "%b- msbuild not found, installing... -%b" "$RED" "$NC"
   choco install microsoft-build-tools
 
   # These downloads might help at some point
@@ -96,39 +96,34 @@ if [ ! -f "$msbuild_path" ] ; then
   #choco install netfx-4.5.2-devpack
 fi
 if [ ! -f "$msbuild_path" ] ; then
-  >&2 echo -e "${RED}--MSBUILD still not found... see if it is in default path--${NC}"
+  >&2 printf -- "%b- msbuild still not found... see if it is in default path -%b" "$RED" "$NC"
   msbuild_path="msbuild"
   win_msbuild_path="msbuild"
 fi
 
-
-echo "--executing sync-net $version--"
+printf -- "%b- executing sync-net %s -%b" "$CYAN" "$version" "$NC"
 sync-net "$version"
 
->&2 echo "--Building and deploying artifacts version $version--"
-pushd "$NET_SYNC_ROOT" >/dev/null
-  >&2 echo "--Restoring packages--"
+>&2 printf -- "- building and deploying artifacts version %s -" "$version"
+pushj "$NET_SYNC_ROOT" >/dev/null
+  >&2 printf -- "- restoring nuget packages -"
   nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
-  >&2 echo "--Packages restored successfully--"
 
-  >&2 echo "--Cleaning $NET_ARTIFACTS_ROOT--"
+  >&2 printf -- "- cleaning %b -" "$NET_BUILD_ROOT"
   rimraf "$NET_BUILD_ROOT"
-  rimraf "$NET_ARTIFACTS_ROOT"
   mkdirp "$NET_BUILD_ROOT"
-  mkdirp "$NET_ARTIFACTS_ROOT"
-  >&2 echo "--MSBUILD artifacts--"
 
   win_net_build_root="$(cpath -w "$output_path")"
-  >&2 echo "Building to $win_net_build_root"
+  >&2 printf -- "- building to %s -" "$win_net_build_root"
 
-  >&2 echo "Executing... -> cmd /c \"$win_msbuild_path\" Tix.Web.SelfHost\Tix.Web.SelfHost.csproj /tv:${tools_version} /nologo /p:VisualStudioVersion=${visual_studio_version} /p:Configuration=${configuration} /p:OutputPath=\"${win_net_build_root}\" /m /v:m /clp:ErrorsOnly"
-  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_net_build_root}" //m //v:m //clp:ErrorsOnly
-  >&2 echo "--MSBUILD finished successfully--"
+  msbuild_command="cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath=\"${win_net_build_root}\" //m //v:m //clp:ErrorsOnly"
+  >&2 printf -- "- executing... -> %s -" "$msbuild_command"
+  "$msbuild_command"
 
-  >&2 echo "--Cleaning packages--"
+  >&2 printf -- "- cleaning packages -"
   rimraf packages
-  >&2 echo "--Packages cleaned successfully--"
-popd >/dev/null
+  >&2 printf -- "- packages cleaned successfully -"
+popj >/dev/null
 
 if [ "$encrypt" = true ] ; then
   npm install -g cryptkeeper &>/dev/null
@@ -136,4 +131,4 @@ if [ "$encrypt" = true ] ; then
   cryptkeeper -ens connectionStrings -p "${configuration}Provider" -C "${configuration}Keys" -E "$BUILD_ROOT" -R "$config_path"
 fi
 
->&2 echo -e "${GREEN}--NET version $version successfully built--${NC}"
+>&2 printf -- "%b- tixinc-net version %s successfully built -%b" "$GREEN" "$version" "$NC"
