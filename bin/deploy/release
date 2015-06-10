@@ -93,11 +93,11 @@ configuration_lower="$(printf "%s" "$configuration" | tr '[:upper:]' '[:lower:]'
 release_name="$(printf "net_%s-js_%s-%s" "$net_revision" "$js_revision" "$configuration_lower")"
 >&2 printf -- "- building and packaging release %s -\n" "$release_name"
 if [ "$encrypt" = true ] ; then
-  deploy-net -v "$net_revision" -c "$configuration" -V 12.0 -e
+  build-net -v "$net_revision" -c "$configuration" -V 12.0 -e
 else
-  deploy-net -v "$net_revision" -c "$configuration" -V 12.0
+  build-net -v "$net_revision" -c "$configuration" -V 12.0
 fi
-deploy-js "$js_revision"
+build-js "$js_revision"
 deploy-startup
 #deploy-rsa "$configuration"
 

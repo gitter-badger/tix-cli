@@ -145,6 +145,10 @@ export NET_ROOT="${MODULE_ROOT}/tixinc-net"
 export NET_SELFHOST_ROOT="${NET_ROOT}/Tix.Web.SelfHost"
 export NET_PROJECT_PATH="${NET_SELFHOST_ROOT}/Tix.Web.SelfHost.csproj"
 
+export SYNC_ROOT="${MODULE_ROOT}/sync"
+export NET_SYNC_ROOT="${SYNC_ROOT}/tixinc-net"
+export JS_SYNC_ROOT="${SYNC_ROOT}/tixinc-js"
+
 export BUILD_ROOT="${MODULE_ROOT}/build"
 export NET_BUILD_ROOT="${BUILD_ROOT}/tixinc-net"
 export JS_BUILD_ROOT="${BUILD_ROOT}/tixinc-js"

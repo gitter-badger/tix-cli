@@ -1,13 +1,113 @@
 #!/bin/bash
 #
-# Syncs an exact revision of tixinc-js module to the build directory.
+# Deploys fresh tixinc-js artifacts
 
-### if no arguments, throw an error
-if [ $# -lt 1 ]; then
-  >&2 echo "Must specify a revision to build..."
+set -e
+. "$HOME/.tixrc"
+
+latest=false
+version=""
+configuration="debug"
+
+usage_short="${BLUE}usage: build-js [-l] [-v version] [-c configuration]"
+usage_long="$usage_short\n-l: Deploy latest version of tixinc-js"
+usage_long="$usage_long\n-v: Deploy specific version (tag or hash)"
+usage_long="$usage_long\n-c: configuration to use (default: $configuration)${NC}"
+
+usage_short="$usage_short\nuse -h to get supported command information${NC}"
+
+options=":lv:c:h"
+shopt -u nocasematch
+OPTIND=1
+while getopts "$options" opt ; do
+    case "$opt" in
+    l )
+      latest=true
+      ;;
+    v )
+      version="$OPTARG"
+      ;;
+    c )
+      configuration="$OPTARG"
+      ;;
+    h )
+      >&2 printf "%b" "$usage_long" && exit 1
+      exit 0
+      ;;
+    \?)
+      >&2 printf "%b" "unknown option: -$OPTARG"
+      >&2 printf "%b" "$usage_short"
+      exit 1
+      ;;
+    : )
+      >&2 printf "%b" "missing option argument for -$OPTARG"
+      >&2 printf "%b" "$usage_short"
+      exit 1
+      ;;
+    * )
+      >&2 printf "%b" "unimplemented option: -$OPTARG"
+      >&2 printf "%b" "$usage_short"
+      exit 1
+    esac
+done
+shift $((OPTIND-1))
+
+if [ "$latest" = true ] ; then
+  version="$(revisions -l tixinc-js)"
+fi
+
+if [ "$version" = "" ] ; then
+  >&2 printf "%b- must specify a JS version to build (-l or -v version) -%b" "$RED" "$NC"
   exit 1
 fi
 
-. "$HOME/.tixrc"
 
-build-module tixinc-js "$1"
+>&2 printf -- "- executing sync-js %s -" "$version"
+sync-js "$revision"
+
+>&2 printf -- "- cleaning previous build and artifacts -"
+rimraf "$JS_BUILD_ROOT"
+rimraf "$JS_ARTIFACTS_ROOT"
+
+
+mkdirp "$JS_BUILD_ROOT"
+pushd "$JS_SYNC_ROOT" >/dev/null
+  cp -rf ./ "$JS_BUILD_ROOT"
+popd >/dev/null
+
+>&2 printf -- "- building js version %s -" "$version"
+pushj "$JS_BUILD_ROOT" >/dev/null
+  >&2 printf -- "- configuring JS as %s -" "$configuration"
+  server_config_path="server.json"
+  server_target_config_path="etc/${configuration}.json"
+
+  client_config_path="client/client.json"
+  client_config_path="client/etc/${configuration}.json"
+
+  if [ ! -f "$server_target_config_path" ] ; then
+    >&2 printf "%b- no target configuration exists at %s -%b" "$RED" "$server_target_config_path" "$NC"
+    exit 1
+  fi
+
+  if [ ! -f "$client_target_config_path" ] ; then
+    >&2 printf "%b- no target configuration exists at %s -%b" "$RED" "$client_target_config_path" "$NC"
+    exit 1
+  fi
+
+  cp "$server_target_config_path" "$server_config_path"
+  cp "$client_target_config_path" "$client_config_path"
+
+
+
+
+  >&2 printf -- "- installing npm build dependencies -"
+  npm install
+
+
+
+
+  >&2 printf -- "- downloading 64 bit node.exe to bin -"
+  curl -sL http://nodejs.org/dist/latest/x64/node.exe >bin/node.exe
+popj >/dev/null
+
+>&2 echo -e "${GREEN}--Artifacts revision $revision successfully deployed--${NC}"
