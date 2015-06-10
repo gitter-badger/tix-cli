@@ -4,4 +4,4 @@
 
 set -e
 
-$(clone-module tix-cli)
+clone-module tix-cli

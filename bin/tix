@@ -76,22 +76,22 @@ while getopts "$options" opt; do
       non_interactive=true
     ;;
    h )
-      >&2 printf -- "%b" "$usage_long" && exit 1
+      >&2 printf -- "%b\n" "$usage_long"
       exit 0
       ;;
     \?)
-      >&2 printf -- "%b" "unknown option: -$OPTARG"
-      >&2 printf -- "%b" "$usage_short"
+      >&2 printf -- "unknown option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 printf -- "%b" "missing option argument for -$OPTARG"
-      >&2 printf -- "%b" "$usage_short"
+      >&2 printf -- "missing option argument for -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 printf -- "%b" "unimplemented option: -$OPTARG"
-      >&2 printf -- "%b" "$usage_short"
+      >&2 printf -- "unimplemented option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
     esac
 done
@@ -99,7 +99,7 @@ shift $((OPTIND-1))
 
 # Delete option comes first
 if [ "$uninstall_flag" = true ] ; then
-  >&2 printf -- "%b- deleting everything... -%b" "$RED" "$NC"
+  >&2 printf -- "%b- deleting everything... -%b\n" "$RED" "$NC"
   rimraf "$MODULE_ROOT"
   rimraf "$SRC_ROOT"
   rimraf "$SSH_ROOT"
@@ -123,19 +123,19 @@ fi
 
 # Install these first
 if [ "$install_required" = true ] ; then
-  >&2 printf -- "- installing required... -"
+  >&2 printf -- "- installing required... -\n"
   install-required
-  >&2 printf -- "%b- required install complete -%b" "$GREEN" "$NC"
+  >&2 printf -- "%b- required install complete -%b\n" "$GREEN" "$NC"
 fi
 
 
 if [ "$rewrite_tixrc" = true ] ; then
-  >&2 printf -- "- rewriting ~/.tixrc... -"
+  >&2 printf -- "- rewriting ~/.tixrc... -\n"
   rimraf "$CONFIG_PATH"
 fi
 if [ ! -f "$CONFIG_PATH" ] ; then
   install-tixrc
-  >&2 printf -- "- ~/.tixrc file initialized -"
+  >&2 printf -- "- ~/.tixrc file initialized -\n"
 fi
 . "$CONFIG_PATH"
 
@@ -145,10 +145,10 @@ npm-token
 . "$CONFIG_PATH"
 
 if [ ! -f "$CLI_PATH" ] || [ "$reinstall_cli" = true ] ; then
-  >&2 printf -- "- installing cli to %b... -" "$CLI_PATH"
+  >&2 printf -- "- installing cli to %b... -\n" "$CLI_PATH"
   rimraf "$CLI_PATH"
   install-cli
-  >&2 printf -- "%b- local install complete -%b" "$GREEN" "$NC"
+  >&2 printf -- "%b- local install complete -%b\n" "$GREEN" "$NC"
 fi
 
 if [ "$install_optional" = true ] ; then
@@ -172,9 +172,9 @@ if [ "$deploy_flag" = true ] ; then
 fi
 
 if [ "$non_interactive" = true ] ; then
-  printf -- "- (-n) norun flag specified, skipping cli execution... -"
+  printf -- "- (-n) norun flag specified, skipping cli execution... -\n"
   exit 0
 fi
 
-printf -- "- executing cli at %b... -" "$CLI_PATH"
+printf -- "- executing cli at %b... -\n" "$CLI_PATH"
 node "$CLI_PATH"

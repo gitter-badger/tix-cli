@@ -7,37 +7,37 @@ set -e
 . "$HOME/.tixrc"
 
 # Define flags
-build_flag=false
+sync_flag=false
 
-usage_short="${CYAN}Usage: clone-module [-b] module-name [relative-path]${NC}"
-usage_long="$usage_short\n-b: Clone the module to the build root instead of module root."
+usage_short="${CYAN}Usage: clone-module [-s] module-name [relative-path]"
+usage_long="$usage_short\n-s: clone the module to the sync root instead of module root.${NC}"
 
-usage_short="$usage_short\nUse -h to get supported command information."
+usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
-options=":bh"
+options=":sh"
 OPTIND=1
 while getopts "$options" opt; do
     case "$opt" in
     b )
-      build_flag=true
+      sync_flag=true
       ;;
-    h )
-      >&2 echo -e "$usage_long" && exit 1
+   h )
+      >&2 printf -- "%b\n" "$usage_long"
       exit 0
       ;;
     \?)
-      >&2 echo -e "Unknown option: -$OPTARG"
-      >&2 echo -e "$usage_short"
+      >&2 printf -- "unknown option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 echo -e "Missing option argument for -$OPTARG"
-      >&2 echo -e "$usage_short"
+      >&2 printf -- "missing option argument for -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 echo -e "Unimplemented option: -$OPTARG" && exit 1
-      >&2 echo -e "$usage_short"
+      >&2 printf -- "unimplemented option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
     esac
 done
@@ -46,16 +46,16 @@ shift $((OPTIND-1))
 
 ### if no arguments, throw an error
 if [ $# -eq 0 ]; then
-  >&2 echo -e "${RED}--Must specify a module to clone--${NC}"
+  >&2 printf -- "%b- must specify a module to clone -%b" "$RED" "$NC"
   exit 1
 fi
 
-module_name=$1
-module_dir=${2-$module_name}
+module_name="$1"
+module_dir="${2-$module_name}"
 module_root="$MODULE_ROOT"
 
-if [ "$build_flag" = true ] ; then
-  module_root="$BUILD_ROOT"
+if [ "$sync_flag" = true ] ; then
+  module_root="$SYNC_ROOT"
 fi
 
 module_url="$GITHUB_URL_TIX/$module_name"
@@ -63,10 +63,10 @@ module_path="$module_root/$module_dir"
 
 ### if module already cloned, throw an error
 if [ -d "$module_path" ]; then
-  >&2 echo -e "${RED}--Module $module_name already exists at $module_path--${NC}"
+  >&2 printf -- "%b- module %s already exists at %s -%b" "$CYAN" "$module_name" "$module_path" "$NC"
   exit 1
 fi
 
->&2 echo -e "--Cloning $module_url to $module_path...--"
-git clone "$module_url" "$module_path" 2>&1 | grep -qi "fatal" && >&2 echo "An error occurred while cloning." && exit 1
->&2 echo -e "${GREEN}--$module_name cloned successfully--${NC}"
+>&2 printf -- "- cloning %s to %s... -" "$module_url" "$module_path"
+git clone "$module_url" "$module_path" 2>&1 | grep -qi "fatal" && >&2 printf -- "An error occurred while cloning." && exit 1
+>&2 printf -- "%b- %s cloned successfully -%b" "$GREEN" "$module_name" "$NC"

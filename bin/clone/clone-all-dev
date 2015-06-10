@@ -2,6 +2,8 @@
 #
 # Clones all modules being used for current development
 
+set -e
+
 clone-automation
 clone-cli
 clone-config
@@ -9,5 +11,5 @@ clone-ext
 clone-tixinc-js
 clone-tixinc-net
 
-echo "--about to clone tixinc-classic, this one might take a bit--"
+printf "- about to clone tixinc-classic, this one might take a bit -"
 clone-tixinc-classic
