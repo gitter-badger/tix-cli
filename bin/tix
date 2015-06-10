@@ -76,22 +76,22 @@ while getopts "$options" opt; do
       non_interactive=true
     ;;
    h )
-      >&2 printf "%b" "$usage_long" && exit 1
+      >&2 printf -- "%b" "$usage_long" && exit 1
       exit 0
       ;;
     \?)
-      >&2 printf "%b" "unknown option: -$OPTARG"
-      >&2 printf "%b" "$usage_short"
+      >&2 printf -- "%b" "unknown option: -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 printf "%b" "missing option argument for -$OPTARG"
-      >&2 printf "%b" "$usage_short"
+      >&2 printf -- "%b" "missing option argument for -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 printf "%b" "unimplemented option: -$OPTARG"
-      >&2 printf "%b" "$usage_short"
+      >&2 printf -- "%b" "unimplemented option: -$OPTARG"
+      >&2 printf -- "%b" "$usage_short"
       exit 1
     esac
 done
@@ -123,7 +123,7 @@ fi
 
 # Install these first
 if [ "$install_required" = true ] ; then
-  >&2 printf "- installing required... -"
+  >&2 printf -- "- installing required... -"
   install-required
   >&2 printf -- "%b- required install complete -%b" "$GREEN" "$NC"
 fi
@@ -176,5 +176,5 @@ if [ "$non_interactive" = true ] ; then
   exit 0
 fi
 
-printf "- executing cli at %b... -" "$CLI_PATH"
+printf -- "- executing cli at %b... -" "$CLI_PATH"
 node "$CLI_PATH"
