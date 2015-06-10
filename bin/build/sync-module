@@ -8,7 +8,7 @@ set -e
 
 ### if no arguments, throw an error
 if [ $# -lt 2 ]; then
-  >&2 printf -- "%b- must specify module to clone and revision... -%b" "$RED" "$NC"
+  >&2 printf -- "%b- must specify module to clone and revision... -%b\n" "$RED" "$NC"
   exit 1
 fi
 
@@ -18,16 +18,16 @@ revision="$2"
 module_sync_root="$SYNC_ROOT/$module_name"
 
 if [ ! -d "$module_sync_root" ] ; then
-  >&2 printf -- "${CYAN}--Module does not exist in sync directory, cloning...--${NC}"
+  >&2 printf -- "%b- module does not exist in sync directory, cloning... -%b\n" "$CYAN" "$NC"
   mkdirp "$SYNC_ROOT"
   clone-module -s "$module_name"
-  >&2 printf -- "--Finished cloning module to sync directory--"
+  >&2 printf -- "- finished cloning module to sync directory -\n"
 fi
 
 pushd "$module_sync_root">/dev/null
-  >&2 printf -- "- fetching and force revision checkout -"
+  >&2 printf -- "- fetching and force revision checkout -\n"
   git fetch --all
-  >&2 printf -- "- issuing \"git checkout --force %s \" -" "$revision"
+  >&2 printf -- "- issuing \"git checkout --force %s \" -\n" "$revision"
   git checkout --force "$revision"
-  >&2 printf -- "- finished fetch and revision checkout -"
+  >&2 printf -- "- finished fetch and revision checkout -\n"
 popd >/dev/null

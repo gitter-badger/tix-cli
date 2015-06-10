@@ -30,23 +30,23 @@ while getopts "$options" opt ; do
     c )
       configuration="$OPTARG"
       ;;
-    h )
-      >&2 printf -- "%b" "$usage_long" && exit 1
+   h )
+      >&2 printf -- "%b\n" "$usage_long"
       exit 0
       ;;
     \?)
-      >&2 printf -- "%b" "unknown option: -$OPTARG"
-      >&2 printf -- "%b" "$usage_short"
+      >&2 printf -- "unknown option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 printf -- "%b" "missing option argument for -$OPTARG"
-      >&2 printf -- "%b" "$usage_short"
+      >&2 printf -- "missing option argument for -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 printf -- "%b" "unimplemented option: -$OPTARG"
-      >&2 printf -- "%b" "$usage_short"
+      >&2 printf -- "unimplemented option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
     esac
 done
@@ -57,15 +57,15 @@ if [ "$latest" = true ] ; then
 fi
 
 if [ "$version" = "" ] ; then
-  >&2 printf "%b- must specify a JS version to build (-l or -v version) -%b" "$RED" "$NC"
+  >&2 printf "%b- must specify a JS version to build (-l or -v version) -%b\n" "$RED" "$NC"
   exit 1
 fi
 
 
->&2 printf -- "- executing sync-js %s -" "$version"
+>&2 printf -- "- executing sync-js %s -\n" "$version"
 sync-js "$revision"
 
->&2 printf -- "- cleaning previous build and artifacts -"
+>&2 printf -- "- cleaning previous build and artifacts -\n"
 rimraf "$JS_BUILD_ROOT"
 rimraf "$JS_ARTIFACTS_ROOT"
 
@@ -75,11 +75,11 @@ pushj "$JS_SYNC_ROOT" >/dev/null
   cp -rf ./ "$JS_BUILD_ROOT"
 popj >/dev/null
 
->&2 printf -- "- building js version %s -" "$version"
+>&2 printf -- "- building js version %s -\n" "$version"
 pushj "$JS_BUILD_ROOT" >/dev/null
   npm run deploy -c "$configuration"
 
-  >&2 printf -- "- downloading 64 bit node.exe to bin -"
+  >&2 printf -- "- downloading 64 bit node.exe to bin -\n"
   curl -sL http://nodejs.org/dist/latest/x64/node.exe >bin/node.exe
 popj >/dev/null
 

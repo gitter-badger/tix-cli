@@ -46,7 +46,7 @@ shift $((OPTIND-1))
 
 ### if no arguments, throw an error
 if [ $# -eq 0 ]; then
-  >&2 printf -- "%b- must specify a module to clone -%b" "$RED" "$NC"
+  >&2 printf -- "%b- must specify a module to clone -%b\n" "$RED" "$NC"
   exit 1
 fi
 
@@ -63,10 +63,10 @@ module_path="$module_root/$module_dir"
 
 ### if module already cloned, throw an error
 if [ -d "$module_path" ]; then
-  >&2 printf -- "%b- module %s already exists at %s -%b" "$CYAN" "$module_name" "$module_path" "$NC"
-  exit 1
+  >&2 printf -- "%b- module %s already exists at %s, skipping -%b\n" "$CYAN" "$module_name" "$module_path" "$NC"
+  exit 0
 fi
 
->&2 printf -- "- cloning %s to %s... -" "$module_url" "$module_path"
-git clone "$module_url" "$module_path" 2>&1 | grep -qi "fatal" && >&2 printf -- "An error occurred while cloning." && exit 1
->&2 printf -- "%b- %s cloned successfully -%b" "$GREEN" "$module_name" "$NC"
+>&2 printf -- "- cloning %s to %s... -\n" "$module_url" "$module_path"
+git clone "$module_url" "$module_path" 2>&1 | grep -qi "fatal" && >&2 printf -- "%b- an error occurred while cloning -%b\n" "$RED" "$NC" && exit 1
+>&2 printf -- "%b- %s cloned successfully -%b\n" "$GREEN" "$module_name" "$NC"

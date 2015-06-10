@@ -8,7 +8,7 @@ set -e
 
 ### if no arguments, throw an error
 if [ $# -lt 1 ]; then
-  >&2 echo -e "${RED}--Must specify a revision to build...--${NC}"
+  >&2 printf -- "%b- must specify version to build... -%b\n" "$RED" "$NC"
   exit 1
 fi
 

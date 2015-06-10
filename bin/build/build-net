@@ -51,23 +51,23 @@ while getopts "$options" opt ; do
     o )
       output_path="$OPTARG"
       ;;
-    h )
-      >&2 printf -- "%b" "$usage_long" && exit 1
+   h )
+      >&2 printf -- "%b\n" "$usage_long"
       exit 0
       ;;
     \?)
-      >&2 printf -- "%b" "unknown option: -$OPTARG"
-      >&2 printf -- "%b" "$usage_short"
+      >&2 printf -- "unknown option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 printf -- "%b" "missing option argument for -$OPTARG"
-      >&2 printf -- "%b" "$usage_short"
+      >&2 printf -- "missing option argument for -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 printf -- "%b" "unimplemented option: -$OPTARG"
-      >&2 printf -- "%b" "$usage_short"
+      >&2 printf -- "unimplemented option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
     esac
 done
@@ -78,7 +78,7 @@ if [ "$latest" = true ] ; then
 fi
 
 if [ "$version" = "" ] ; then
-  >&2 printf -- "%b- must specify a version to build (-l or -v version) -%b" "$RED" "$NC"
+  >&2 printf -- "%b- must specify a version to build (-l or -v version) -%b\n" "$RED" "$NC"
   exit 1
 fi
 
@@ -88,7 +88,7 @@ msbuild_path="/c/Program Files (x86)/MSBuild/${tools_version}/Bin/MSBuild.exe"
 win_msbuild_path="$(cpath -w "$msbuild_path")"
 if [ ! -f "$msbuild_path" ] ; then
   # Not there, lets install
-  >&2 printf -- "%b- msbuild not found, installing... -%b" "$RED" "$NC"
+  >&2 printf -- "%b- msbuild not found, installing... -%b\n" "$RED" "$NC"
   choco install microsoft-build-tools
 
   # These downloads might help at some point
@@ -96,33 +96,33 @@ if [ ! -f "$msbuild_path" ] ; then
   #choco install netfx-4.5.2-devpack
 fi
 if [ ! -f "$msbuild_path" ] ; then
-  >&2 printf -- "%b- msbuild still not found... see if it is in default path -%b" "$RED" "$NC"
+  >&2 printf -- "%b- msbuild still not found... see if it is in default path -%b\n" "$RED" "$NC"
   msbuild_path="msbuild"
   win_msbuild_path="msbuild"
 fi
 
-printf -- "%b- executing sync-net %s -%b" "$CYAN" "$version" "$NC"
+printf -- "%b- executing sync-net %s -%b\n" "$CYAN" "$version" "$NC"
 sync-net "$version"
 
->&2 printf -- "- building and deploying artifacts version %s -" "$version"
+>&2 printf -- "- building and deploying artifacts version %s -\n" "$version"
 pushj "$NET_SYNC_ROOT" >/dev/null
-  >&2 printf -- "- restoring nuget packages -"
+  >&2 printf -- "- restoring nuget packages -\n"
   nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
 
-  >&2 printf -- "- cleaning %b -" "$NET_BUILD_ROOT"
+  >&2 printf -- "- cleaning %b -\n" "$NET_BUILD_ROOT"
   rimraf "$NET_BUILD_ROOT"
   mkdirp "$NET_BUILD_ROOT"
 
   win_net_build_root="$(cpath -w "$output_path")"
-  >&2 printf -- "- building to %s -" "$win_net_build_root"
+  >&2 printf -- "- building to %s -\n" "$win_net_build_root"
 
   msbuild_command="cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath=\"${win_net_build_root}\" //m //v:m //clp:ErrorsOnly"
-  >&2 printf -- "- executing... -> %s -" "$msbuild_command"
+  >&2 printf -- "- executing... -> %s -\n" "$msbuild_command"
   "$msbuild_command"
 
-  >&2 printf -- "- cleaning packages -"
+  >&2 printf -- "- cleaning packages -\n"
   rimraf packages
-  >&2 printf -- "- packages cleaned successfully -"
+  >&2 printf -- "- packages cleaned successfully -\n"
 popj >/dev/null
 
 if [ "$encrypt" = true ] ; then
@@ -131,4 +131,4 @@ if [ "$encrypt" = true ] ; then
   cryptkeeper -ens connectionStrings -p "${configuration}Provider" -C "${configuration}Keys" -E "$BUILD_ROOT" -R "$config_path"
 fi
 
->&2 printf -- "%b- tixinc-net version %s successfully built -%b" "$GREEN" "$version" "$NC"
+>&2 printf -- "%b- tixinc-net version %s successfully built -%b\n" "$GREEN" "$version" "$NC"

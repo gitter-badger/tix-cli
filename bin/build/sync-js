@@ -2,12 +2,14 @@
 #
 # Syncs an exact revision of tixinc-js module to the sync directory.
 
-### if no arguments, throw an error
-if [ $# -lt 1 ]; then
-  >&2 echo "Must specify a revision to build..."
-  exit 1
-fi
+set -e
 
 . "$HOME/.tixrc"
+
+### if no arguments, throw an error
+if [ $# -lt 1 ]; then
+  >&2 printf -- "%b- must specify version to build... -%b\n" "$RED" "$NC"
+  exit 1
+fi
 
 sync-module tixinc-js "$1"
