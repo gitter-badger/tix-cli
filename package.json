@@ -33,6 +33,12 @@
     }
   ],
   "scripts": {
+    "env": "env",
+    "echo": "echo",
+    "bash": "bash -c",
+    "comspec-bash": "SET COMSPEC='%USERPROFILE%\\local\\cmder\\vendor\\msysgit\\git-bash.bat'",
+    "comspec-cmd": "SET COMSPEC='C:\\WINDOWS\\system32\\cmd.exe'",
+    "ls": "ls",
     "test": "tape test/*.js"
   },
   "devDependencies": {
