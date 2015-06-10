@@ -82,8 +82,7 @@ pushj "$JS_BUILD_ROOT" >/dev/null
   npm install
 
   >&2 printf -- "- configuring JS as %s -" "$configuration"
-  npm run configure:env "$configuration"
-  npm run configure:transform
+  npm run configure "$configuration"
 
   >&2 printf -- "- building js -"
   npm run build

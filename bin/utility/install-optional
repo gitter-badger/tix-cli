@@ -2,7 +2,7 @@
 #
 # This script installs optional applications
 
-source $HOME/.tixrc
+source "$HOME/.tixrc"
 
 ### General packages
 if hash curl 2>/dev/null; then
