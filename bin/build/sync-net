@@ -12,5 +12,4 @@ if [ $# -lt 1 ]; then
   exit 1
 fi
 
-
 sync-module tixinc-net "$1"
