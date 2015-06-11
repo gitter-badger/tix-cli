@@ -9,12 +9,12 @@ module_name=""
 branch_name="master"
 revision_count=10
 
-usage_short="${CYAN}Usage: revisions [-l] [-b branch-name] [-c revision-count] module-name${NC}"
-usage_long="$usage_short\n-l: Gets the latest annotated revision."
-usage_long="$usage_long\n-b: Name of branch to get revisions for (default master)."
-usage_long="$usage_long\n-c: Specifies the number of recent revisions to get for tags and commits (default 10)."
+usage_short="${CYAN}Usage: revisions [-l] [-b branch-name] [-c revision-count] module-name"
+usage_long="$usage_short\n-l: gets the latest annotated revision"
+usage_long="$usage_long\n-b: name of branch to get revisions for (default master)"
+usage_long="$usage_long\n-c: specifies the number of recent revisions to get for tags and commits (default 10)${NC}"
 
-usage_short="$usage_short\nUse -h to get supported command information."
+usage_short="$usage_short\nuse -h to get supported command information${NC}"
 
 options=":lb:c:h"
 shopt -u nocasematch
@@ -33,23 +33,23 @@ while getopts "$options" opt ; do
     c ) # Specifies the number of latest revisions to show for both tags and commits, optional
       revision_count=$OPTARG
       ;;
-    h )
-      >&2 echo -e "$usage_long" && exit 1
+   h )
+      >&2 printf -- "%b\n" "$usage_long"
       exit 0
       ;;
     \?)
-      >&2 echo -e "Unknown option: -$OPTARG"
-      >&2 echo -e "$usage_short"
+      >&2 printf -- "unknown option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
       ;;
     : )
-      >&2 echo -e "Missing option argument for -$OPTARG"
-      >&2 echo -e "$usage_short"
+      >&2 printf -- "missing option argument for -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
       ;;
     * )
-      >&2 echo -e "Unimplemented option: -$OPTARG" && exit 1
-      >&2 echo -e "$usage_short"
+      >&2 printf -- "unimplemented option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
       exit 1
     esac
 done
@@ -61,16 +61,16 @@ module_name=$1
 
 ### if no arguments, throw an error
 if [ "$module_name" = "" ]; then
-  >&2 echo -e "$usage_short" && exit 1
+  >&2 printf -- "%b/n" "$usage_short" && exit 1
 fi
 
-module_root="$BUILD_ROOT/$module_name"
+module_root="$SYNC_ROOT/$module_name"
 remote_branch="origin/$branch_name"
 
 ### if module not cloned, clone it
 if [ ! -d "$module_root" ]; then
-  >&2 echo -e "${CYAN}Module $module_name does not exist at $module_root, cloning...${NC}"
-  clone-module -b $module_name >/dev/null
+  >&2 printf -- "%b- module %s does not exist at %s, cloning... -%b\n" "$CYAN" "$module_name" "$module_root" "$NC"
+  clone-module -s $module_name >/dev/null
 fi
 
 pushd "$module_root" >/dev/null
@@ -84,8 +84,8 @@ pushd "$module_root" >/dev/null
     exit 0
   fi
 
-  >&2 echo -e "${YELLOW}--tags--${NC}"
+  >&2 printf -- "%b- tags -%b\n" "$YELLOW" "$NC"
   git tag -l | sort -r -n -t. -k1,1 -k2,2 -k3,3 | head -n $revision_count
-  >&2 echo -e "${YELLOW}--recent commit hashes--${NC}"
+  >&2 printf -- "%b- recent commit hashes -%b\n" "$YELLOW" "$NC"
   git log "$remote_branch" --abbrev-commit --pretty=oneline --max-count=$revision_count
 popd >/dev/null
