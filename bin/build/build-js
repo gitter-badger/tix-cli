@@ -77,10 +77,21 @@ popj >/dev/null
 
 >&2 printf -- "- building js version %s -\n" "$version"
 pushj "$JS_BUILD_ROOT" >/dev/null
-  npm run deploy -c "$configuration"
+  npm run configure "$configuration"
+
+  npm run build
+
+  npm prune --production
+
+  rimraf .git
+  rimraf .gitignore
+  rimraf .gitattributes
+  rimraf gulpfile.js
+  rimraf server-base.json
+  rimraf client
 
   >&2 printf -- "- downloading 64 bit node.exe to bin -\n"
   curl -sL http://nodejs.org/dist/latest/x64/node.exe >bin/node.exe
 popj >/dev/null
 
->&2 echo -e "${GREEN}--Artifacts revision $revision successfully deployed--${NC}"
+>&2 printf "%b- JS artifacts version %s successfully deployed -%b" "$GREEN" "$version" "$NC"
