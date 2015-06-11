@@ -77,6 +77,8 @@ popj >/dev/null
 
 >&2 printf -- "- building js version %s -\n" "$version"
 pushj "$JS_BUILD_ROOT" >/dev/null
+  npm install
+
   npm run configure "$configuration"
 
   npm run build
