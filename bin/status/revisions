@@ -61,7 +61,7 @@ module_name=$1
 
 ### if no arguments, throw an error
 if [ "$module_name" = "" ]; then
-  >&2 printf -- "%b/n" "$usage_short" && exit 1
+  >&2 printf -- "%b\n" "$usage_short" && exit 1
 fi
 
 module_root="$SYNC_ROOT/$module_name"
@@ -70,7 +70,7 @@ remote_branch="origin/$branch_name"
 ### if module not cloned, clone it
 if [ ! -d "$module_root" ]; then
   >&2 printf -- "%b- module %s does not exist at %s, cloning... -%b\n" "$CYAN" "$module_name" "$module_root" "$NC"
-  clone-module -s $module_name >/dev/null
+  clone-module -s "$module_name"
 fi
 
 pushd "$module_root" >/dev/null

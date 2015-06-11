@@ -18,10 +18,10 @@ options=":sh"
 OPTIND=1
 while getopts "$options" opt; do
     case "$opt" in
-    b )
+    s )
       sync_flag=true
       ;;
-   h )
+    h )
       >&2 printf -- "%b\n" "$usage_long"
       exit 0
       ;;
