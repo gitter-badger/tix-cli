@@ -61,14 +61,11 @@ if [ "$version" = "" ] ; then
   exit 1
 fi
 
-
 >&2 printf -- "- executing sync-js %s -\n" "$version"
 sync-js "$revision"
 
 >&2 printf -- "- cleaning previous build and artifacts -\n"
 rimraf "$JS_BUILD_ROOT"
-rimraf "$JS_ARTIFACTS_ROOT"
-
 
 mkdirp "$JS_BUILD_ROOT"
 pushj "$JS_SYNC_ROOT" >/dev/null
