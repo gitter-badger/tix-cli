@@ -13,7 +13,7 @@ fi
 latest=false
 configuration=Release
 encrypt=false
-artifacts_root="$RELEASE_ROOT"
+artifacts_root="$ARTIFACTS_ROOT"
 js_version=""
 net_version=""
 
