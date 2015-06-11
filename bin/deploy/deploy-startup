@@ -6,9 +6,10 @@ set -e
 
 . "$HOME/.tixrc"
 
-run_file_path="$ARTIFACTS_ROOT/run.cmd"
+run_file_path="$BUILD_ROOT/run.cmd"
 
->&2 echo "--Deploying startup script--"
+>&2 printf -- "- deploying startup script -\n"
+mkdirp "$BUILD_ROOT"
 rimraf "$run_file_path"
-echo "start tixinc-net\Tix.Web.SelfHost.exe & cmd.exe /s /k \"pushd tixinc-js && bin\node.exe bin\www && popd\"" >"$run_file_path"
->&2 echo -e "${GREEN}--Startup script successfully deployed--${NC}"
+printf -- "start tixinc-net\Tix.Web.SelfHost.exe & cmd.exe /s /k \"pushd tixinc-js && bin\node.exe bin\www && popd\"" >"$run_file_path"
+>&2 printf -- "%b- startup script successfully deployed -%b\n" "$GREEN" "$NC"

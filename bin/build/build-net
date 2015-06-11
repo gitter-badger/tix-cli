@@ -118,7 +118,7 @@ pushj "$NET_SYNC_ROOT" >/dev/null
 
   msbuild_command="cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath=\"${win_net_build_root}\" //m //v:m //clp:ErrorsOnly"
   >&2 printf -- "- executing... -> %s -\n" "$msbuild_command"
-  "$msbuild_command"
+  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_net_build_root}" //m //v:m //clp:ErrorsOnly
 
   >&2 printf -- "- cleaning packages -\n"
   rimraf packages
