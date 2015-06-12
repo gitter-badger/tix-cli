@@ -172,9 +172,9 @@ if [ "$deploy_flag" = true ] ; then
 fi
 
 if [ "$non_interactive" = true ] ; then
-  printf -- "- (-n) norun flag specified, skipping cli execution... -\n"
+  printf -- "- -n norun flag specified, skipping cli execution... -\n"
   exit 0
 fi
 
-printf -- "- executing cli at %b... -\n" "$CLI_PATH"
+printf -- "- executing cli at %s... -\n" "$CLI_PATH"
 node "$CLI_PATH"
