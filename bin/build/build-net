@@ -111,7 +111,7 @@ mkdirp "$NET_RELEASE_ROOT"
 pushj "$NET_BUILD_ROOT"
   net_build_junc="$PWD"
   pushj "$NET_SYNC_ROOT"
-    cp rf ./ "$net_build_junc"
+    cp -rf ./ "$net_build_junc"
   popj
 
   >&2 printf -- "- restoring nuget packages -\n"
