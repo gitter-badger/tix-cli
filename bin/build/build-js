@@ -89,7 +89,7 @@ pushj "$JS_RELEASE_ROOT"
   pushj "$JS_BUILD_ROOT"
     js_build_junc="$PWD"
     pushj "$JS_SYNC_ROOT"
-      cp -rf ./ "$js_build_root"
+      cp -rf ./ "$js_build_junc"
     popj
 
     if [ "$skip_install_flag" != true ] ; then
