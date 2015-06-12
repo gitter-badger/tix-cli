@@ -107,8 +107,13 @@ mkdirp "$NET_BUILD_ROOT"
 mkdirp "$NET_RELEASE_ROOT"
 
 >&2 printf -- "- building net version %s -\n" "$version"
-cpj "$NET_SYNC_ROOT" "$NET_BUILD_ROOT"
-pushj "$NET_BUILD_ROOT" >/dev/null
+#cpj "$NET_SYNC_ROOT" "$NET_BUILD_ROOT"
+pushj "$NET_BUILD_ROOT"
+  net_build_junc="$PWD"
+  pushj "$NET_SYNC_ROOT"
+    cp rf ./ "$net_build_junc"
+  popj
+
   >&2 printf -- "- restoring nuget packages -\n"
   rimraf packages
   nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive

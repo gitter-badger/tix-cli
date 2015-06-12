@@ -82,21 +82,30 @@ rimraf "$JS_RELEASE_ROOT"
 
 >&2 printf -- "- building js version %s -\n" "$version"
 mkdirp "$JS_BUILD_ROOT"
-cpj "$JS_SYNC_ROOT" "$JS_BUILD_ROOT"
-pushj "$JS_BUILD_ROOT"
+mkdirp "$JS_RELEASE_ROOT"
+#cpj "$JS_SYNC_ROOT" "$JS_BUILD_ROOT"
+pushj "$JS_RELEASE_ROOT"
+  js_release_junc="$PWD"
+  pushj "$JS_BUILD_ROOT"
+    js_build_junc="$PWD"
+    pushj "$JS_SYNC_ROOT"
+      cp -rf ./ "$js_build_root"
+    popj
+
     if [ "$skip_install_flag" != true ] ; then
       # Make non-build debug dependencies optional and they won't get installed for builds
       npm install --no-optional
     fi
     npm run configure "$configuration"
     npm run build
-popj
+    npm prune --production
 
->&2 printf -- "- building js release version %s -\n" "$version"
-mkdirp "$JS_RELEASE_ROOT"
-cpj "$JS_BUILD_ROOT" "$JS_RELEASE_ROOT"
-pushj "$JS_RELEASE_ROOT"
-  npm prune --production
+    cp -rf ./ "$js_release_junc"
+
+  popj
+
+      #npm prune --production
+
 
   rimraf .git
   rimraf .gitignore
@@ -105,7 +114,6 @@ pushj "$JS_RELEASE_ROOT"
   rimraf client
   rimraf etc
   rimraf test
-
   pushd bin
     shopt -s extglob
     rimraf !(www)
@@ -113,5 +121,27 @@ pushj "$JS_RELEASE_ROOT"
     curl -sL http://nodejs.org/dist/latest/x64/node.exe >node.exe
   popd
 popj
+
+#>&2 printf -- "- building js release version %s -\n" "$version"
+#mkdirp "$JS_RELEASE_ROOT"
+#cpj "$JS_BUILD_ROOT" "$JS_RELEASE_ROOT"
+#pushj "$JS_RELEASE_ROOT"
+#  npm prune --production
+#
+#  rimraf .git
+###  rimraf .gitignore
+#  rimraf .gitattributes
+#  rimraf gulpfile.js
+#  rimraf client
+#  rimraf etc
+#  rimraf test
+
+#  pushd bin
+#    shopt -s extglob
+#    rimraf !(www)
+##    >&2 printf -- "- downloading 64 bit node.exe to release bin -\n"
+#    curl -sL http://nodejs.org/dist/latest/x64/node.exe >node.exe
+#  popd
+#popj
 
 >&2 printf "%b- js artifacts version %s successfully deployed -%b" "$GREEN" "$version" "$NC"
