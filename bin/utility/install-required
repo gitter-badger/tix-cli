@@ -45,8 +45,8 @@ fi
 if ! hash junc 2>/dev/null; then
   >&2 echo "--Installing junc--"
   npm install -g junc
-  junc-install "$RC_PATH"
-  . "$RC_PATH"
+  junc-install
+  . "$HOME/.bashrc"
 fi
 if ! hash chrome 2>/dev/null; then
   >&2 echo "--Installing chrome--"
