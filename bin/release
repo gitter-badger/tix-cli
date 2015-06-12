@@ -89,6 +89,10 @@ if [ "$net_version" = "" ] ; then
   exit 1
 fi
 
+>&2 printf -- "- cleaning previous builds -\n"
+rimraf "$JS_BUILD_ROOT"
+rimraf "$NET_BUILD_ROOT"
+
 configuration_lower="$(printf -- "%s" "$configuration" | tr '[:upper:]' '[:lower:]')"
 release_name="$(printf -- "net_%s-js_%s-%s" "$net_version" "$js_version" "$configuration_lower")"
 >&2 printf -- "- building and packaging release %s -\n" "$release_name"
@@ -97,15 +101,16 @@ if [ "$encrypt" = true ] ; then
 else
   build-net -v "$net_version" -c "$configuration" -V 12.0
 fi
-build-js -v "$js_version" -c "$configuration"
+build-js -v "$js_version" -c "$configuration_lower" -C
 deploy-startup
 
 artifacts_path="${artifacts_root}/${release_name}.7z"
-rimraf "$artifacts_root"
+
+rimraf "$artifacts_path"
 mkdirp "$artifacts_root"
 
 >&2 printf -- "- packaging release to %s -\n" "$release_path"
-pushj "$BUILD_ROOT" >/dev/null
+pushj "$RELEASE_ROOT" >/dev/null
   # 7zip the built artifacts using LZMA2 max compression and multithreading
   7za a -t7z "$artifacts_path" ./* -m0=lzma2 -mx=9 -aoa -mfb=64 -md=32m -ms=on
 popj >/dev/null

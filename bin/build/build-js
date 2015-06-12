@@ -8,15 +8,19 @@ set -e
 latest=false
 version=""
 configuration="debug"
+clean_build_flag=false
+skip_install_flag=false
 
-usage_short="${BLUE}usage: build-js [-l] [-v version] [-c configuration]"
+usage_short="${BLUE}usage: build-js [-l] [-v version] [-c configuration] [-C] [-s]"
 usage_long="$usage_short\n-l: Deploy latest version of tixinc-js"
 usage_long="$usage_long\n-v: Deploy specific version (tag or hash)"
-usage_long="$usage_long\n-c: configuration to use (default: $configuration)${NC}"
+usage_long="$usage_long\n-c: configuration to use (default: $configuration)"
+usage_long="$usage_long\n-C: clean previous build"
+usage_long="$usage_long\n-s: skip npm install${NC}"
 
 usage_short="$usage_short\nuse -h to get supported command information${NC}"
 
-options=":lv:c:h"
+options=":lv:c:Csh"
 shopt -u nocasematch
 OPTIND=1
 while getopts "$options" opt ; do
@@ -29,6 +33,12 @@ while getopts "$options" opt ; do
       ;;
     c )
       configuration="$OPTARG"
+      ;;
+    C )
+      clean_build_flag=true
+      ;;
+    s )
+      skip_install_flag=true
       ;;
    h )
       >&2 printf -- "%b\n" "$usage_long"
@@ -62,35 +72,46 @@ if [ "$version" = "" ] ; then
 fi
 
 >&2 printf -- "- executing sync-js %s -\n" "$version"
-sync-js "$revision"
+sync-js "$version"
 
->&2 printf -- "- cleaning previous build and artifacts -\n"
-rimraf "$JS_BUILD_ROOT"
-
-mkdirp "$JS_BUILD_ROOT"
-pushj "$JS_SYNC_ROOT" >/dev/null
-  cp -rf ./ "$JS_BUILD_ROOT"
-popj >/dev/null
+>&2 printf -- "- cleaning previous js release -\n"
+if [ "$clean_build_flag" = true ] ; then
+  rimraf "$JS_BUILD_ROOT"
+fi
+rimraf "$JS_RELEASE_ROOT"
 
 >&2 printf -- "- building js version %s -\n" "$version"
-pushj "$JS_BUILD_ROOT" >/dev/null
-  npm install
+mkdirp "$JS_BUILD_ROOT"
+cpj "$JS_SYNC_ROOT" "$JS_BUILD_ROOT"
+pushj "$JS_BUILD_ROOT"
+    if [ "$skip_install_flag" != true ] ; then
+      # Make non-build debug dependencies optional and they won't get installed for builds
+      npm install --no-optional
+    fi
+    npm run configure "$configuration"
+    npm run build
+popj
 
-  npm run configure "$configuration"
-
-  npm run build
-
+>&2 printf -- "- building js release version %s -\n" "$version"
+mkdirp "$JS_RELEASE_ROOT"
+cpj "$JS_BUILD_ROOT" "$JS_RELEASE_ROOT"
+pushj "$JS_RELEASE_ROOT"
   npm prune --production
 
   rimraf .git
   rimraf .gitignore
   rimraf .gitattributes
   rimraf gulpfile.js
-  rimraf server-base.json
   rimraf client
+  rimraf etc
+  rimraf test
 
-  >&2 printf -- "- downloading 64 bit node.exe to bin -\n"
-  curl -sL http://nodejs.org/dist/latest/x64/node.exe >bin/node.exe
-popj >/dev/null
+  pushd bin
+    shopt -s extglob
+    rimraf !(www)
+    >&2 printf -- "- downloading 64 bit node.exe to release bin -\n"
+    curl -sL http://nodejs.org/dist/latest/x64/node.exe >node.exe
+  popd
+popj
 
->&2 printf "%b- JS artifacts version %s successfully deployed -%b" "$GREEN" "$version" "$NC"
+>&2 printf "%b- js artifacts version %s successfully deployed -%b" "$GREEN" "$version" "$NC"

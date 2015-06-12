@@ -145,23 +145,25 @@ export NET_ROOT="${MODULE_ROOT}/tixinc-net"
 export NET_SELFHOST_ROOT="${NET_ROOT}/Tix.Web.SelfHost"
 export NET_PROJECT_PATH="${NET_SELFHOST_ROOT}/Tix.Web.SelfHost.csproj"
 
+# app code gets pulled to sync root to prep a specific version for build
 export SYNC_ROOT="${MODULE_ROOT}/sync"
 export NET_SYNC_ROOT="${SYNC_ROOT}/tixinc-net"
 export JS_SYNC_ROOT="${SYNC_ROOT}/tixinc-js"
 
+# specific app code version gets copied from sync root to build root and built here
 export BUILD_ROOT="${MODULE_ROOT}/build"
 export NET_BUILD_ROOT="${BUILD_ROOT}/tixinc-net"
 export JS_BUILD_ROOT="${BUILD_ROOT}/tixinc-js"
 
+# specific depoyable app version gets copied from build root to release and prepped for release
+export RELEASE_ROOT="${MODULE_ROOT}/release"
+export NET_RELEASE_ROOT="${RELEASE_ROOT}/tixinc-net"
+export JS_RELEASE_ROOT="${RELEASE_ROOT}/tixinc-js"
+
+# build artifacts get zipped from release root and put in artifacts root to be deployed
 export ARTIFACTS_ROOT="${MODULE_ROOT}/artifacts"
 export NET_ARTIFACTS_ROOT="${ARTIFACTS_ROOT}/tixinc-net"
 export JS_ARTIFACTS_ROOT="${ARTIFACTS_ROOT}/tixinc-js"
-
-export RELEASE_ROOT="${MODULE_ROOT}/release"
-
-export GYP_ROOT="${MODULE_ROOT}/gyp"
-export NODE_GYP_ROOT="${MODULE_ROOT}/node-gyp"
-export GYP_DEPLOY_LOG="${MODULE_ROOT}/gyp.log"
 
 
 

@@ -11,7 +11,7 @@ tools_version="12.0"
 visual_studio_version="12.0"
 configuration="Debug"
 encrypt=false
-output_path="$NET_BUILD_ROOT"
+release_root="$NET_RELEASE_ROOT"
 
 usage_short="${CYAN}Usage: build-net -l|-v version [-t ToolsVersion] [-V VisualStudioVersion] [-c Configuration] [-e] [-o OutputPath]"
 usage_long="$usage_short\n-l: deploy latest version of tixinc-net"
@@ -20,7 +20,7 @@ usage_long="$usage_long\n-t: msbuild ToolsVersion to use (default=${tools_versio
 usage_long="$usage_long\n-V: msbuild VisualStudioVersion to use (default=${visual_studio_version})"
 usage_long="$usage_long\n-c: configuration to deploy (default=${configuration})"
 usage_long="$usage_long\n-e: encrypt configuration section"
-usage_long="$usage_long\n-o: output path (default=$output_path)${NC}"
+usage_long="$usage_long\n-o: output path (default=$release_root)${NC}"
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
@@ -49,7 +49,7 @@ while getopts "$options" opt ; do
       encrypt=true
       ;;
     o )
-      output_path="$OPTARG"
+      release_root="$OPTARG"
       ;;
    h )
       >&2 printf -- "%b\n" "$usage_long"
@@ -90,10 +90,6 @@ if [ ! -f "$msbuild_path" ] ; then
   # Not there, lets install
   >&2 printf -- "%b- msbuild not found, installing... -%b\n" "$RED" "$NC"
   choco install microsoft-build-tools
-
-  # These downloads might help at some point
-  #http://download.microsoft.com/download/9/B/B/9BB1309E-1A8F-4A47-A6C5-ECF76672A3B3/BuildTools_Full.exe
-  #choco install netfx-4.5.2-devpack
 fi
 if [ ! -f "$msbuild_path" ] ; then
   >&2 printf -- "%b- msbuild still not found... see if it is in default path -%b\n" "$RED" "$NC"
@@ -104,31 +100,31 @@ fi
 printf -- "%b- executing sync-net %s -%b\n" "$CYAN" "$version" "$NC"
 sync-net "$version"
 
->&2 printf -- "- building and deploying artifacts version %s -\n" "$version"
-pushj "$NET_SYNC_ROOT" >/dev/null
+>&2 printf -- "- cleaning previous net release -\n"
+rimraf "$NET_BUILD_ROOT"
+rimraf "$NET_RELEASE_ROOT"
+mkdirp "$NET_BUILD_ROOT"
+mkdirp "$NET_RELEASE_ROOT"
+
+>&2 printf -- "- building net version %s -\n" "$version"
+cpj "$NET_SYNC_ROOT" "$NET_BUILD_ROOT"
+pushj "$NET_BUILD_ROOT" >/dev/null
   >&2 printf -- "- restoring nuget packages -\n"
+  rimraf packages
   nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
 
-  >&2 printf -- "- cleaning %b -\n" "$NET_BUILD_ROOT"
-  rimraf "$NET_BUILD_ROOT"
-  mkdirp "$NET_BUILD_ROOT"
+  win_net_release_root="$(cpath -w "$release_root")"
+  >&2 printf -- "- building to %s -\n" "$win_net_release_root"
 
-  win_net_build_root="$(cpath -w "$output_path")"
-  >&2 printf -- "- building to %s -\n" "$win_net_build_root"
-
-  msbuild_command="cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath=\"${win_net_build_root}\" //m //v:m //clp:ErrorsOnly"
+  msbuild_command="cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath=\"${win_net_release_root}\" //m //v:m //clp:ErrorsOnly"
   >&2 printf -- "- executing... -> %s -\n" "$msbuild_command"
-  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_net_build_root}" //m //v:m //clp:ErrorsOnly
-
-  >&2 printf -- "- cleaning packages -\n"
-  rimraf packages
-  >&2 printf -- "- packages cleaned successfully -\n"
+  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_net_release_root}" //m //v:m //clp:ErrorsOnly
 popj >/dev/null
 
 if [ "$encrypt" = true ] ; then
   npm install -g cryptkeeper &>/dev/null
-  config_path="$NET_BUILD_ROOT/Tix.Web.SelfHost.exe.config"
-  cryptkeeper -ens connectionStrings -p "${configuration}Provider" -C "${configuration}Keys" -E "$BUILD_ROOT" -R "$config_path"
+  config_path="$release_root/Tix.Web.SelfHost.exe.config"
+  cryptkeeper -ens connectionStrings -p "${configuration}Provider" -C "${configuration}Keys" -E "$release_root" -R "$config_path"
 fi
 
 >&2 printf -- "%b- tixinc-net version %s successfully built -%b\n" "$GREEN" "$version" "$NC"
