@@ -6,10 +6,10 @@ set -e
 
 . "$HOME/.tixrc"
 
-run_file_path="$BUILD_ROOT/run.cmd"
+run_file_path="$RELEASE_ROOT/run.cmd"
 
 >&2 printf -- "- deploying startup script -\n"
-mkdirp "$BUILD_ROOT"
+mkdirp "$RELEASE_ROOT"
 rimraf "$run_file_path"
 
 start_node="pushd tixinc-js && bin\\node.exe bin\\www && popd"
