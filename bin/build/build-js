@@ -83,15 +83,20 @@ rimraf "$JS_RELEASE_ROOT"
 >&2 printf -- "- building js version %s -\n" "$version"
 mkdirp "$JS_BUILD_ROOT"
 mkdirp "$JS_RELEASE_ROOT"
+
+>&2 printf -- "- copying sync files to build -\n"
+pushj "$JS_BUILD_ROOT"
+  js_build_junc="$PWD"
+  pushj "$JS_SYNC_ROOT"
+    cp -rf ./ "$js_build_junc"
+  popj
+popj
+
+
 #cpj "$JS_SYNC_ROOT" "$JS_BUILD_ROOT"
 pushj "$JS_RELEASE_ROOT"
   js_release_junc="$PWD"
   pushj "$JS_BUILD_ROOT"
-    js_build_junc="$PWD"
-    pushj "$JS_SYNC_ROOT"
-      cp -rf ./ "$js_build_junc"
-    popj
-
     if [ "$skip_install_flag" != true ] ; then
       # Make non-build debug dependencies optional and they won't get installed for builds
       npm install --no-optional
