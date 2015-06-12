@@ -161,6 +161,7 @@ fi
 
 if [ "$link_flag" = true ] ; then
   link-all
+  install-all
 fi
 
 if [ "$pull_flag" = true ] ; then

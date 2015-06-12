@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# This script installs all dev dependent npm packages
+
+. "$HOME/.tixrc"
+
+pushd "$MODULE_ROOT"
+for module in *; do
+  [ -f "$module/package.json" ] || continue
+  pushd "$module" >&2
+    printf -- "%b- npm installing %b... -%b" "$CYAN" "$module" "$NC"
+    npm install
+    printf -- "%b- finished npm install on $module -%b" "$GREEN" "$module" "$NC"
+  popd
+done
+
