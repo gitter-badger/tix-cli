@@ -5,51 +5,47 @@
 RC_PATH="$HOME/.tixrc"
 . "$RC_PATH"
 
->&2 echo "--Installing Required Applications--"
+>&2 printf -- "%b- installing Required Applications -%b" "$CYAN" "$NC"
 if ! hash rimraf 2>/dev/null; then
-  >&2 echo "--Installing rimraf--"
-  >&2 echo "--**short for 'rm -rf' (remove recursive/force)**--"
+  >&2 printf -- "--Installing rimraf--"
   npm install -g rimraf >/dev/null
 fi
 if ! hash mkdirp 2>/dev/null; then
-  >&2 echo "--Installing mkdirp--"
-  >&2 echo "--**short for 'mkdir -p' (make directory recursively and skip silently if directory exists)**--"
+  >&2 printf -- "%b- Installing mkdirp -%b" "$CYAN" "$NC"
   npm install -g mkdirp >/dev/null
 fi
 if ! hash nodemon 2>/dev/null; then
-  >&2 echo "--Installing nodemon--"
-  >&2 echo "--**runs node.js and watches server-side files for updates to trigger process reload**--"
+  >&2 printf -- "%b- Installing nodemon -%b" "$CYAN" "$NC"
   npm install -g nodemon >/dev/null
 fi
 if ! hash forever 2>/dev/null; then
-  >&2 echo "--Installing forever--"
-  >&2 echo "--**runs node.js in a production setting, ensuring the process never goes down**--"
+  >&2 printf -- "%b- Installing forever -%b" "$CYAN" "$NC"
   npm install -g forever >/dev/null
 fi
 if ! hash gulp 2>/dev/null; then
-  >&2 echo "--Installing gulp--"
+  >&2 printf -- "%b- Installing gulp -%b" "$CYAN" "$NC"
   npm install -g gulp >/dev/null
 fi
 if ! hash browser-sync 2>/dev/null; then
-  >&2 echo "--Installing browser-sync--"
+  >&2 printf -- "%b- Installing browser-sync -%b" "$CYAN" "$NC"
   npm install -g browser-sync >/dev/null
 fi
 if ! hash catw 2>/dev/null; then
-  >&2 echo "--Installing catw--"
+  >&2 printf -- "%b- Installing catw -%b" "$CYAN" "$NC"
   npm install -g catw >/dev/null
 fi
 if ! hash cpath 2>/dev/null; then
-  >&2 echo "--Installing cpath--"
+  >&2 printf -- "%b- Installing cpath -%b" "$CYAN" "$NC"
   npm install -g cpath
 fi
 if ! hash junc 2>/dev/null; then
-  >&2 echo "--Installing junc--"
+  >&2 printf -- "%b- Installing junc -%b" "$CYAN" "$NC"
   npm install -g junc
   junc-install
   . "$HOME/.bashrc"
 fi
 if ! hash chrome 2>/dev/null; then
-  >&2 echo "--Installing chrome--"
+  >&2 printf -- "%b- Installing chrome -%b" "$CYAN" "$NC"
   if [ "$PNAME" = "windows" ]; then
     choco install google-chrome-x64
   fi
