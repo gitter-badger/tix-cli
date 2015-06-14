@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# This script installs all dev dependent npm packages
+
+. "$HOME/.tixrc"
+
+WIN_LOCAL_ROOT="$USERPROFILE\\local"
+PINNED_APPLICATIONS_PATH="$WIN_LOCAL_ROOT\\tix-cli\\src\\ps1\\pinned-applications.psm1"
+CMDER_PATH="$WIN_LOCAL_ROOT\\cmder\\Cmder.exe"
+
+pin_taskbar() {
+  powershell -command "Import-Module $PINNED_APPLICATIONS_PATH; Set-PinnedApplication -Action PinToTaskbar -FilePath $CMDER_PATH"
+}
+
+
+if [ "$1" = "-u" ] || [ "$1" = "--uninstall" ] ; then
+
+else
+  powershell -command "Import-Module $PINNED_APPLICATIONS_PATH; Set-PinnedApplication -Action PinToTaskbar -FilePath $CMDER_PATH"
+fi
+

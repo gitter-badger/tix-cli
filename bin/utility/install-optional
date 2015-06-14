@@ -2,54 +2,92 @@
 #
 # This script installs optional applications
 
-source "$HOME/.tixrc"
+. "$HOME/.tixrc"
 
-### General packages
+pre_install() {
+    printf -- "%b- installing %s -%b" "$CYAN" "$1" "$NC"
+}
+
+post_install() {
+    printf -- "%b- %s installed successfully -%b" "$GREEN" "$1" "$NC"
+}
+
+download_package() {
+  url="$1"
+  download_path="$2"
+  directory="$(dirname "$download_path")"
+  mkdirp "$directory"
+  curl -L "$url" >"$download_path"
+}
+
+install_zip() {
+  url="$1"
+  install_path="$2"
+  download_package "$url" "$2"
+  procexp_url="https://download.sysinternals.com/files/ProcessExplorer.zip"
+  procexp_path="${LOCAL_BIN_ROOT}/procexp.exe"
+  mkdir -p "$SRC_ZIP_ROOT"
+  pushd "$SRC_ZIP_ROOT"
+  curl -L "$procexp_url" >ProcessExplorer.zip
+  unzip -po ProcessExplorer.zip procexp.exe >"$procexp_path"
+
+}
+
+pre_install "optional applications"
 if hash curl 2>/dev/null; then
   if ! hash ack 2>/dev/null; then
-    ### ack: Fast file searching
-    echo "Installing ack..."
-    curl http://beyondgrep.com/ack-2.14-single-file > "${LOCAL_BIN_ROOT}/ack"
-    echo "ack installed successfully."
+    pre_install ack
+    curl http://beyondgrep.com/ack-2.14-single-file >"${LOCAL_BIN_ROOT}/ack"
+    post_install ack
   fi
 fi
 
-### Brew / pacman packages
-### ag (the_silver_searcher): extremely fast file searching
 if hash brew 2>/dev/null; then
+  pre_install ag
   brew install the_silver_searcher
+  post_install ag
 elif hash pacman 2>/dev/null; then
+  pre_install ag
   pacman -S the_silver_searcher
+  post_install ag
 fi
 
 
 if [ "$PNAME" = "windows" ]; then
   ### ag: the_silver_searcher
   if ! hash ag 2>/dev/null; then
-    echo "Installing ag via choco..."
+    pre_install ag
     choco install ag --yes --force &>/dev/null
-    echo "ag installed successfully."
+    post_install ag
   fi
+
+  if ! hash 
+  http://downloads.sourceforge.net/project/newkelp/Notepad%2B%2B%20Portable/Notepad%20%20Portable.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fnewkelp%2Ffiles%2FSublime%2520Text%25203%2520Portable%2F&ts=1434254588&use_mirror=iweb
 
   ### sysinternals: process explorer
   ### Good for looking at windows processes, file locking, etc.
   if ! hash procexp 2>/dev/null; then
+    pre_install procexp
     procexp_url="https://download.sysinternals.com/files/ProcessExplorer.zip"
     procexp_path="${LOCAL_BIN_ROOT}/procexp.exe"
-    mkdir -p $SRC_ZIP_ROOT
-    pushd $SRC_ZIP_ROOT
-      curl -L $procexp_url >ProcessExplorer.zip
-      unzip -po ProcessExplorer.zip procexp.exe >$procexp_path
+    mkdir -p "$SRC_ZIP_ROOT"
+    pushd "$SRC_ZIP_ROOT"
+      curl -L "$procexp_url" >ProcessExplorer.zip
+      unzip -po ProcessExplorer.zip procexp.exe >"$procexp_path"
     popd
+    post_install procexp
   fi
 
   if ! hash procmon 2>/dev/null; then
+    pre_install procmon
     procmon_url="https://download.sysinternals.com/files/ProcessMonitor.zip"
     procmon_path="${LOCAL_BIN_ROOT}/procmon.exe"
-    mkdir -p $SRC_ZIP_ROOT
-    pushd $SRC_ZIP_ROOT
-      curl -L $procmon_url >ProcessMonitor.zip
-      unzip -po ProcessMonitor.zip Procmon.exe >$procmon_path
+    mkdir -p "$SRC_ZIP_ROOT"
+    pushd "$SRC_ZIP_ROOT"
+      curl -L "$procmon_url" >ProcessMonitor.zip
+      unzip -po ProcessMonitor.zip Procmon.exe >"$procmon_path"
     popd
+    post_install procmon
   fi
 fi
+post_install "optional applications"

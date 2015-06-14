@@ -1,52 +1,63 @@
 #!/bin/bash
 #
-# This script installs required applications
+# this script installs required applications
 
 RC_PATH="$HOME/.tixrc"
 . "$RC_PATH"
 
->&2 printf -- "%b- installing Required Applications -%b" "$CYAN" "$NC"
+>&2 printf -- "%b- installing required applications -%b" "$CYAN" "$NC"
 if ! hash rimraf 2>/dev/null; then
-  >&2 printf -- "--Installing rimraf--"
+  >&2 printf -- "%b- installing rimraf -%b" "$CYAN" "$NC"
   npm install -g rimraf >/dev/null
+  >&2 printf -- "%b- installed rimraf successfully -%b" "$GREEN" "$NC"
 fi
 if ! hash mkdirp 2>/dev/null; then
-  >&2 printf -- "%b- Installing mkdirp -%b" "$CYAN" "$NC"
+  >&2 printf -- "%b- installing mkdirp -%b" "$CYAN" "$NC"
   npm install -g mkdirp >/dev/null
+  >&2 printf -- "%b- installed mkdirp successfully -%b" "$GREEN" "$NC"
 fi
 if ! hash nodemon 2>/dev/null; then
-  >&2 printf -- "%b- Installing nodemon -%b" "$CYAN" "$NC"
+  >&2 printf -- "%b- installing nodemon -%b" "$CYAN" "$NC"
   npm install -g nodemon >/dev/null
+  >&2 printf -- "%b- installed nodemon successfully -%b" "$GREEN" "$NC"
 fi
 if ! hash forever 2>/dev/null; then
-  >&2 printf -- "%b- Installing forever -%b" "$CYAN" "$NC"
+  >&2 printf -- "%b- installing forever -%b" "$CYAN" "$NC"
   npm install -g forever >/dev/null
+  >&2 printf -- "%b- installed forever successfully -%b" "$GREEN" "$NC"
 fi
 if ! hash gulp 2>/dev/null; then
-  >&2 printf -- "%b- Installing gulp -%b" "$CYAN" "$NC"
+  >&2 printf -- "%b- installing gulp -%b" "$CYAN" "$NC"
   npm install -g gulp >/dev/null
+  >&2 printf -- "%b- installed gulp successfully -%b" "$GREEN" "$NC"
 fi
 if ! hash browser-sync 2>/dev/null; then
-  >&2 printf -- "%b- Installing browser-sync -%b" "$CYAN" "$NC"
+  >&2 printf -- "%b- installing browser-sync -%b" "$CYAN" "$NC"
   npm install -g browser-sync >/dev/null
+  >&2 printf -- "%b- installed browser-sync successfully -%b" "$GREEN" "$NC"
 fi
 if ! hash catw 2>/dev/null; then
-  >&2 printf -- "%b- Installing catw -%b" "$CYAN" "$NC"
+  >&2 printf -- "%b- installing catw -%b" "$CYAN" "$NC"
   npm install -g catw >/dev/null
+  >&2 printf -- "%b- installed catw successfully -%b" "$GREEN" "$NC"
 fi
 if ! hash cpath 2>/dev/null; then
-  >&2 printf -- "%b- Installing cpath -%b" "$CYAN" "$NC"
+  >&2 printf -- "%b- installing cpath -%b" "$CYAN" "$NC"
   npm install -g cpath
+  >&2 printf -- "%b- installed cpath successfully -%b" "$GREEN" "$NC"
 fi
 if ! hash junc 2>/dev/null; then
-  >&2 printf -- "%b- Installing junc -%b" "$CYAN" "$NC"
+  >&2 printf -- "%b- installing junc -%b" "$CYAN" "$NC"
   npm install -g junc
   junc-install
   . "$HOME/.bashrc"
+  >&2 printf -- "%b- installed junc successfully -%b" "$GREEN" "$NC"
 fi
 if ! hash chrome 2>/dev/null; then
-  >&2 printf -- "%b- Installing chrome -%b" "$CYAN" "$NC"
   if [ "$PNAME" = "windows" ]; then
+    >&2 printf -- "%b- installing chrome -%b" "$CYAN" "$NC"
     choco install google-chrome-x64
+    >&2 printf -- "%b- installed chrome successfully -%b" "$GREEN" "$NC"
   fi
 fi
+>&2 printf -- "%b- finished installing required applications -%b" "$GREEN" "$NC"

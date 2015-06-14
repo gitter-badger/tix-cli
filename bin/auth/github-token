@@ -8,10 +8,10 @@ set -e
 
 renew=false
 
-usage_short="${CYAN}Usage: github-token [-r]"
+usage_short="${CYAN}usage: github-token [-r]"
 usage_long="$usage_short\n-r: Get a fresh token from GitHub."
 
-usage_short="$usage_short\nUse -h to get supported command information."
+usage_short="$usage_short\nuse -h to get supported command information."
 
 options=":rh"
 shopt -u nocasematch
