@@ -4,6 +4,7 @@ set -e
 
 . "$HOME/.tixrc"
 
+bin_path="Tix.Automation\\bin\\Release"
 automation_method="Tix.Automation.Sql.IdentityAutomation.CreateIdentityDatabaseIfNotExists"
 if [ "$1" = "-r" ]; then
   automation_method="Tix.Automation.Sql.IdentityAutomation.DropCreateIdentityDatabase"
@@ -18,8 +19,8 @@ pushj "$MODULE_ROOT/tixinc-net"
   nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
 
   >&2 printf -- "- building prod -\n"
-  cmd //s //c "call "C:\\Program Files \(x86\)\\Microsoft Visual Studio 12.0\\VC\\vcvarsall.bat" x86 & msbuild Tix.Automation\\Tix.Automation.csproj /tv:12.0 /nologo /p:VisualStudioVersion="12.0" /p:Configuration=Release /m /v:m /clp:ErrorsOnly"
+  cmd //s //c "call "C:\\Program Files \(x86\)\\Microsoft Visual Studio 12.0\\VC\\vcvarsall.bat" x86 & msbuild Tix.Automation\\Tix.Automation.csproj /tv:12.0 /nologo /p:VisualStudioVersion="12.0" /p:Configuration=Release /p:OutputPath="$bin_path"  /m /v:m /clp:ErrorsOnly"
   >&2 printf -- "- deploying prod identity db -\n"
-  cmd //c packages\\xunit.runner.console.2.0.0\\tools\\xunit.console.exe Tix.Automation\\bin\\Release\\Tix.Automation.dll -method "$automation_method"
+  cmd //c packages\\xunit.runner.console.2.0.0\\tools\\xunit.console.exe "$bin_path\\Tix.Automation.dll" -method "$automation_method"
 popj
 
