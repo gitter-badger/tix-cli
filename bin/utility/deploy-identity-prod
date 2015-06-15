@@ -4,9 +4,12 @@ set -e
 
 . "$HOME/.tixrc"
 
+>&2 printf -- "- deploy identity database: prod -"
+
 bin_path="Tix.Automation\\bin\\Release"
 automation_method="Tix.Automation.Sql.IdentityAutomation.CreateIdentityDatabaseIfNotExists"
 if [ "$1" = "-r" ]; then
+  >&2 printf -- "- drop / recreate database flag specified -"
   automation_method="Tix.Automation.Sql.IdentityAutomation.DropCreateIdentityDatabase"
 fi
 
