@@ -4,12 +4,12 @@ set -e
 
 . "$HOME/.tixrc"
 
->&2 printf -- "- deploy identity database: dev -"
+>&2 printf -- "- deploy identity database: dev -\n"
 
 bin_path="Tix.Automation\\bin\\Debug"
 automation_method="Tix.Automation.Sql.IdentityAutomation.CreateIdentityDatabaseIfNotExists"
 if [ "$1" = "-r" ]; then
-  >&2 printf -- "- drop / recreate database flag specified -"
+  >&2 printf -- "- drop / recreate database flag specified -\n"
   automation_method="Tix.Automation.Sql.IdentityAutomation.DropCreateIdentityDatabase"
 fi
 
@@ -22,7 +22,7 @@ pushj "$MODULE_ROOT/tixinc-net"
   nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
 
   >&2 printf -- "- building dev -\n"
-  cmd //s //c "call \"C:\\Program Files \(x86\)\\Microsoft Visual Studio 12.0\\VC\\vcvarsall.bat\" x86 & msbuild Tix.Automation\\Tix.Automation.csproj /tv:12.0 /nologo /p:VisualStudioVersion=\"12.0\" /p:Configuration=Debug /p:OutputPath=\"$bin_path\" /m /v:m /clp:ErrorsOnly"
+  cmd //s //c "call "C:\\Program Files \(x86\)\\Microsoft Visual Studio 12.0\\VC\\vcvarsall.bat" x86 & msbuild Tix.Automation\\Tix.Automation.csproj /tv:12.0 /nologo /p:VisualStudioVersion=12.0 /p:Configuration=Debug /p:OutputPath=$bin_path /m /v:m /clp:ErrorsOnly"
   >&2 printf -- "- deploying dev identity db -\n"
   cmd //c packages\\xunit.runner.console.2.0.0\\tools\\xunit.console.exe "$bin_path\\Tix.Automation.dll" -method "$automation_method"
 popj
