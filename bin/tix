@@ -102,6 +102,8 @@ while getopts "$options" opt; do
 done
 shift $((OPTIND-1))
 
+
+
 # Delete option comes first
 if [ "$uninstall_flag" = true ] ; then
   >&2 printf -- "%b- deleting everything... -%b\n" "$RED" "$NC"
@@ -178,6 +180,14 @@ fi
 
 if [ "$deploy_flag" = true ] ; then
   release -l
+fi
+
+# if more arguments this is a chained command
+if [ $# -gt 0 ]; then
+  command="$1"
+  shift
+  tix-"$command" "$@"
+  exit 0
 fi
 
 if [ "$non_interactive" = true ] ; then

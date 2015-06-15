@@ -10,21 +10,14 @@ if ! hash junc 2>/dev/null ; then
   tix -i
 fi
 
-latest=false
-configuration=Release
-encrypt=false
-artifacts_root="$ARTIFACTS_ROOT"
-js_version=""
-net_version=""
+latest_flag=false
+database_flag=false
+configuration=Debug
 
-usage_short="${CYAN}Usage: release [-l] [-c configuration] [-e] [-d destination-path] [-j js-version] [-n net-version]"
+usage_short="${CYAN}Usage: tix deploy [-l] [-D] [-c configuration]"
 usage_long="$usage_short\n-l: deploy latest across all libraries"
-usage_long="$usage_long\n-c: configuration to deploy (default: $configuration)"
-usage_long="$usage_long\n-e: encrypt connection strings configuration (default: $encrypt)"
-usage_long="$usage_long\n-d: optional destination directory (default: $artifacts_root)"
-usage_long="$usage_long\n-D: optional destination directory (default: $artifacts_root)"
-usage_long="$usage_long\n-j: tixinc-js version to deploy"
-usage_long="$usage_long\n-n: tixinc-net version to deploy${NC}"
+usage_long="$usage_long\n-D: deploy database"
+usage_long="$usage_long\n-c: configuration to deploy (default: $configuration)${NC}"
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
@@ -34,22 +27,13 @@ OPTIND=1
 while getopts "$options" opt ; do
     case "$opt" in
     l )
-      latest=true
+      latest_flag=true
+      ;;
+    D )
+      database_flag=true
       ;;
     c )
       configuration="$OPTARG"
-      ;;
-    e )
-      encrypt=true
-      ;;
-    d )
-      artifacts_root="$OPTARG"
-      ;;
-    j )
-      js_version="$OPTARG"
-      ;;
-    n )
-      net_version="$OPTARG"
       ;;
    h )
       >&2 printf -- "%b\n" "$usage_long"
@@ -73,7 +57,7 @@ while getopts "$options" opt ; do
 done
 shift $((OPTIND-1))
 
-if [ "$latest" = true ] ; then
+if [ "$latest_flag" = true ] ; then
   >&2 printf -- "%b- latest (-l) flag specified, getting the latest annotated tagged versions of tixinc-js and tixinc-net -%b\n" "$CYAN" "$NC"
   js_version=$(revisions -l tixinc-js)
   >&2 printf -- "%b- using js version %s -%b\n" "$CYAN" "$js_version" "$NC"
@@ -81,14 +65,6 @@ if [ "$latest" = true ] ; then
   >&2 printf -- "%b- using net version %s -%b\n" "$CYAN" "$net_version" "$NC"
 fi
 
-if [ "$js_version" = "" ] ; then
-  >&2 printf -- "%b- tixinc-js (-j) version string is mandatory.  Use \"revisions -m tixinc-js\" to see recent versions -%b\n" "$RED" "$NC"
-  exit 1
-fi
-if [ "$net_version" = "" ] ; then
-  >&2 printf -- "%b- tixinc-net (-n) version string is mandatory.  Use \"revisions -m tixinc-net\" to see recent versions -%b\n" "$RED" "$NC"
-  exit 1
-fi
 
 >&2 printf -- "- cleaning previous builds -\n"
 rimraf "$JS_BUILD_ROOT"

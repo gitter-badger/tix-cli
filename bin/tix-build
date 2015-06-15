@@ -1,0 +1,148 @@
+#!/bin/bash
+#
+# Deploys fresh tixinc-net artifacts
+
+set -e
+. "$HOME/.tixrc"
+
+latest_flag=false
+version=""
+configuration="debug"
+release_root=""
+
+# .net builds
+net_solution="Tix.Web.SelfHost.sln"
+net_project="Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj"
+net_tools_version="12.0"
+net_vs_version="12.0"
+
+usage_short="${CYAN}usage: tix build [-l] [-v version] [-c configuration] [-o output-directory] [-S solution-name] [-P project-name] [-E] [-T net-tools-version] [-V net-vs-version]"
+usage_long="$usage_short\n\t-l: deploy latest version of tixinc-net"
+usage_long="$usage_long\n\t-v: deploy specific version (tag or hash)"
+usage_long="$usage_long\n\t-c: configuration to deploy (default=$configuration)"
+usage_long="$usage_long\n\t-o: output path (default=$release_root)"
+
+usage_long="$usage_long\n\n- .net specific -"
+usage_long="$usage_long\n\t-S: solution name (default=$net_solution)"
+usage_long="$usage_long\n\t-P: project name (default=$net_project)"
+usage_long="$usage_long\n\t-E: encrypt configuration sections (1 per flag)"
+usage_long="$usage_long\n\t-T: msbuild ToolsVersion to use (default=$net_tools_version)"
+usage_long="$usage_long\n\t-V: msbuild VisualStudioVersion to use (default=$net_vs_version)${NC}"
+
+usage_short="$usage_short\nUse -h to get supported command information.${NC}"
+
+
+options=":lv:c:o:S:P:E:T:V:h"
+shopt -u nocasematch
+OPTIND=1
+while getopts "$options" opt ; do
+    case "$opt" in
+    l )
+      latest_flag=true
+      ;;
+    v )
+      version="$OPTARG"
+      ;;
+    c )
+      configuration="$OPTARG"
+      ;;
+    o )
+      release_root="$OPTARG"
+      ;;
+    S )
+      net_solution="$OPTARG"
+      ;;
+    P )
+      net_project="$OPTARG"
+      ;;
+    E )
+      net_encrypt_sections+=("$OPTARG")
+      ;;
+    T )
+      net_tools_version="$OPTARG"
+      ;;
+    V )
+      net_vs_version="$OPTARG"
+      ;;
+   h )
+      >&2 printf -- "%b\n" "$usage_long"
+      exit 0
+      ;;
+    \?)
+      >&2 printf -- "unknown option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
+      exit 1
+      ;;
+    : )
+      >&2 printf -- "missing option argument for -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
+      exit 1
+      ;;
+    * )
+      >&2 printf -- "unimplemented option: -%b\n" "$OPTARG"
+      >&2 printf -- "%b\n" "$usage_short"
+      exit 1
+    esac
+done
+shift $((OPTIND-1))
+
+if [ "$latest_flag" = true ] ; then
+  version="$(revisions -l tixinc-net)"
+fi
+
+if [ "$version" = "" ] ; then
+  >&2 printf -- "%b- must specify a version to build (-l or -v version) -%b\n" "$RED" "$NC"
+  exit 1
+fi
+
+# msbuild might exist and be in path, might exist and not be in path or might not exist... thankfully MS makes this easy to install.. not
+# setup default paths an test to see if its there
+msbuild_path="/c/Program Files (x86)/MSBuild/${tools_version}/Bin/MSBuild.exe"
+win_msbuild_path="$(cpath -w "$msbuild_path")"
+if [ ! -f "$msbuild_path" ] ; then
+  # Not there, lets install
+  >&2 printf -- "%b- msbuild not found, installing... -%b\n" "$RED" "$NC"
+  choco install microsoft-build-tools
+fi
+if [ ! -f "$msbuild_path" ] ; then
+  >&2 printf -- "%b- msbuild still not found... see if it is in default path -%b\n" "$RED" "$NC"
+  msbuild_path="msbuild"
+  win_msbuild_path="msbuild"
+fi
+
+printf -- "%b- executing sync-net %s -%b\n" "$CYAN" "$version" "$NC"
+sync-net "$version"
+
+>&2 printf -- "- cleaning previous net release -\n"
+rimraf "$NET_BUILD_ROOT"
+rimraf "$NET_RELEASE_ROOT"
+mkdirp "$NET_BUILD_ROOT"
+mkdirp "$NET_RELEASE_ROOT"
+
+>&2 printf -- "- building net version %s -\n" "$version"
+#cpj "$NET_SYNC_ROOT" "$NET_BUILD_ROOT"
+pushj "$NET_BUILD_ROOT"
+  net_build_junc="$PWD"
+  pushj "$NET_SYNC_ROOT"
+    cp -rf ./ "$net_build_junc"
+  popj
+
+  >&2 printf -- "- restoring nuget packages -\n"
+  rimraf packages
+  nuget restore "$net_solution" -PackagesDirectory packages -Verbosity quiet -NonInteractive
+
+  win_net_release_root="$(cpath -w "$release_root")"
+  >&2 printf -- "- building to %s -\n" "$win_net_release_root"
+
+  msbuild_command="cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath=\"${win_net_release_root}\" //m //v:m //clp:ErrorsOnly"
+  >&2 printf -- "- executing... -> %s -\n" "$msbuild_command"
+  cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_net_release_root}" //m //v:m //clp:ErrorsOnly
+popj >/dev/null
+
+if [ "$encrypt" = true ] ; then
+  npm install -g cryptkeeper &>/dev/null
+  config_path="$release_root/Tix.Web.SelfHost.exe.config"
+  cryptkeeper -ens connectionStrings -p "${configuration}Provider" -C "${configuration}Keys" -E "$release_root" -R "$config_path"
+fi
+
+>&2 printf -- "%b- tixinc-net version %s successfully built -%b\n" "$GREEN" "$version" "$NC"
