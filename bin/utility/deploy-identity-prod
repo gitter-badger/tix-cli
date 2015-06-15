@@ -15,8 +15,6 @@ pushj "$MODULE_ROOT/tixinc-net"
   git pull
 
   >&2 printf -- "- restoring nuget packages -\n"
-  rimraf packages
-  rimraf Tix.Automation/bin/Release
   nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
 
   >&2 printf -- "- building prod -\n"
