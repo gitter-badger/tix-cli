@@ -61,8 +61,8 @@ if [ "$PNAME" = "windows" ]; then
     post_install ag
   fi
 
-  if ! hash 
-  http://downloads.sourceforge.net/project/newkelp/Notepad%2B%2B%20Portable/Notepad%20%20Portable.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fnewkelp%2Ffiles%2FSublime%2520Text%25203%2520Portable%2F&ts=1434254588&use_mirror=iweb
+  #if ! hash
+  #http://downloads.sourceforge.net/project/newkelp/Notepad%2B%2B%20Portable/Notepad%20%20Portable.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fnewkelp%2Ffiles%2FSublime%2520Text%25203%2520Portable%2F&ts=1434254588&use_mirror=iweb
 
   ### sysinternals: process explorer
   ### Good for looking at windows processes, file locking, etc.
