@@ -116,7 +116,7 @@ pushj "$NET_BUILD_ROOT"
 
   >&2 printf -- "- restoring nuget packages -\n"
   rimraf packages
-  nuget restore Tix.SelfHost.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
+  nuget restore Tix.Net.sln -PackagesDirectory packages -Verbosity quiet -NonInteractive
 
   win_net_release_root="$(cpath -w "$release_root")"
   >&2 printf -- "- building to %s -\n" "$win_net_release_root"
