@@ -10,7 +10,7 @@ var exePath = path.join(__dirname, '..', 'tixinc-net', 'Tix.Web.SelfHost.exe');
 
 var commandArgs = {
   install: ['install', serviceName, exePath],
-  uninstall: ['remove', serviceName],
+  uninstall: ['remove', serviceName, 'confirm'],
   setDescription:  ['set', serviceName, 'Description', 'The tixinc-net ASP.NET WebApi authorization and resource server.'],
   start: ['start', serviceName],
   stop: ['stop', serviceName],

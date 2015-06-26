@@ -1,0 +1,1 @@
+cmd.exe /s /k "node.exe tixinc-net-uninstall && node.exe tixinc-js-uninstall"

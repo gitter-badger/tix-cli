@@ -1,0 +1,1 @@
+cmd.exe /s /k "node.exe tixinc-net-install && node.exe tixinc-js-install"
