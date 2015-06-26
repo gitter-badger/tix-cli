@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var exec = require('child_process').execFileSync;
+
+var serviceName = 'tixinc-net';
+
+var nssmPath = path.join(__dirname, 'nssm.exe');
+var exePath = path.join(__dirname, '..', 'tixinc-net', 'Tix.Web.SelfHost.exe');
+
+var commandArgs = {
+  install: ['install', serviceName, exePath],
+  uninstall: ['remove', serviceName],
+  setDescription:  ['set', serviceName, 'Description', 'The tixinc-net ASP.NET WebApi authorization and resource server.'],
+  start: ['start', serviceName],
+  stop: ['stop', serviceName],
+  restart: ['restart', serviceName],
+  status: ['status', serviceName]
+};
+
+function nssm(args) {
+  return exec(nssmPath, args, {
+    stdio: 'inherit',
+    encoding: 'utf8'
+  });
+}
+
+console.log('- installing tixinc-net at path ' + exePath + ' -');
+nssm(commandArgs.install);
+nssm(commandArgs.setDescription);
+console.log('- tixinc-net install complete, starting -');
+nssm(commandArgs.start);
+console.log('- tixinc-net started successfully -');
+

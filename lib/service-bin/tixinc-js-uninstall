@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var Service = require('node-windows').Service;
+
+var scriptPath = path.join(__dirname, 'tixinc-js-start');
+
+var jsService = new Service({
+  name:'tixinc-js',
+  description: 'The tixinc-js node.js host for angular, scripts, and other assets.',
+  script: scriptPath
+});
+
+jsService.on('uninstall',function(){
+  console.log('- tixinc-js uninstalled successfully -');
+});
+
+jsService.uninstall();

@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var Service = require('node-windows').Service;
+
+var scriptPath = path.join(__dirname, 'tixinc-js-start');
+
+console.log('- installing tixinc-js at path ' + scriptPath + ' -');
+
+var jsService = new Service({
+  name:'tixinc-js',
+  description: 'The tixinc-js node.js host for angular, scripts, and other assets.',
+  script: scriptPath
+});
+
+jsService.on('install',function(){
+  console.log('- tixinc-js install complete, starting -');
+  jsService.start();
+});
+
+jsService.on('error', function(error) {
+  console.error('- tixinc-js error occurred: ' + error + ' -');
+});
+
+jsService.install();

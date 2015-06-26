@@ -1,0 +1,9 @@
+{
+  "name": "tix-service-bin",
+  "version": "1.0.0",
+  "description": "The scripts for deploying tixinc applications as services.",
+  "dependencies": {
+    "node-windows": "^0.1.7"
+  },
+  "devDependencies": {}
+}

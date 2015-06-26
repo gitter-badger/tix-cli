@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+/**
+ * This script starts up tixinc-js
+ */
+
+var path = require('path');
+var exec = require('child_process').execFileSync;
+
+var nodePath = path.join(__dirname, 'node.exe');
+var args = [path.join('bin', 'www')];
+
+var options = {
+  cwd: path.join(__dirname, '..', 'tixinc-js'),
+  stdio: 'inherit',
+  encoding: 'utf8'
+};
+
+var stdout = exec(nodePath, args, options);
+console.error('- tixinc-js process died: ' + stdout + ' -');
+process.exit(1);
