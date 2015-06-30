@@ -21,11 +21,13 @@ pushd "$SRC_CLI_ROOT"
   git pull &>/dev/null
   git pull --tags &>/dev/null
 
-  >&2 printf -- "%b- npm install on latest cli code -%b\n" "$CYAN" "$NC"
-  npm install
+  pushd ./lib/service-bin
+    >&2 printf -- "%b- npm install on latest service bin code -%b\n" "$CYAN" "$NC"
+    npm install
 
-  rimraf "$RELEASE_BIN_ROOT"
-  mkdirp "$RELEASE_BIN_ROOT"
-  cp -rf ./lib/service-bin/* "$RELEASE_BIN_ROOT"
+    rimraf "$RELEASE_BIN_ROOT"
+    mkdirp "$RELEASE_BIN_ROOT"
+    cp -rf ./* "$RELEASE_BIN_ROOT"
+  popd
 popd
 >&2 printf -- "%b- server bin deployed successfully -%b\n" "$GREEN" "$NC"
