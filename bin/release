@@ -103,7 +103,7 @@ else
   build-net -v "$net_version" -c "$configuration" -V 12.0
 fi
 build-js -v "$js_version" -c "$configuration_lower" -C
-deploy-startup
+deploy-bin
 
 artifacts_path="${artifacts_root}/${release_name}.7z"
 

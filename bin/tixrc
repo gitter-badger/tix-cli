@@ -127,7 +127,7 @@ export NODE_EXE_PATH="${LOCAL_BIN_ROOT}/node.exe"
 export SRC_ROOT="${INSTALL_ROOT}/src"
 export SRC_BIN_ROOT="${SRC_ROOT}/bin"
 export SRC_ZIP_ROOT="${SRC_ROOT}/zip"
-
+export SRC_CLI_ROOT="${SRC_ROOT}/tix-cli"
 
 ### MODULE PATHS
 export MODULE_ROOT="${INSTALL_ROOT}/tixinc"
@@ -157,6 +157,7 @@ export JS_BUILD_ROOT="${BUILD_ROOT}/tixinc-js"
 
 # specific depoyable app version gets copied from build root to release and prepped for release
 export RELEASE_ROOT="${MODULE_ROOT}/release"
+export RELEASE_BIN_ROOT="${RELEASE_ROOT}/bin"
 export NET_RELEASE_ROOT="${RELEASE_ROOT}/tixinc-net"
 export JS_RELEASE_ROOT="${RELEASE_ROOT}/tixinc-js"
 

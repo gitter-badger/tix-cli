@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# Deploys fresh tixinc-js artifacts
+
+#TODO: Switch to cpj after moving to new structure
+
+set -e
+
+. "$HOME/.tixrc"
+
+if [ ! -d "$SRC_CLI_ROOT" ]; then
+  mkdirp "$SRC_ROOT"
+  pushd "$SRC_ROOT"
+  git clone "$GITHUB_URL_CLI"
+  popd
+fi
+
+>&2 printf -- "%b- deploying server bin -%b\n" "$CYAN" "$NC"
+pushd "$SRC_CLI_ROOT"
+  git pull
+  git pull --tags
+
+  rimraf "$RELEASE_BIN_ROOT"
+  mkdirp "$RELEASE_BIN_ROOT"
+  cp -rf ./lib/service-bin/* "$RELEASE_BIN_ROOT"
+popd
+>&2 printf -- "%b- server bin deployed successfully -%b\n" "$GREEN" "$NC"
