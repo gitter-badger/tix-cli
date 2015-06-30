@@ -17,8 +17,11 @@ fi
 
 >&2 printf -- "%b- deploying server bin -%b\n" "$CYAN" "$NC"
 pushd "$SRC_CLI_ROOT"
-  git pull
-  git pull --tags
+  >&2 printf -- "%b- pulling latest CLI code -%b\n" "$CYAN" "$NC"
+  git pull &>/dev/null
+  git pull --tags &>/dev/null
+
+  >&2 printf -- "%b- npm install on latest cli code -%b\n" "$CYAN" "$NC"
   npm install
 
   rimraf "$RELEASE_BIN_ROOT"
