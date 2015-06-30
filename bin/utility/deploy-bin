@@ -19,6 +19,7 @@ fi
 pushd "$SRC_CLI_ROOT"
   git pull
   git pull --tags
+  npm install
 
   rimraf "$RELEASE_BIN_ROOT"
   mkdirp "$RELEASE_BIN_ROOT"
