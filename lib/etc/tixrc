@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# Use ~/.tixrc to override TIX_HOME and SRC_HOME directories
+
+set -e
+
+# This file can be used to override TIX_HOME and SRC_HOME paths and contains auth variables
+export TIX_USER_TIXRC_PATH="$HOME/.tixrc"
+if [ -f "$TIX_USER_TIXRC_PATH" ]; then
+  . "$TIX_USER_TIXRC_PATH"
+fi
+
+. ./static
+. ./url
+
+
+if ! grep -q "$TIX_LOCAL_BIN_ROOT" <<< "$PATH"; then
+  printf -- "%b- adding TIX_LOCAL_BIN_ROOT (%s) to PATH -%b" "$BLUE" "$TIX_LOCAL_BIN_ROOT" "$NC"
+  export PATH="$TIX_LOCAL_BIN_ROOT:$PATH"
+fi
+
+if ! grep -q "$TIX_LOCAL_NPM_ROOT" <<< "$PATH"; then
+  printf -- "%b- adding TIX_LOCAL_NPM_ROOT (%s) to PATH -%b" "$BLUE" "$TIX_LOCAL_NPM_ROOT" "$NC"
+  export PATH="$TIX_LOCAL_NPM_ROOT:$PATH"
+fi
+
+NPM_GLOBAL_BIN="$(npm bin -g)"
+if ! grep -q "$NPM_GLOBAL_BIN" <<< "$PATH"; then
+  printf -- "%b- adding NPM_GLOBAL_BIN (%s) to PATH -%b" "$BLUE" "$NPM_GLOBAL_BIN" "$NC"
+  export PATH="$NPM_GLOBAL_BIN:$PATH"
+fi

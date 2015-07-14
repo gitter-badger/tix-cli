@@ -5,11 +5,11 @@
 . "$HOME/.tixrc"
 
 pre_install() {
-    printf -- "%b- installing %s -%b" "$CYAN" "$1" "$NC"
+    printf -- "%b- installing %s -%b\n" "$CYAN" "$1" "$NC"
 }
 
 post_install() {
-    printf -- "%b- %s installed successfully -%b" "$GREEN" "$1" "$NC"
+    printf -- "%b- %s installed successfully -%b\n" "$GREEN" "$1" "$NC"
 }
 
 download_package() {

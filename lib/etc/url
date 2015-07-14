@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+
+### --URLs--
+
+export GITHUB_URL_BASE="https://github.com"
+export GITHUB_URL_TIXINC="$GITHUB_URL_BASE/tixinc"
+
+export GITHUB_URL_TIXINC_CLI="$GITHUB_URL_TIX/tix-cli"
+export GITHUB_URL_TIXINC_JS="$GITHUB_URL_TIX/tixinc-js"
+export GITHUB_URL_TIXINC_NET="$GITHUB_URL_TIX/tixinc-net"
+
+export GITHUB_URL_POWERLINE_FONTS="$GITHUB_URL_BASE/powerline/fonts"
+

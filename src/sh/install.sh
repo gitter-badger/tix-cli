@@ -25,10 +25,9 @@ mkdir -p "${LOCAL_BIN_ROOT}"
 mkdir -p "${LOCAL_CONFIG_ROOT}"
 
 # Skipping this until tix has a readonly user with private repo access
-#if [ ! -e "$NPMRC_PATH" ]; then
+if [ ! -e "$NPMRC_PATH" ]; then
 #  printf "--Creating new ~/.npmrc--" | tee $INSTALL_LOG_PATH
-#  printf prefix = ${LOCAL_BIN_ROOT:2} > $NPMRC_PATH
-#  printf "//registry.npmjs.org/:_authToken=aca97731-9f24-46fa-a0bb-7f547b937342" >> $NPMRC_PATH
+  printf "prefix = %s" "${LOCAL_BIN_ROOT:2}" >$NPMRC_PATH
 #fi
 
 # Set window resolution information
@@ -51,9 +50,9 @@ if [ ! -f "$NPM_PATH" ] ; then
   >&2 printf -- "- installing npm -"
   curl -L https://www.npmjs.org/install.sh | sh >/dev/null
   >&2 printf -- "- setting vs tools version to ${MSVS_VERSION} -"
-  npm config set msvs_version "${MSVS_VERSION}" --global
-  >&2 printf -- "- setting npm to use bash shell when using npm explore command -"
-  npm config set shell bash
+  npm config -g set msvs_version "${MSVS_VERSION}"
+  >&2 printf -- "- setting npm to --global use bash shell when using npm explore command -"
+  npm config -g set shell bash
 fi
 
 >&2 printf -- "- installing tix-cli globally -"

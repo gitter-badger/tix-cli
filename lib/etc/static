@@ -1,0 +1,155 @@
+#!/bin/bash
+
+set -e
+
+PLATFORM="unknown"  ### The name of the platform
+PNAME="unknown"     ### The general name of the platform (unix / windows)
+
+unix_name=$(uname)
+shopt -s nocasematch
+case "$unix_name" in
+  *unix*)
+    PLATFORM="unix"
+    ;;
+  *linux*)
+    PLATFORM="linux"
+    ;;
+  *freebsd*)
+    PLATFORM="freebsd"
+    ;;
+  *darwin*)
+    PLATFORM="osx"
+    ;;
+  *windows*|*ming*)
+    PLATFORM="windows"
+    ;;
+esac
+
+case "$PLATFORM" in
+  linux|unix|freebsd|osx)
+  PNAME="unix"
+  ;;
+  windows)
+  PNAME="windows"
+  ;;
+  *)
+  >&2 echo "Unable to classify the system OS -> uname: $unix_name, PLATFORM: $PLATFORM"
+  exit 1
+esac
+
+### --OS INFO--
+### Export all OS high level info here
+
+export PLATFORM
+export PNAME
+
+
+### --ANSI COLOR CODES--
+### Export all ANSI color codes
+
+export NC='\033[0m'         #NO COLOR
+export BLACK='\033[0;30m'
+export RED='\033[0;31m'
+export GREEN='\033[0;32m'
+export BROWN_ORANGE='\033[0;33m'
+export BLUE='\033[0;34m'
+export PURPLE='\033[0;35m'
+export CYAN='\033[0;36m'
+export LIGHT_GRAY='\033[0;37m'
+export DARK_GRAY='\033[1;30m'
+export LIGHT_RED='\033[1;31m'
+export LIGHT_GREEN='\033[1;32m'
+export YELLOW='\033[1;33m'
+export LIGHT_BLUE='\033[1;34m'
+export LIGHT_PURPLE='\033[1;35m'
+export LIGHT_CYAN='\033[1;36m'
+export WHITE='\033[1;37m'
+
+### --PATHS--
+### All paths are absolute.
+### HOME suffix => top level directory
+### ROOT suffix => directory
+### PATH suffix => file
+
+### SYSTEM PATHS
+
+export SSH_ROOT="$HOME/.ssh"
+export NPMRC_PATH="$HOME/.npmrc"
+
+
+### LOCAL PATHS
+
+### TIX INSTALLATION AND BUILD DIRECTORIES
+
+if [ -z "$TIX_HOME" ]; then
+  export TIX_HOME="$HOME/.tix"
+fi
+
+export TIX_ETC_ROOT="$TIX_HOME/etc"
+export TIX_LOCAL_ROOT="$TIX_HOME/local"
+export TIX_LOCAL_BIN_ROOT="$TIX_LOCAL_ROOT/bin"
+export TIX_LOCAL_CLI_ROOT="$TIX_LOCAL_ROOT/tix-cli"
+export TIX_LOCAL_NPM_ROOT="$TIX_LOCAL_ROOT/npm"
+export TIX_LOCAL_NPMCACHE_ROOT="$TIX_LOCAL_ROOT/npm-cache"
+export TIX_LOCAL_CHROME_ROOT="$TIX_LOCAL_ROOT/chrome"
+export TIX_LOCAL_FONTS_ROOT="$TIX_LOCAL_ROOT/fonts"
+export TIX_LOG_ROOT="$TIX_HOME/log"
+# directories for the system to sync and copy files from
+export TIX_SRC_ROOT="$TIX_HOME/src"
+export TIX_SRC_BIN_ROOT="$TIX_SRC_ROOT/bin"
+export TIX_SRC_TIXINC_ROOT="$TIX_SRC_ROOT/tixinc"
+export TIX_SRC_CLI_ROOT="$TIX_SRC_TIXINC_ROOT/tix-cli"
+# app code gets pulled to sync root to prep a specific version for build
+export TIX_SYNC_ROOT="$TIX_HOME/sync"
+export TIX_SYNC_NET_ROOT="$TIX_SYNC_ROOT/tixinc-net"
+export TIX_SYNC_JS_ROOT="$TIX_SYNC_ROOT/tixinc-js"
+# specific app code version gets copied from sync root to build root and built here
+export TIX_BUILD_ROOT="$TIX_HOME/build"
+export TIX_BUILD_NET_ROOT="$TIX_BUILD_ROOT/tixinc-net"
+export TIX_BUILD_JS_ROOT="$TIX_BUILD_ROOT/tixinc-js"
+# specific depoyable app version gets copied from build root to release and prepped for release
+export TIX_RELEASE_ROOT="$TIX_HOME/release"
+export TIX_RELEASE_BIN_ROOT="$TIX_RELEASE_ROOT/bin"
+export TIX_RELEASE_NET_ROOT="$TIX_RELEASE_ROOT/tixinc-net"
+export TIX_RELEASE_JS_ROOT="$TIX_RELEASE_ROOT/tixinc-js"
+# build artifacts get zipped from release root and put in artifacts root to be deployed
+export TIX_ARTIFACTS_ROOT="$TIX_HOME/artifacts"
+
+
+export TIX_ETC_TIXRC_PATH="$TIX_ETC_ROOT/tixrc"
+export TIX_ETC_STATIC_PATH="$TIX_ETC_ROOT/static"
+export TIX_ETC_URL_PATH="$TIX_ETC_ROOT/url"
+export TIX_ETC_AUTH_PATH="$TIX_ETC_ROOT/auth"
+
+
+### SOURCE CODE ~/<username|organization>/<repository>
+
+if [ -z "$SRC_HOME" ]; then
+  export SRC_HOME="$HOME"
+fi
+
+export SRC_TIXINC_ROOT="$SRC_HOME/tixinc"
+export SRC_AUTOMATION_ROOT="$SRC_TIXINC_ROOT/automation"
+export SRC_EXT_ROOT="$SRC_TIXINC_ROOT/ext"
+export SRC_CONFIG_ROOT="$SRC_TIXINC_ROOT/config"
+export SRC_CLASSIC_ROOT="$SRC_TIXINC_ROOT/tixinc-classic"
+export SRC_JS_ROOT="$SRC_TIXINC_ROOT/tixinc-js"
+export SRC_NET_ROOT="$SRC_TIXINC_ROOT/tixinc-net"
+
+export SRC_NET_SELFHOST_ROOT="$SRC_NET_ROOT/Tix.Web.SelfHost"
+export SRC_NET_SELFHOST_PROJECT_PATH="$SRC_NET_SELFHOST_ROOT/Tix.Web.SelfHost.csproj"
+
+
+
+### TOOL PATHS
+export TIX_NODE_MODULES_ROOT="$TIX_LOCAL_NODEJS_ROOT/node_modules"
+export TIX_RIMRAF_PATH="$TIX_NODE_MODULES_ROOT/rimraf/rimraf.js"
+export TIX_NODE_EXE_PATH="$TIX_LOCAL_NODEJS_ROOT/node.exe"
+
+CHROME_PATH="unknown"
+if [ "$PNAME" = "windows" ]; then
+  CHROME_PATH="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+elif [ "$PLATFORM" = "osx" ]; then
+  CHROME_PATH="$(osascript -e 'POSIX path of (path to application "Chrome")')Contents/MacOS/Google Chrome"
+fi
+export CHROME_PATH

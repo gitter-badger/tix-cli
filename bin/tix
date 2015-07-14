@@ -20,10 +20,9 @@ clone_flag=false
 link_flag=false
 install_flag=false
 pull_flag=false
-deploy_flag=false
-non_interactive=false
+interactive=false
 
-usage_short="${CYAN}usage: tix [-I] [-O] [-W] [-R] [-U] [-F] [-c] [-l] [-i] [-p] [-d] [-n]"
+usage_short="${CYAN}usage: tix [-I] [-O] [-W] [-R] [-U] [-F] [-c] [-l] [-i] [-p] [-n]"
 usage_long="$usage_short\n-I: install required dependencies"
 usage_long="$usage_long\n-O: install optional dependencies"
 usage_long="$usage_long\n-W: rewrite ~/.tixrc configuration file"
@@ -34,12 +33,11 @@ usage_long="$usage_long\n-c: clone all tixinc modules"
 usage_long="$usage_long\n-l: npm link all tixinc modules"
 usage_long="$usage_long\n-i: npm install all tixinc modules"
 usage_long="$usage_long\n-p: pull all tixinc modules"
-usage_long="$usage_long\n-d: deploy all tixinc modules"
-usage_long="$usage_long\n-n: run commands and exit${NC}"
+usage_long="$usage_long\n-n: interactive${NC}"
 
 usage_short="$usage_short\nuse -h to get supported command information${NC}"
 
-options=":IOWRUFclipdnh"
+options=":IOWRUFclipnh"
 shopt -u nocasematch
 OPTIND=1
 while getopts "$options" opt; do
@@ -78,7 +76,7 @@ while getopts "$options" opt; do
       deploy_flag=true
       ;;
     n )
-      non_interactive=true
+      interactive=true
     ;;
    h )
       >&2 printf -- "%b\n" "$usage_long"
@@ -178,10 +176,6 @@ if [ "$pull_flag" = true ] ; then
   pull-all
 fi
 
-if [ "$deploy_flag" = true ] ; then
-  release -l
-fi
-
 # if more arguments this is a chained command
 if [ $# -gt 0 ]; then
   command="$1"
@@ -190,8 +184,7 @@ if [ $# -gt 0 ]; then
   exit 0
 fi
 
-if [ "$non_interactive" = true ] ; then
-  printf -- "- -n norun flag specified, skipping cli execution... -\n"
+if [ "$interactive" = false ] ; then
   exit 0
 fi
 
