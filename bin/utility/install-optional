@@ -46,10 +46,6 @@ if hash brew 2>/dev/null; then
   pre_install ag
   brew install the_silver_searcher
   post_install ag
-elif hash pacman 2>/dev/null; then
-  pre_install ag
-  pacman -S the_silver_searcher
-  post_install ag
 fi
 
 

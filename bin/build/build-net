@@ -106,13 +106,12 @@ rimraf "$NET_RELEASE_ROOT"
 mkdirp "$NET_BUILD_ROOT"
 mkdirp "$NET_RELEASE_ROOT"
 
+pushd "$NET_SYNC_ROOT" >/dev/null
+  cp -rf ./ "$NET_BUILD_ROOT"
+popd >/dev/null
+
 >&2 printf -- "- building net version %s -\n" "$version"
-#cpj "$NET_SYNC_ROOT" "$NET_BUILD_ROOT"
-pushj "$NET_BUILD_ROOT"
-  net_build_junc="$PWD"
-  pushj "$NET_SYNC_ROOT"
-    cp -rf ./ "$net_build_junc"
-  popj
+pushd "$NET_BUILD_ROOT" >/dev/null
 
   >&2 printf -- "- restoring nuget packages -\n"
   rimraf packages
@@ -124,7 +123,7 @@ pushj "$NET_BUILD_ROOT"
   msbuild_command="cmd //c \"$win_msbuild_path\" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath=\"${win_net_release_root}\" //m //v:m //clp:ErrorsOnly"
   >&2 printf -- "- executing... -> %s -\n" "$msbuild_command"
   cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_net_release_root}" //m //v:m //clp:ErrorsOnly
-popj >/dev/null
+popd >/dev/null
 
 if [ "$encrypt" = true ] ; then
   npm install -g cryptkeeper &>/dev/null
