@@ -3,10 +3,10 @@
 # This script installs the tix-cli
 
 ### Init ~/.tixrc if it does not exist and source it
-CONFIG_PATH=$HOME/.tixrc
-if [ ! -e "$CONFIG_PATH" ]; then
-    echo -e "--$CONFIG_PATH doesn't exist, sourcing from GitHub...--"
-    cp "$HOME/local/bin/node_modules/tix-cli/bin/tixrc" "$CONFIG_PATH"
-    echo -e "${GREEN}--$CONFIG_PATH restored successfully--${NC}"
+CONFIG_PATH="$HOME/.tixrc"
+if [ ! -f "$CONFIG_PATH" ]; then
+    printf -- "- %s doesn't exist, sourcing from repository -\n" "$CONFIG_PATH"
+    cp "$NPM_CONFIG_PREFIX/node_modules/tix-cli/bin/tixrc" "$CONFIG_PATH"
+    printf "%b- %s restored successfully -%b\n" "$GREEN" "$CONFIG_PATH" "$NC"
 fi
 
