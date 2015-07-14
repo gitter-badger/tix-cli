@@ -4,11 +4,8 @@
 
 set -e
 
+install-tixrc
 . "$HOME/.tixrc"
-
-if ! hash junc 2>/dev/null ; then
-  tix -i
-fi
 
 latest=false
 configuration=Release
@@ -111,9 +108,9 @@ rimraf "$artifacts_path"
 mkdirp "$artifacts_root"
 
 >&2 printf -- "- packaging release to %s -\n" "$release_path"
-pushj "$RELEASE_ROOT" >/dev/null
+pushd "$RELEASE_ROOT" >/dev/null
   # 7zip the built artifacts using LZMA2 max compression and multithreading
   7za a -t7z "$artifacts_path" ./* -m0=lzma2 -mx=9 -aoa -mfb=64 -md=32m -ms=on
-popj >/dev/null
+popd >/dev/null
 
 >&2 printf -- "%b- release packaged successfully at %s -%b\n" "$GREEN" "$artifacts_path" "$NC"

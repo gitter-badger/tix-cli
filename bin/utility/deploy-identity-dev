@@ -14,7 +14,7 @@ if [ "$1" = "-r" ]; then
 fi
 
 clone-tixinc-net
-pushj "$MODULE_ROOT/tixinc-net"
+pushd "$MODULE_ROOT/tixinc-net"
   git reset --hard
   git pull
 
@@ -25,5 +25,5 @@ pushj "$MODULE_ROOT/tixinc-net"
   cmd //s //c "call "C:\\Program Files \(x86\)\\Microsoft Visual Studio 12.0\\VC\\vcvarsall.bat" x86 & msbuild Tix.Automation\\Tix.Automation.csproj /tv:12.0 /nologo /p:VisualStudioVersion=12.0 /p:Configuration=Debug /p:OutputPath=$bin_path /m /v:m /clp:ErrorsOnly"
   >&2 printf -- "- deploying dev identity db -\n"
   cmd //c packages\\xunit.runner.console.2.0.0\\tools\\xunit.console.exe "$bin_path\\Tix.Automation.dll" -method "$automation_method"
-popj
+popd
 
