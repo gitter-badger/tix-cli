@@ -1,32 +1,28 @@
 #!/usr/bin/env node
 
-var path = require('path');
-var exec = require('child_process').execFileSync;
-
-var serviceName = 'tixinc-net';
-
-var nssmPath = path.join(__dirname, 'nssm.exe');
-var exePath = path.join(__dirname, '..', 'tixinc-net', 'Tix.Web.SelfHost.exe');
-
-var commandArgs = {
-  install: ['install', serviceName, exePath],
-  uninstall: ['remove', serviceName, 'confirm'],
-  setDescription:  ['set', serviceName, 'Description', 'The tixinc-net ASP.NET WebApi authorization and resource server.'],
-  start: ['start', serviceName],
-  stop: ['stop', serviceName],
-  restart: ['restart', serviceName],
-  status: ['status', serviceName]
-};
+var log = require('bunyan').createLogger({name: 'tixinc-net-service'})
+  , path = require('path')
+  , exec = require('child_process').execFileSync
+  , serviceName = 'tixinc-net'
+  , nssmPath = path.join(__dirname, 'nssm.exe')
+  , exePath = path.join(__dirname, '..', 'tixinc-net', 'Tix.Web.SelfHost.exe')
+  , commandArgs = { install: ['install', serviceName, exePath]
+                  , uninstall: ['remove', serviceName, 'confirm']
+                  , setDescription:  ['set', serviceName, 'Description', 'The tixinc-net ASP.NET WebApi authorization and resource server.']
+                  , start: ['start', serviceName]
+                  , stop: ['stop', serviceName]
+                  , restart: ['restart', serviceName]
+                  , status: ['status', serviceName]
+                  }
 
 function nssm(args) {
-  return exec(nssmPath, args, {
-    stdio: 'inherit',
-    encoding: 'utf8'
-  });
+  return exec(nssmPath, args, { stdio: 'inherit'
+                              , encoding: 'utf8'
+                              })
 }
 
-console.log('- uninstalling tixinc-net -');
-nssm(commandArgs.stop);
-nssm(commandArgs.uninstall);
-console.log('- tixinc-net uninstalled successfully -');
+log.info('uninstalling tixinc-net')
+nssm(commandArgs.stop)
+nssm(commandArgs.uninstall)
+log.info('tixinc-net uninstalled successfully')
 

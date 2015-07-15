@@ -107,12 +107,9 @@ pushd "$JS_RELEASE_ROOT"
   rimraf .gitignore
   rimraf .gitattributes
   rimraf gulpfile.js
-  rimraf client
-  rimraf etc
   rimraf test
   pushd bin
     shopt -s extglob
-    rimraf !(www)
     >&2 printf -- "- downloading 64 bit node.exe to release bin -\n"
     curl -sL http://nodejs.org/dist/latest/x64/node.exe >node.exe
   popd

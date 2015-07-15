@@ -1,25 +1,24 @@
 #!/usr/bin/env node
 
-var path = require('path');
-var Service = require('node-windows').Service;
+var log = require('bunyan').createLogger({name: 'tixinc-js-service'})
+  , path = require('path')
+  , Service = require('node-windows').Service
+  , scriptPath = path.join(__dirname, 'tixinc-js-start')
+  , opts = { name:'tixinc-js'
+           , description: 'The tixinc-js node.js host for angular, scripts, and other assets.'
+           , script: scriptPath
+           }
+  , srv = new Service(opts)
 
-var scriptPath = path.join(__dirname, 'tixinc-js-start');
 
-console.log('- installing tixinc-js at path ' + scriptPath + ' -');
+srv.on('install',function(){
+  log.info('tixinc-js install complete, starting')
+  srv.start()
+})
 
-var jsService = new Service({
-  name:'tixinc-js',
-  description: 'The tixinc-js node.js host for angular, scripts, and other assets.',
-  script: scriptPath
-});
+srv.on('error', function(error) {
+  log.error(error, 'tixinc-js error occurred')
+})
 
-jsService.on('install',function(){
-  console.log('- tixinc-js install complete, starting -');
-  jsService.start();
-});
-
-jsService.on('error', function(error) {
-  console.error('- tixinc-js error occurred: ' + error + ' -');
-});
-
-jsService.install();
+log.info(opts, 'installing tixinc-js service')
+srv.install()

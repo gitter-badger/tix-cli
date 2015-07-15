@@ -1,18 +1,16 @@
 #!/usr/bin/env node
 
-var path = require('path');
-var Service = require('node-windows').Service;
+var log = require('bunyan').createLogger({name: 'tixinc-js-service'})
+  , path = require('path')
+  , Service = require('node-windows').Service
+  , scriptPath = path.join(__dirname, 'tixinc-js-start')
+  , opts =  { name:'tixinc-js'
+            , description: 'The tixinc-js node.js host for angular, scripts, and other assets.'
+            , script: scriptPath
+            }
+  , srv = new Service(opts)
 
-var scriptPath = path.join(__dirname, 'tixinc-js-start');
-
-var jsService = new Service({
-  name:'tixinc-js',
-  description: 'The tixinc-js node.js host for angular, scripts, and other assets.',
-  script: scriptPath
-});
-
-jsService.on('uninstall',function(){
-  console.log('- tixinc-js uninstalled successfully -');
-});
-
-jsService.uninstall();
+srv.on('uninstall',function(){
+  log.info('tixinc-js uninstalled successfully')
+})
+srv.uninstall()

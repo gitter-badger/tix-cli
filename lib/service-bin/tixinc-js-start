@@ -4,18 +4,16 @@
  * This script starts up tixinc-js
  */
 
-var path = require('path');
-var exec = require('child_process').execFileSync;
+var log = require('bunyan').createLogger({name: 'tixinc-js-service'})
+  , path = require('path')
+  , exec = require('child_process').execFileSync
+  , nodePath = path.join(__dirname, 'node.exe')
+  , args = [path.join('bin', 'start')]
+  , opts =  { cwd: path.join(__dirname, '..', 'tixinc-js')
+            , stdio: 'inherit'
+            , encoding: 'utf8'
+            }
+  , stdout = exec(nodePath, args, options)
 
-var nodePath = path.join(__dirname, 'node.exe');
-var args = [path.join('bin', 'www')];
-
-var options = {
-  cwd: path.join(__dirname, '..', 'tixinc-js'),
-  stdio: 'inherit',
-  encoding: 'utf8'
-};
-
-var stdout = exec(nodePath, args, options);
-console.error('- tixinc-js process died: ' + stdout + ' -');
-process.exit(1);
+log.error(stdout, 'tixinc-js process died')
+process.exit(1)

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "The scripts for deploying tixinc applications as services.",
   "dependencies": {
+    "bunyan": "^1.4.0",
     "node-windows": "^0.1.7"
-  },
-  "devDependencies": {}
+  }
 }

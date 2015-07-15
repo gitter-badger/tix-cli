@@ -695,9 +695,7 @@ function Cli(config, token) {
     },
     "debug": function (argv) {
       executeAt(toAbsPath(argv.module), function () {
-        //exec('npm install gulp -g', 'Error occurred installing gulp globally.', true);
-        //exec('gulp debug', 'Error occurred during gulp debug.', true);
-        exec('node bin/www');
+        exec('node bin/start.js');
       });
     },
     "uninstall-extended": function () {
