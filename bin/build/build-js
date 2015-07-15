@@ -91,10 +91,7 @@ popd
 
 
 pushd "$JS_BUILD_ROOT"
-  if [ "$skip_install_flag" != true ] ; then
-    # Make non-build debug dependencies optional and they won't get installed for builds
-    npm install --no-optional
-  fi
+  npm install --no-optional
   npm run configure "$configuration"
   npm run build
   npm prune --production
