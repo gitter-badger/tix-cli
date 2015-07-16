@@ -36,6 +36,8 @@
     "test": "tape test/*.js"
   },
   "devDependencies": {
+    "nodegit": "^0.4.1",
+    "shelljs": "^0.5.1",
     "tape": "^4.0.0"
   },
   "dependencies": {
@@ -55,6 +57,6 @@
     "linux",
     "win32"
   ],
-  "license": "MIT",
+  "license": "UNLICENSED",
   "preferGlobal": true
 }
