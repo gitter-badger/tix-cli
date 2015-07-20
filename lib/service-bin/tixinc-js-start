@@ -13,7 +13,7 @@ var log = require('bunyan').createLogger({name: 'tixinc-js-service'})
             , stdio: 'inherit'
             , encoding: 'utf8'
             }
-  , stdout = exec(nodePath, args, options)
+  , stdout = exec(nodePath, args, opts)
 
 log.error(stdout, 'tixinc-js process died')
 process.exit(1)
