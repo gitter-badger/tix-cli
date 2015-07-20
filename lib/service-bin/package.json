@@ -4,6 +4,7 @@
   "description": "The scripts for deploying tixinc applications as services.",
   "dependencies": {
     "bunyan": "^1.4.0",
+    "mv": "^2.1.1",
     "node-windows": "^0.1.7"
   }
 }
