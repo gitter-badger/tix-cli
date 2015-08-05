@@ -8,7 +8,7 @@ var log = require('bunyan').createLogger({name: 'tixinc-js-service'})
   , path = require('path')
   , exec = require('child_process').execFileSync
   , nodePath = path.join(__dirname, 'node.exe')
-  , args = [path.join('bin', 'start')]
+  , args = [path.join('bin', 'run')]
   , opts =  { cwd: path.join(__dirname, '..', 'tixinc-js')
             , stdio: 'inherit'
             , encoding: 'utf8'
