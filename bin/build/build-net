@@ -7,10 +7,9 @@ set -e
 
 latest=false
 version=""
-tools_version="12.0"
-visual_studio_version="12.0"
+tools_version="14.0"
+visual_studio_version="14.0"
 configuration="Debug"
-encrypt=false
 release_root="$NET_RELEASE_ROOT"
 
 usage_short="${CYAN}Usage: build-net -l|-v version [-t ToolsVersion] [-V VisualStudioVersion] [-c Configuration] [-e] [-o OutputPath]"
@@ -19,13 +18,12 @@ usage_long="$usage_long\n-v: deploy specific version (tag or hash)"
 usage_long="$usage_long\n-t: msbuild ToolsVersion to use (default=${tools_version})"
 usage_long="$usage_long\n-V: msbuild VisualStudioVersion to use (default=${visual_studio_version})"
 usage_long="$usage_long\n-c: configuration to deploy (default=${configuration})"
-usage_long="$usage_long\n-e: encrypt configuration section"
 usage_long="$usage_long\n-o: output path (default=$release_root)${NC}"
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
 
-options=":lv:t:V:c:eo:h"
+options=":lv:t:V:c:o:h"
 shopt -u nocasematch
 OPTIND=1
 while getopts "$options" opt ; do
@@ -44,9 +42,6 @@ while getopts "$options" opt ; do
       ;;
     c )
       configuration="$OPTARG"
-      ;;
-    e )
-      encrypt=true
       ;;
     o )
       release_root="$OPTARG"
@@ -124,11 +119,5 @@ pushd "$NET_BUILD_ROOT" >/dev/null
   >&2 printf -- "- executing... -> %s -\n" "$msbuild_command"
   cmd //c "$win_msbuild_path" Tix.Web.SelfHost\\Tix.Web.SelfHost.csproj //tv:${tools_version} //nologo //p:VisualStudioVersion=${visual_studio_version} //p:Configuration=${configuration} //p:OutputPath="${win_net_release_root}" //m //v:m //clp:ErrorsOnly
 popd >/dev/null
-
-if [ "$encrypt" = true ] ; then
-  npm install -g cryptkeeper &>/dev/null
-  config_path="$release_root/Tix.Web.SelfHost.exe.config"
-  cryptkeeper -ens connectionStrings -p "${configuration}Provider" -C "${configuration}Keys" -E "$release_root" -R "$config_path"
-fi
 
 >&2 printf -- "%b- tixinc-net version %s successfully built -%b\n" "$GREEN" "$version" "$NC"

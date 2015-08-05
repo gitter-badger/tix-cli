@@ -9,15 +9,13 @@ install-tixrc
 
 latest=false
 configuration=Release
-encrypt=false
 artifacts_root="$ARTIFACTS_ROOT"
 js_version=""
 net_version=""
 
-usage_short="${CYAN}Usage: release [-l] [-c configuration] [-e] [-d destination-path] [-j js-version] [-n net-version]"
+usage_short="${CYAN}Usage: release [-l] [-c configuration] [-d destination-path] [-j js-version] [-n net-version]"
 usage_long="$usage_short\n-l: deploy latest across all libraries"
 usage_long="$usage_long\n-c: configuration to deploy (default: $configuration)"
-usage_long="$usage_long\n-e: encrypt connection strings configuration (default: $encrypt)"
 usage_long="$usage_long\n-d: optional destination directory (default: $artifacts_root)"
 usage_long="$usage_long\n-D: optional destination directory (default: $artifacts_root)"
 usage_long="$usage_long\n-j: tixinc-js version to deploy"
@@ -25,7 +23,7 @@ usage_long="$usage_long\n-n: tixinc-net version to deploy${NC}"
 
 usage_short="$usage_short\nUse -h to get supported command information.${NC}"
 
-options=":lc:ed:j:n:h"
+options=":lc:d:j:n:h"
 shopt -u nocasematch
 OPTIND=1
 while getopts "$options" opt ; do
@@ -35,9 +33,6 @@ while getopts "$options" opt ; do
       ;;
     c )
       configuration="$OPTARG"
-      ;;
-    e )
-      encrypt=true
       ;;
     d )
       artifacts_root="$OPTARG"
@@ -94,11 +89,7 @@ rimraf "$NET_BUILD_ROOT"
 configuration_lower="$(printf -- "%s" "$configuration" | tr '[:upper:]' '[:lower:]')"
 release_name="$(printf -- "net_%s-js_%s-%s" "$net_version" "$js_version" "$configuration_lower")"
 >&2 printf -- "- building and packaging release %s -\n" "$release_name"
-if [ "$encrypt" = true ] ; then
-  build-net -v "$net_version" -c "$configuration" -V 12.0 -e
-else
-  build-net -v "$net_version" -c "$configuration" -V 12.0
-fi
+build-net -v "$net_version" -c "$configuration"
 build-js -v "$js_version" -c "$configuration_lower" -C
 deploy-bin
 
