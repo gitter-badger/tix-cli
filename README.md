@@ -1,6 +1,8 @@
 tix-cli
 =======
 
+[![Join the chat at https://gitter.im/TixInc/tix-cli](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TixInc/tix-cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 TixCli is a [command line interface](http://en.wikipedia.org/wiki/Command-line_interface) to interact with GitHub Authorization API and perform setup and deployment of private TixInc repositories.
 
 
